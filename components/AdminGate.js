@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { supabase } from "../lib/supabase";
+import AppShell from "./AppShell";
+
+const ADMIN_NAV = [
+  { href: "/admin", label: "Tableau", icon: "home" },
+  { href: "/", label: "Site", icon: "globe" },
+];
 
 export default function AdminGate({ children }) {
   const [state, setState] = useState("loading");
@@ -43,13 +48,6 @@ export default function AdminGate({ children }) {
     );
   }
   return (
-    <>
-      <Head><title>Administration · KARGORA</title><meta name="robots" content="noindex" /></Head>
-      <header className="site"><div className="wrap">
-        <Link href="/admin" className="brand">KARGORA<small>ADMINISTRATION</small></Link>
-        <button className="btn sm alt" onClick={async () => { await supabase.auth.signOut(); setState("out"); }}>Déconnexion</button>
-      </div></header>
-      <div className="wrap" style={{ paddingTop: 20, paddingBottom: 40 }}>{children}</div>
-    </>
+    <AppShell title="Administration" items={ADMIN_NAV}>{children}</AppShell>
   );
 }

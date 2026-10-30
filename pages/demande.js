@@ -3,12 +3,15 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import { supabase } from "../lib/supabase";
+import { useUser } from "../lib/auth";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 
 export default function Demande() {
   const { query } = useRouter();
+  const user = useUser();
+  const meta = user?.user_metadata || {};
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(null);
@@ -81,8 +84,8 @@ export default function Demande() {
         <p className="muted">L&apos;envoi de ce formulaire ne vous engage pas et n&apos;est pas une commande payée.</p>
         <form className="f" onSubmit={onSubmit}>
           <div className="row2">
-            <label>Nom et prénom<input name="name" required minLength={2} maxLength={120} autoComplete="name" /></label>
-            <label>Téléphone / WhatsApp<input name="phone" type="tel" required minLength={8} maxLength={30} autoComplete="tel" placeholder="+236 …" /></label>
+            <label>Nom et prénom<input name="name" key={"n" + (meta.full_name || "")} defaultValue={meta.full_name || ""} required minLength={2} maxLength={120} autoComplete="name" /></label>
+            <label>Téléphone / WhatsApp<input name="phone" type="tel" key={"p" + (meta.phone || "")} defaultValue={meta.phone || ""} required minLength={8} maxLength={30} autoComplete="tel" placeholder="+236 …" /></label>
           </div>
           <label>Vous êtes
             <select name="profile" defaultValue={query.profil || "particulier"} key={query.profil || "p"}>

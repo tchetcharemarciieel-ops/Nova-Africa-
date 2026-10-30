@@ -3,10 +3,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import { supabase } from "../lib/supabase";
+import { useUser } from "../lib/auth";
 import { SERVICES, OTHER_SERVICES, OPERATIONS } from "../lib/services";
 
 export default function DemandeNumerique() {
   const { query } = useRouter();
+  const user = useUser();
+  const meta = user?.user_metadata || {};
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(null);
@@ -68,8 +71,8 @@ export default function DemandeNumerique() {
           </div>
           <label>Précisions <span className="opt">(facultatif)</span><textarea name="details" maxLength={1500} rows={3} /></label>
           <div className="row2">
-            <label>Nom et prénom<input name="name" required minLength={2} maxLength={120} autoComplete="name" /></label>
-            <label>Téléphone / WhatsApp<input name="phone" type="tel" required minLength={8} maxLength={30} autoComplete="tel" /></label>
+            <label>Nom et prénom<input name="name" key={"n" + (meta.full_name || "")} defaultValue={meta.full_name || ""} required minLength={2} maxLength={120} autoComplete="name" /></label>
+            <label>Téléphone / WhatsApp<input name="phone" type="tel" key={"p" + (meta.phone || "")} defaultValue={meta.phone || ""} required minLength={8} maxLength={30} autoComplete="tel" /></label>
           </div>
           <div className="row2">
             <label>Vous êtes<select name="profile"><option value="particulier">Particulier</option><option value="commercant">Commerçant</option><option value="entreprise">Entreprise</option></select></label>

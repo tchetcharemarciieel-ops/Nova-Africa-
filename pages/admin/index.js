@@ -15,6 +15,9 @@ function Dashboard() {
   const [st, setSt] = useState("");
   const [kind, setKind] = useState("");
   const [err, setErr] = useState("");
+  const [clients, setClients] = useState([]);
+  const [draws, setDraws] = useState([]);
+  const [pays, setPays] = useState([]);
 
   async function load() {
     const [r, s, k, m, se] = await Promise.all([
@@ -26,6 +29,12 @@ function Dashboard() {
     ]);
     const e = r.error || k.error || m.error;
     if (e) setErr(e.message);
+    const [c, dr, py] = await Promise.all([
+      supabase.rpc("kargora_admin_clients"),
+      supabase.rpc("kargora_admin_draws"),
+      supabase.from("kargora_payments").select("*").order("confirmed_at", { ascending: false }).limit(200),
+    ]);
+    setClients(c.data || []); setDraws(dr.data || []); setPays(py.data || []);
     setReqs(r.data || []); setStatuses(s.data || []); setKpi(k.data); setMsgs(m.data || []); setSettings(se.data || []);
   }
   useEffect(() => { load(); }, []);
@@ -93,7 +102,7 @@ function Dashboard() {
         </div>
       )}
       <div className="tabs">
-        {[["demandes", "Demandes"], ["messages", `Messages (${msgs.filter((m) => !m.handled).length})`], ["categories", "Produits demandés"], ["reglages", "Instructions de paiement"]].map(([k, l]) => (
+        {[["demandes", "Demandes"], ["clients", `Clients (${clients.length})`], ["paiements", "Paiements"], ["tirages", "Tirages"], ["messages", `Messages (${msgs.filter((m) => !m.handled).length})`], ["categories", "Produits demandés"], ["reglages", "Instructions de paiement"]].map(([k, l]) => (
           <button key={k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}>{l}</button>
         ))}
         <button onClick={exportCsv}>Exporter (CSV)</button>
@@ -132,6 +141,48 @@ function Dashboard() {
         </>
       )}
 
+      {tab === "clients" && (
+        <div className="scroll"><table className="t">
+          <thead><tr><th>Client</th><th>Contact</th><th>Type</th><th>Demandes</th><th>Inscrit le</th><th>Dernière connexion</th></tr></thead>
+          <tbody>
+            {clients.map((c) => <tr key={c.id}><td>{c.full_name || "—"}</td><td>{c.email}<br /><span className="muted">{c.phone}</span></td><td>{PROFILES[c.account_type] || "—"}</td><td>{c.requests}</td><td>{dateFr(c.created_at)}</td><td>{c.last_sign_in_at ? dateFr(c.last_sign_in_at) : "—"}</td></tr>)}
+            {!clients.length && <tr><td colSpan={6} className="muted">Aucun client inscrit.</td></tr>}
+          </tbody></table></div>
+      )}
+
+      {tab === "paiements" && (
+        <div className="scroll"><table className="t">
+          <thead><tr><th>Reçu</th><th>Date</th><th>Demande</th><th>Mode</th><th className="right">Montant</th><th>Référence</th></tr></thead>
+          <tbody>
+            {pays.map((x) => <tr key={x.id}><td>{x.receipt_number}</td><td>{dateFr(x.confirmed_at)}</td><td>{reqs.find((r) => r.id === x.request_id)?.number}</td><td>{METHODS[x.method]}</td><td className="right">{fcfa(x.amount)}</td><td>{x.reference}</td></tr>)}
+            {!pays.length && <tr><td colSpan={6} className="muted">Aucun paiement confirmé.</td></tr>}
+          </tbody></table>
+          <p className="muted">Les paiements se confirment depuis la fiche de la commande, après vérification de l&apos;argent reçu.</p></div>
+      )}
+
+      {tab === "tirages" && (
+        <div className="card">
+          <h3>Tirages au sort</h3>
+          <p className="muted">Les tirages se créent automatiquement (samedi, heures réglées dans « Instructions de paiement » → lottery_hours) dès qu&apos;un lot est renseigné dans lottery_prize. Ne promettez que des lots que vous pouvez remettre.</p>
+          <div className="scroll"><table className="t">
+            <thead><tr><th>Date (Bangui)</th><th>Lot</th><th>État</th><th>Participants</th><th>Gagnant</th><th>Remise du lot</th></tr></thead>
+            <tbody>
+              {draws.map((d) => (
+                <tr key={d.id}>
+                  <td>{new Date(d.scheduled_at).toLocaleString("fr-FR", { timeZone: "Africa/Bangui", dateStyle: "medium", timeStyle: "short" })}</td>
+                  <td>{d.prize}</td><td><span className="badge">{{ open: "Ouvert", drawn: "Tiré", no_entries: "Sans participant", cancelled: "Annulé" }[d.status]}</span></td>
+                  <td>{d.status === "open" ? d.live_entries : d.entries}</td>
+                  <td>{d.winner_email ? <>{d.winner_name}<br />{d.winner_email}<br />{d.winner_phone}</> : "—"}</td>
+                  <td>{d.status === "drawn" ? (
+                    <select className="i" defaultValue={d.prize_status} onChange={async (e) => { await supabase.from("kargora_draws").update({ prize_status: e.target.value }).eq("id", d.id); }}>
+                      <option value="pending">À contacter</option><option value="contacted">Contacté</option><option value="delivered">Remis</option><option value="forfeited">Non réclamé</option>
+                    </select>) : d.status === "open" ? <button className="btn sm danger" onClick={async () => { if (confirm("Annuler ce tirage ?")) { await supabase.from("kargora_draws").update({ status: "cancelled" }).eq("id", d.id); load(); } }}>Annuler</button> : ""}</td>
+                </tr>))}
+              {!draws.length && <tr><td colSpan={6} className="muted">Aucun tirage : renseignez d&apos;abord le lot (lottery_prize).</td></tr>}
+            </tbody></table></div>
+        </div>
+      )}
+
       {tab === "messages" && (
         <div className="scroll"><table className="t"><tbody>
           {msgs.map((m) => (
@@ -158,7 +209,7 @@ function Dashboard() {
           <p className="muted">Affichées au client uniquement après acceptation de son devis. Renseignez-les seulement une fois le moyen de paiement validé contractuellement.</p>
           {settings.map((s) => (
             <form key={s.key} className="f" style={{ marginBottom: 12 }} onSubmit={(e) => { e.preventDefault(); saveSetting(s.key, new FormData(e.currentTarget).get("v")); }}>
-              <label>{METHODS[s.key.replace("payment_", "")] || s.key}<textarea className="i" name="v" defaultValue={s.value} rows={2} /></label>
+              <label>{METHODS[s.key.replace("payment_", "")] || ({ lottery_prize: "Lot du tirage au sort (laisser vide = pas de tirage)", lottery_hours: "Heures des tirages du samedi, heure de Bangui (ex. 6,10)" })[s.key] || s.key}<textarea className="i" name="v" defaultValue={s.value} rows={2} /></label>
               <div><button className="btn sm blue">Enregistrer</button></div>
             </form>
           ))}
