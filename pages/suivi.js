@@ -56,7 +56,7 @@ export default function Suivi() {
         {res && (
           <div className="mt">
             <div className="card">
-              <div className="muted">Demande {res.number} · {dayFr(res.created_at)}</div>
+              <div className="muted">Demande {res.number} · {dayFr(res.created_at)}{res.kind === "numerique" && " · service numérique"}</div>
               <h3 style={{ marginTop: 6 }}>Statut : <span className="badge">{res.status}</span></h3>
               {res.note && <p>{res.note}</p>}
               <p className="muted" style={{ marginBottom: 0 }}>Produit : {res.product}</p>

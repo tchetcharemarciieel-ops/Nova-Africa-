@@ -5,11 +5,12 @@ import { CONTACT } from "../lib/supabase";
 
 const NAV = [
   ["/", "Accueil"],
-  ["/commercants", "Commerçants"],
-  ["/particuliers", "Particuliers"],
-  ["/comment-ca-marche", "Comment ça marche"],
+  ["/particuliers", "Achats internationaux"],
+  ["/commercants", "Approvisionnement professionnel"],
+  ["/services-numeriques", "Services numériques"],
+  ["/cartes-cadeaux", "Cartes cadeaux"],
   ["/suivi", "Suivre ma commande"],
-  ["/a-propos", "À propos"],
+  ["/demande", "Demander un devis"],
   ["/contact", "Contact"],
 ];
 

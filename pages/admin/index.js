@@ -13,6 +13,7 @@ function Dashboard() {
   const [settings, setSettings] = useState([]);
   const [q, setQ] = useState("");
   const [st, setSt] = useState("");
+  const [kind, setKind] = useState("");
   const [err, setErr] = useState("");
 
   async function load() {
@@ -32,9 +33,9 @@ function Dashboard() {
   const label = (c) => statuses.find((s) => s.code === c)?.label || c;
   const filtered = useMemo(() => {
     const t = q.trim().toLowerCase();
-    return reqs.filter((r) => (!st || String(r.status_code) === st) &&
+    return reqs.filter((r) => (!kind || r.kind === kind) && (!st || String(r.status_code) === st) &&
       (!t || [r.full_name, r.phone, r.number].some((v) => v?.toLowerCase().includes(t))));
-  }, [reqs, q, st]);
+  }, [reqs, q, st, kind]);
 
   const cats = useMemo(() => {
     const m = {};
@@ -101,6 +102,11 @@ function Dashboard() {
       {tab === "demandes" && (
         <>
           <div className="row2" style={{ marginBottom: 12 }}>
+            <select className="i" value={kind} onChange={(e) => setKind(e.target.value)}>
+              <option value="">Commandes physiques et numériques</option>
+              <option value="physique">Physiques seulement</option>
+              <option value="numerique">Numériques seulement</option>
+            </select>
             <input className="i" placeholder="Rechercher : nom, téléphone ou numéro" value={q} onChange={(e) => setQ(e.target.value)} />
             <select className="i" value={st} onChange={(e) => setSt(e.target.value)}>
               <option value="">Tous les statuts</option>
@@ -115,7 +121,7 @@ function Dashboard() {
                   <td><Link href={`/admin/${r.id}`}>{r.number}</Link></td>
                   <td>{dateFr(r.created_at)}</td>
                   <td>{r.full_name}<br /><span className="muted">{r.phone}</span></td>
-                  <td>{PROFILES[r.profile]}</td>
+                  <td>{PROFILES[r.profile]}<br /><span className="badge">{r.kind === "numerique" ? "Numérique" : "Physique"}</span></td>
                   <td>{r.product_description.slice(0, 70)}{r.product_description.length > 70 && "…"} ×{r.quantity}</td>
                   <td><span className="badge">{label(r.status_code)}</span></td>
                 </tr>

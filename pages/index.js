@@ -44,6 +44,7 @@ export default function Home() {
             <div className="card"><h3>Commerçants</h3><p>Accessoires, vêtements, emballages, fournitures de boutique, marchandises en quantité.</p><Link href="/commercants">Voir l&apos;offre commerçants →</Link></div>
             <div className="card"><h3>Entreprises</h3><p>Mobilier, matériel informatique, fournitures et équipements professionnels.</p><Link href="/commercants">Demande professionnelle →</Link></div>
             <div className="card"><h3>Particuliers</h3><p>Vous avez trouvé un produit en ligne ? Envoyez-nous le lien.</p><Link href="/particuliers">Commander à partir d&apos;un lien →</Link></div>
+            <div className="card"><h3>Services numériques</h3><p>Netflix, Spotify, Canva, PlayStation, Apple, Google Play : abonnements et crédits sur devis.</p><Link href="/services-numeriques">Voir les services →</Link></div>
           </div>
           <p className="notice mt">
             Transparence : KARGORA ne tient pas de stock affiché. Chaque prix et chaque délai est

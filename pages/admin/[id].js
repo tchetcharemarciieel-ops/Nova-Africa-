@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import AdminGate from "../../components/AdminGate";
 import { supabase } from "../../lib/supabase";
+import { SERVICE_NAME } from "../../lib/services";
 import { fcfa, dateFr, dayFr, PROFILES, METHODS } from "../../lib/format";
 
 const QUOTE_FIELDS = [
@@ -72,7 +73,7 @@ function Detail({ id }) {
           <div className="muted">Reçue le {dateFr(r.created_at)}</div>
         </div>
         <div className="card">
-          <h3>Produit demandé</h3>
+          <h3>{r.kind === "numerique" ? `Service numérique : ${SERVICE_NAME[r.service] || "—"}` : "Produit demandé"}</h3>
           <div style={{ whiteSpace: "pre-wrap" }}>{r.product_description}</div>
           <div>Quantité : {r.quantity}{r.budget_indicatif != null && <> · Budget : {fcfa(r.budget_indicatif)}</>}</div>
           {r.preferred_origin && <div>Origine souhaitée : {r.preferred_origin}</div>}
