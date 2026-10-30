@@ -2,9 +2,8 @@ import Layout from "../components/Layout";
 
 export default function Conditions() {
   return (
-    <Layout title="Conditions et confidentialité">
+    <Layout title="Conditions et confidentialité" hero={{ eyebrow: "Informations légales", title: "Conditions et confidentialité", sub: "Commande, paiement, annulation, services numériques et données personnelles." }}>
       <section className="block"><div className="wrap">
-        <h2>Conditions et confidentialité</h2>
         <p className="notice">Version de travail du lancement. Ces textes doivent être relus et validés par un conseil juridique avant l&apos;ouverture commerciale.</p>
         <h3 className="mt">Commande</h3>
         <p>L&apos;envoi d&apos;une demande ne constitue pas une commande. Une commande n&apos;est lancée qu&apos;après acceptation explicite d&apos;un devis par le client et confirmation du paiement par KARGORA.</p>

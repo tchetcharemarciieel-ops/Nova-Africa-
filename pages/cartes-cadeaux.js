@@ -3,9 +3,8 @@ import Layout from "../components/Layout";
 
 export default function CartesCadeaux() {
   return (
-    <Layout title="Cartes cadeaux" description="Cartes cadeaux et crédits numériques officiels, sur demande et sur devis.">
+    <Layout title="Cartes cadeaux" description="Cartes cadeaux et crédits numériques officiels, sur demande et sur devis." hero={{ eyebrow: "Cartes cadeaux", title: "Cartes cadeaux et crédits numériques", sub: "Apple, Google Play, PlayStation, Spotify : montant et région à vérifier, devis avant paiement." }}>
       <section className="block"><div className="wrap">
-        <h2>Cartes cadeaux</h2>
         <p>Apple, Google Play, PlayStation, Spotify et autres : indiquez la carte, le montant et la région de votre compte. Nous vérifions la compatibilité et le prix auprès de fournisseurs autorisés, puis nous vous envoyons un devis.</p>
         <ol>
           <li>Vous choisissez la carte, le montant et la région.</li>

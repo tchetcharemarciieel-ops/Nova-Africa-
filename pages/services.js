@@ -25,9 +25,8 @@ const PILL = { "Disponible": "ok", "Sur demande": "req", "Bientôt disponible": 
 
 export default function Services() {
   return (
-    <Layout title="Nos services" description="Commerce et achats, services numériques et services pratiques KARGORA.">
+    <Layout hero={{ eyebrow: "Nos services", title: "Ce que KARGORA peut faire pour vous", sub: "Chaque service indique clairement son état : disponible, sur demande ou bientôt disponible." }} title="Nos services" description="Commerce et achats, services numériques et services pratiques KARGORA.">
       <section className="block"><div className="wrap">
-        <div className="head"><span className="eyebrow">Nos services</span><h2>Ce que KARGORA peut faire pour vous</h2><p className="muted">Chaque service indique clairement son état : disponible, sur demande ou bientôt disponible.</p></div>
         <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))" }}>
           {CATS.map((c) => (
             <div className="card" key={c.title}>

@@ -41,9 +41,8 @@ export default function Suivi() {
 
   const q = res?.quote;
   return (
-    <Layout title="Suivre ma commande">
+    <Layout title="Suivre ma commande" hero={{ eyebrow: "Suivi", title: "Suivre ma commande", sub: "Entrez votre numéro de demande et le téléphone utilisé." }}>
       <section className="block"><div className="wrap" style={{ maxWidth: 760 }}>
-        <h2>Suivre ma commande</h2>
         <form className="f" onSubmit={lookup}>
           <div className="row2">
             <label>Numéro de demande<input value={creds.number} onChange={(e) => setCreds({ ...creds, number: e.target.value })} required placeholder="KRG-XXXXXXXX" /></label>

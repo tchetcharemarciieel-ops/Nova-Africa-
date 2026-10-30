@@ -3,9 +3,8 @@ import Layout from "../components/Layout";
 
 export default function Particuliers() {
   return (
-    <Layout title="Pour les particuliers" description="Commandez un produit précis à partir d'un lien ou d'une description.">
+    <Layout title="Pour les particuliers" description="Commandez un produit précis à partir d'un lien ou d'une description." hero={{ eyebrow: "Particuliers", title: "Achats internationaux", sub: "Un produit repéré en ligne ? Envoyez-nous le lien : nous étudions l’achat et le transport jusqu’à Bangui." }}>
       <section className="block"><div className="wrap">
-        <h2>Pour les particuliers</h2>
         <p>Vous avez repéré un produit sur un site étranger ou chez un fournisseur ? Envoyez-nous le lien ou une description. Nous vérifions s&apos;il peut être acheté et transporté jusqu&apos;à Bangui, puis nous vous envoyons un devis.</p>
         <ol>
           <li>Vous remplissez le formulaire (lien du produit, quantité).</li>

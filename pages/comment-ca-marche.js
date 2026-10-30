@@ -13,9 +13,8 @@ const STEPS = [
 
 export default function Comment() {
   return (
-    <Layout title="Comment ça marche">
+    <Layout title="Comment ça marche" hero={{ eyebrow: "Fonctionnement", title: "Comment ça marche", sub: "De la demande au retrait à Bangui, étape par étape." }}>
       <section className="block"><div className="wrap">
-        <h2>Comment ça marche</h2>
         <div className="grid">
           {STEPS.map(([t, d], i) => (
             <div className="card" key={t}><div className="n">{i + 1}</div><h3>{t}</h3><p className="muted" style={{ margin: 0 }}>{d}</p></div>

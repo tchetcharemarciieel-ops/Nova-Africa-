@@ -4,9 +4,8 @@ import { SERVICES, OTHER_SERVICES } from "../lib/services";
 
 export default function ServicesNumeriques() {
   return (
-    <Layout title="Services numériques" description="Abonnements, renouvellements et crédits numériques sur demande, avec devis.">
+    <Layout title="Services numériques" description="Abonnements, renouvellements et crédits numériques sur demande, avec devis." hero={{ eyebrow: "Services numériques", title: "Abonnements, renouvellements et crédits", sub: "Netflix, Spotify, Canva, PlayStation, Apple, Google Play et plus : sur devis, avec des fournisseurs autorisés." }}>
       <section className="block"><div className="wrap">
-        <h2>Services numériques</h2>
         <p>Demandez un abonnement, un renouvellement ou un crédit numérique. Chaque demande est étudiée : nous vérifions la disponibilité et le prix, puis nous vous envoyons un devis. Vous payez seulement après l&apos;avoir accepté.</p>
         <div className="grid">
           {SERVICES.map((s) => (

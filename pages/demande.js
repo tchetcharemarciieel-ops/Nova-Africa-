@@ -97,7 +97,7 @@ export default function Demande() {
   }
 
   return (
-    <Layout title="Demander un devis">
+    <Layout title="Demander un devis" hero={{ eyebrow: "Demande de devis", title: "Décrivez votre besoin", sub: "Gratuit et sans engagement : une demande n’est pas une commande payée." }}>
       <section className="block"><div className="wrap" style={{ maxWidth: 720 }}>
         <h2>Demander un devis</h2>
         <p className="muted">L&apos;envoi de ce formulaire ne vous engage pas et n&apos;est pas une commande payée.</p>

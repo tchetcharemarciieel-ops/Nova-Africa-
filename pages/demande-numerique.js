@@ -51,7 +51,7 @@ export default function DemandeNumerique() {
   }
 
   return (
-    <Layout title="Demande de service numérique">
+    <Layout title="Demande de service numérique" hero={{ eyebrow: "Service numérique", title: "Demande de service numérique", sub: "Abonnement, renouvellement, carte cadeau ou crédit : décrivez-nous votre besoin." }}>
       <section className="block"><div className="wrap" style={{ maxWidth: 720 }}>
         <h2>Demande de service numérique</h2>
         <div className="notice"><strong>Ne nous envoyez jamais votre mot de passe</strong>, ni de code de sécurité reçu par SMS ou e-mail. Nous n&apos;en avons pas besoin pour établir un devis.</div>

@@ -20,9 +20,8 @@ export default function Contact() {
 
   const hasInfo = CONTACT.whatsapp || CONTACT.email || CONTACT.address;
   return (
-    <Layout title="Contact">
+    <Layout title="Contact" hero={{ eyebrow: "Une question ?", title: "Contact", sub: "Écrivez-nous : l’équipe vous répond dès que possible." }}>
       <section className="block"><div className="wrap" style={{ maxWidth: 720 }}>
-        <h2>Contact</h2>
         {hasInfo && (
           <div className="card" style={{ marginBottom: 16 }}>
             {CONTACT.whatsapp && <div>WhatsApp : <strong>{CONTACT.whatsapp}</strong></div>}

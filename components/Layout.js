@@ -6,6 +6,7 @@ import { CONTACT } from "../lib/supabase";
 import { useUser } from "../lib/auth";
 import Logo from "./Logo";
 import Assistant from "./Assistant";
+import PageHero from "./PageHero";
 import { SIGNUP_OPEN, ASSISTANT_READY } from "../lib/flags";
 
 const NAV = [
@@ -18,7 +19,7 @@ const NAV = [
   ["/contact", "Contact"],
 ];
 
-export default function Layout({ title, description, children }) {
+export default function Layout({ title, description, children, hero }) {
   const { pathname } = useRouter();
   const [open, setOpen] = useState(false);
   const user = useUser();
@@ -46,7 +47,7 @@ export default function Layout({ title, description, children }) {
           </nav>
         </div>
       </header>
-      <main>{children}</main>
+      <main>{hero && <PageHero eyebrow={hero.eyebrow} title={hero.title}>{hero.sub}</PageHero>}{children}</main>
       <footer className="site">
         <div className="wrap">
           <div className="cols">
