@@ -6,6 +6,7 @@ import { CONTACT } from "../lib/supabase";
 import { useUser } from "../lib/auth";
 import Logo from "./Logo";
 import Assistant from "./Assistant";
+import { SIGNUP_OPEN, ASSISTANT_READY } from "../lib/flags";
 
 const NAV = [
   ["/particuliers", "Achats"],
@@ -39,7 +40,7 @@ export default function Layout({ title, description, children }) {
             {NAV.map(([href, label]) => <Link key={href} href={href} className={pathname === href ? "on" : ""}>{label}</Link>)}
             {user ? <Link href="/compte" className="btn sm blue">Mon espace</Link> : <>
               <Link href="/connexion">Connexion</Link>
-              <Link href="/inscription" className="btn sm blue">Créer un compte</Link>
+              {SIGNUP_OPEN && <Link href="/inscription" className="btn sm blue">Créer un compte</Link>}
             </>}
             <Link href="/demande" className="btn sm">Demander un devis</Link>
           </nav>
@@ -73,7 +74,7 @@ export default function Layout({ title, description, children }) {
           <p style={{ opacity: 0.75, marginTop: 20 }}>Une demande n&apos;est pas une commande : aucun achat n&apos;est lancé sans devis accepté et paiement confirmé.</p>
         </div>
       </footer>
-      <Assistant />
+      {ASSISTANT_READY && <Assistant />}
     </>
   );
 }

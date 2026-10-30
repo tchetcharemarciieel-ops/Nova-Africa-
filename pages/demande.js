@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import { supabase } from "../lib/supabase";
 import { useUser } from "../lib/auth";
 import { fcfa } from "../lib/format";
+import { ASSISTANT_READY } from "../lib/flags";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
@@ -114,7 +115,7 @@ export default function Demande() {
           </label>
           <label>Nom ou description du produit<textarea name="description" required minLength={3} maxLength={2000} rows={4} /></label>
           <label>Lien du produit <span className="opt">(facultatif)</span>
-            <span style={{ display: "flex", gap: 8 }}><input name="url" type="url" maxLength={1000} placeholder="https://…" style={{ flex: 1 }} /><button type="button" className="btn sm blue" disabled={analyzing} onClick={(e) => analyze(e.currentTarget.form)}>{analyzing ? "Analyse…" : "Analyser le lien"}</button></span>
+            <span style={{ display: "flex", gap: 8 }}><input name="url" type="url" maxLength={1000} placeholder="https://…" style={{ flex: 1 }} />{ASSISTANT_READY && <button type="button" className="btn sm blue" disabled={analyzing} onClick={(e) => analyze(e.currentTarget.form)}>{analyzing ? "Analyse…" : "Analyser le lien"}</button>}</span>
           </label>
           {info && (info.error ? <div className="notice err" role="alert">{info.error}</div> : (
             <div className="linkbox" role="status">

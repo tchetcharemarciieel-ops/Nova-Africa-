@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import { supabase } from "../lib/supabase";
+import { SIGNUP_OPEN } from "../lib/flags";
 
 export default function Inscription() {
   const router = useRouter();
@@ -26,6 +27,12 @@ export default function Inscription() {
     if (data.session) return router.push("/compte");
     setSent(true);
   }
+  if (!SIGNUP_OPEN) return (
+    <Layout title="Créer un compte"><div className="authbox"><div className="card">
+      <h2>Inscriptions bientôt ouvertes</h2>
+      <p>La création de comptes ouvre très prochainement. En attendant, vous pouvez <Link href="/demande">faire une demande de devis</Link> sans compte et la suivre avec son numéro.</p>
+    </div></div></Layout>
+  );
   if (sent) return (
     <Layout title="Vérifiez votre e-mail"><div className="authbox"><div className="card">
       <h2>Vérifiez votre e-mail</h2>

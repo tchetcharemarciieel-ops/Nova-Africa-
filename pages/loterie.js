@@ -4,13 +4,14 @@ import Layout from "../components/Layout";
 import Icon from "../components/Icons";
 import { supabase } from "../lib/supabase";
 import { useUser, dtWat, inText } from "../lib/auth";
+import { SIGNUP_OPEN } from "../lib/flags";
 
 export default function LoteriePublique() {
   const user = useUser();
   const [st, setSt] = useState(null);
   const [, tick] = useState(0);
   useEffect(() => {
-    supabase.rpc("kargora_lottery_state").then(({ data }) => setSt(data));
+    supabase.rpc("kargora_lottery_state").then(({ data }) => setSt(data || { upcoming: [], past: [], won: [] }));
     const t = setInterval(() => tick((x) => x + 1), 30000);
     return () => clearInterval(t);
   }, []);
@@ -21,7 +22,7 @@ export default function LoteriePublique() {
         <div><span className="eyebrow" style={{ color: "#ffb27a" }}>Participation gratuite</span>
           <h1>Le tirage au sort KARGORA</h1>
           <p>Chaque samedi, deux tirages au sort désignent un gagnant parmi les participants. Aucun achat n&apos;est nécessaire : il suffit d&apos;avoir un compte.</p>
-          <div className="actions">{user ? <Link href="/compte/loterie" className="btn">Participer</Link> : <><Link href="/inscription" className="btn">Créer un compte pour participer</Link><Link href="/connexion" className="btn ghost">Connexion</Link></>}</div>
+          <div className="actions">{user ? <Link href="/compte/loterie" className="btn">Participer</Link> : SIGNUP_OPEN ? <><Link href="/inscription" className="btn">Créer un compte pour participer</Link><Link href="/connexion" className="btn ghost">Connexion</Link></> : <span className="pill req">Ouverture prochaine</span>}</div>
         </div></div></div>
       <section className="block"><div className="wrap" style={{ maxWidth: 820 }}>
         <h2>Prochains tirages</h2>

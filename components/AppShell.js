@@ -5,6 +5,7 @@ import Icon from "./Icons";
 import { LogoMark } from "./Logo";
 import { supabase } from "../lib/supabase";
 import Assistant from "./Assistant";
+import { ASSISTANT_READY } from "../lib/flags";
 
 export default function AppShell({ title, items, children }) {
   const { pathname, push } = useRouter();
@@ -27,7 +28,7 @@ export default function AppShell({ title, items, children }) {
           <Link key={i.href} href={i.href} className={on(i.href) ? "on" : ""}><Icon name={i.icon} /><span>{i.label}</span></Link>
         ))}
       </nav>
-      <Assistant />
+      {ASSISTANT_READY && <Assistant />}
     </div>
   );
 }

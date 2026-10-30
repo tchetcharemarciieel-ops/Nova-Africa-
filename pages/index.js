@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Layout from "../components/Layout";
 import Icon from "../components/Icons";
+import { SIGNUP_OPEN } from "../lib/flags";
 
 const HOW = [
   ["Votre demande", "Décrivez un produit, envoyez un lien ou choisissez un service numérique."],
@@ -37,7 +38,7 @@ export default function Home() {
             <div className="route"><b /><i /><span>Fournisseur</span><i /><span>Transport</span><i /><b className="d" /><span>Bangui</span></div>
             <p style={{ margin: 0, fontSize: ".95rem" }}>Suivez chaque étape dans votre espace : devis, paiement, achat, transport, arrivée et retrait.</p>
             <div className="actions" style={{ marginTop: 14 }}>
-              <Link href="/inscription" className="btn sm">Créer un compte</Link>
+              {SIGNUP_OPEN ? <Link href="/inscription" className="btn sm">Créer un compte</Link> : <Link href="/demande" className="btn sm">Faire une demande</Link>}
               <Link href="/suivi" className="btn sm ghost">Suivre une commande</Link>
             </div>
           </div>
@@ -61,8 +62,8 @@ export default function Home() {
 
       <section className="block"><div className="wrap">
         <div className="band">
-          <div><span className="eyebrow" style={{ color: "#ffb27a" }}>Gratuit · chaque samedi</span><h2>Le tirage au sort KARGORA</h2><p>Créez votre compte et participez gratuitement à nos tirages hebdomadaires pour tenter de gagner une importation ou un colis offert. Aucun achat n&apos;est nécessaire.</p></div>
-          <div><Link href="/loterie" className="btn">Voir le tirage</Link></div>
+          <div><span className="eyebrow" style={{ color: "#ffb27a" }}>Gratuit · chaque samedi</span><h2>Le tirage au sort KARGORA</h2><p>Des tirages au sort gratuits chaque samedi, pour tenter de gagner une importation ou un colis offert. Aucun achat ne sera nécessaire. Ouverture prochaine : les lots et le règlement sont en cours de validation.</p></div>
+          <div><Link href="/loterie" className="btn">En savoir plus</Link></div>
         </div>
       </div></section>
 
