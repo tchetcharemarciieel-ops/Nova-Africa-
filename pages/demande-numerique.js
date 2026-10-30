@@ -23,11 +23,11 @@ export default function DemandeNumerique() {
       d.get("region") && `Région du compte : ${d.get("region")}`,
       d.get("details") && `Précisions : ${d.get("details")}`,
     ].filter(Boolean).join("\n");
-    const { data, error: err } = await supabase.rpc("kargora_submit_request", {
+    const { data, error: err } = await supabase.rpc("kargora_submit_digital_request", {
       p_full_name: d.get("name"), p_phone: d.get("phone"), p_profile: d.get("profile"),
-      p_description: detail, p_url: null, p_quantity: Number(d.get("quantity")) || 1,
-      p_origin: null, p_budget: d.get("budget") ? Number(d.get("budget")) : null,
-      p_comment: null, p_files: [], p_kind: "numerique", p_service: d.get("service"),
+      p_service: d.get("service"), p_description: detail,
+      p_quantity: Number(d.get("quantity")) || 1,
+      p_budget: d.get("budget") ? Number(d.get("budget")) : null,
     });
     setBusy(false);
     if (err) return setError("Envoi impossible. Vérifiez les champs et réessayez.");
