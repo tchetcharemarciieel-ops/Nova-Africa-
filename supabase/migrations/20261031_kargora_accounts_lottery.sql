@@ -245,3 +245,10 @@ grant execute on function public.kargora_my_requests(), public.kargora_my_reques
   public.kargora_claim_request(text,text), public.kargora_my_summary(), public.kargora_lottery_enter(uuid),
   public.kargora_admin_clients(), public.kargora_admin_draws() to authenticated;
 grant execute on function public.kargora_lottery_state() to anon, authenticated;
+
+-- ---------- Réglages de l'estimateur (renseignés par l'administrateur à partir de vrais devis partenaires) ----------
+insert into public.kargora_settings(key,value) values
+ ('fx_USD',''),('fx_EUR',''),('fx_CNY',''),('fx_AED',''),
+ ('estimate_uplift_min_percent',''),('estimate_uplift_max_percent',''),
+ ('wholesale_keywords',''),('wholesale_min_qty','')
+on conflict (key) do nothing;

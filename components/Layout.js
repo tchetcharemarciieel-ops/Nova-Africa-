@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { CONTACT } from "../lib/supabase";
 import { useUser } from "../lib/auth";
 import Logo from "./Logo";
+import Assistant from "./Assistant";
 
 const NAV = [
   ["/particuliers", "Achats"],
@@ -72,6 +73,7 @@ export default function Layout({ title, description, children }) {
           <p style={{ opacity: 0.75, marginTop: 20 }}>Une demande n&apos;est pas une commande : aucun achat n&apos;est lancé sans devis accepté et paiement confirmé.</p>
         </div>
       </footer>
+      <Assistant />
     </>
   );
 }

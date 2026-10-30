@@ -209,7 +209,7 @@ function Dashboard() {
           <p className="muted">Affichées au client uniquement après acceptation de son devis. Renseignez-les seulement une fois le moyen de paiement validé contractuellement.</p>
           {settings.map((s) => (
             <form key={s.key} className="f" style={{ marginBottom: 12 }} onSubmit={(e) => { e.preventDefault(); saveSetting(s.key, new FormData(e.currentTarget).get("v")); }}>
-              <label>{METHODS[s.key.replace("payment_", "")] || ({ lottery_prize: "Lot du tirage au sort (laisser vide = pas de tirage)", lottery_hours: "Heures des tirages du samedi, heure de Bangui (ex. 6,10)" })[s.key] || s.key}<textarea className="i" name="v" defaultValue={s.value} rows={2} /></label>
+              <label>{METHODS[s.key.replace("payment_", "")] || ({ lottery_prize: "Lot du tirage au sort (laisser vide = pas de tirage)", lottery_hours: "Heures des tirages du samedi, heure de Bangui (ex. 6,10)", fx_USD: "Taux : 1 USD en FCFA", fx_EUR: "Taux : 1 EUR en FCFA", fx_CNY: "Taux : 1 CNY en FCFA", fx_AED: "Taux : 1 AED en FCFA", estimate_uplift_min_percent: "Estimation : majoration minimale % (transport + douane + frais), d'après vos vrais devis", estimate_uplift_max_percent: "Estimation : majoration maximale %", wholesale_keywords: "Mots-clés des produits vendus en gros seulement (séparés par des virgules)", wholesale_min_qty: "Quantité minimale pour ces produits" })[s.key] || s.key}<textarea className="i" name="v" defaultValue={s.value} rows={2} /></label>
               <div><button className="btn sm blue">Enregistrer</button></div>
             </form>
           ))}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Layout from "../components/Layout";
 import { supabase } from "../lib/supabase";
 import { useUser } from "../lib/auth";
+import { fcfa } from "../lib/format";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
@@ -15,6 +16,23 @@ export default function Demande() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(null);
+  const [info, setInfo] = useState(null);
+  const [analyzing, setAnalyzing] = useState(false);
+
+  async function analyze(form) {
+    const url = form.elements.url.value.trim();
+    if (!url) return setInfo({ error: "Collez d'abord le lien du produit." });
+    setAnalyzing(true); setInfo(null);
+    const { data, error: err } = await supabase.functions.invoke("kargora-assistant", { body: { mode: "link", url, quantity: Number(form.elements.quantity.value) || 1 } });
+    setAnalyzing(false);
+    if (err || data?.error) {
+      let msg = data?.error;
+      try { if (!msg && err?.context) msg = (await err.context.json()).error; } catch { /* ignore */ }
+      return setInfo({ error: msg || "Analyse impossible. Vous pouvez quand même envoyer votre demande." });
+    }
+    setInfo(data);
+    if (data.product?.title && !form.elements.description.value.trim()) form.elements.description.value = data.product.title;
+  }
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -95,7 +113,26 @@ export default function Demande() {
             </select>
           </label>
           <label>Nom ou description du produit<textarea name="description" required minLength={3} maxLength={2000} rows={4} /></label>
-          <label>Lien du produit <span className="opt">(facultatif)</span><input name="url" type="url" maxLength={1000} placeholder="https://…" /></label>
+          <label>Lien du produit <span className="opt">(facultatif)</span>
+            <span style={{ display: "flex", gap: 8 }}><input name="url" type="url" maxLength={1000} placeholder="https://…" style={{ flex: 1 }} /><button type="button" className="btn sm blue" disabled={analyzing} onClick={(e) => analyze(e.currentTarget.form)}>{analyzing ? "Analyse…" : "Analyser le lien"}</button></span>
+          </label>
+          {info && (info.error ? <div className="notice err" role="alert">{info.error}</div> : (
+            <div className="linkbox" role="status">
+              <div className="row">
+                {info.product?.image && <img src={info.product.image} alt="" referrerPolicy="no-referrer" />}
+                <div style={{ flex: 1, minWidth: 200 }}>
+                  <div className="muted" style={{ fontSize: ".8rem" }}>{info.host}</div>
+                  <b>{info.product?.title || "Produit détecté"}</b>
+                  {info.product?.price && <div>Prix affiché : {info.product.price} {info.product.currency || ""}</div>}
+                </div>
+              </div>
+              {info.estimate?.status === "range" && <div className="notice ok"><b>Estimation indicative : entre {fcfa(info.estimate.min_xaf)} et {fcfa(info.estimate.max_xaf)}</b><br />Produit, transport, douane estimée et frais de service. Le montant exact est fixé dans votre devis.</div>}
+              {info.estimate?.status === "product_only" && <div className="notice">Prix du produit : environ {fcfa(info.estimate.product_xaf)}. Le transport, la douane estimée et les frais de service seront précisés dans votre devis.</div>}
+              {info.estimate?.status === "no_rate" && <div className="notice">Conversion en FCFA indisponible pour le moment. Le prix sera établi dans votre devis.</div>}
+              {info.estimate?.status === "no_price" && <div className="notice">Prix non détecté automatiquement (certains sites bloquent la lecture). L&apos;équipe le vérifiera dans votre devis.</div>}
+              {info.wholesale && <div className="notice err"><b>Commande en gros :</b> {info.wholesale.message} Augmentez la quantité ou demandez un devis professionnel.</div>}
+            </div>
+          ))}
           <div className="row2">
             <label>Quantité souhaitée<input name="quantity" type="number" min={1} max={1000000} defaultValue={1} required /></label>
             <label>Budget indicatif en FCFA <span className="opt">(facultatif)</span><input name="budget" type="number" min={0} /></label>
