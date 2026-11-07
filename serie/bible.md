@@ -48,8 +48,8 @@ Chaque vidéo TikTok (30-60 s) suit la même règle :
 ## Points de décision du public (saison 1)
 | Ép. | Décision A | Décision B |
 |-----|-----------|-----------|
-| 1.2 | Elle continue l'enquête malgré la menace | Elle rentre protéger sa famille |
-| 1.3 | Elle montre la clé USB à Karim | Elle la cache et ne dit rien |
+| 1.2 | *(intégrée au récit)* Elle met sa famille à l'abri et continue | — |
+| 1.3 (vote de l'ép. 1) | Elle montre la clé USB à Karim | Elle la cache et ne dit rien |
 | 2 | Elle fait confiance à Kofi | Elle l'enquête sur lui d'abord |
 | 3 | Elle laisse Léa effacer les preuves | Elle les copie en secret |
 | 4 | Elle accepte l'offre du ministre | Elle le piège |

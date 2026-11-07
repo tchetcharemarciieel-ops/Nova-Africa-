@@ -47,7 +47,7 @@ def ep1():
               P('Inspecteur Kofi', 9.3, 11.8, "Quelqu'un voulait qu'on la trouve.")],
         sfx=[('whoosh', 3.0)]))
     # Dakar : MENACE
-    S.append(Scene(('street', {'rain': True}), 11, loc=('DAKAR', 'Quartier Médina — 21h47'), mood='tense',
+    S.append(Scene(('street', {'rain': True}), 11, loc=('ABIDJAN', 'Cocody — 21h47'), mood='tense',
         actors=[A('amara', [(0, 60), (6.5, 330), (7.2, 330)], [(0, 'idle'), (6.6, 'phone_look')], scale=1.25),
                 A('extra', [(0, 740), (10, -60)], y=-30, scale=.9), A('extraw', [(0, -50), (11, 760)], y=-24, scale=.85)],
         overlays=[dict(type='phone', t0=6.8, t1=11, who='Numéro inconnu', red=True,
@@ -58,8 +58,15 @@ def ep1():
         actors=[A('fatou', [(0, 100), (4.5, 380)], scale=1.2), A('courtier', [(0, -160), (7, 150)], y=-4, scale=1.2, face=1)],
         subs=[P(None, .3, 3.3, "Fatou, 17 ans, rentre du lycée."), P(None, 3.6, 6.6, "Quelqu'un la suit.")],
         fx=[('redpulse', 3.5, 6.8)], sfx=[('riser', 3.4, 3.0)]))
+    S.append(Scene(('apartment', {'door': True}), 15, loc=('ABIDJAN', 'Appartement de Nadège — 23h10'), mood='tense',
+        actors=[A('kofi', [(0, -100), (2.6, 250)], [(0, 'idle'), (3.0, 'talk')], scale=1.25),
+                A('amara', [(0, 760), (2.8, 470)], [(0, 'idle'), (8.4, 'phone_look')], scale=1.25, face=-1)],
+        subs=[P('Kofi', 3.0, 5.3, "Nadège a laissé ça pour vous."), P('Amara', 5.5, 8.0, "Ma sœur est chez ma tante. Je continue.")],
+        overlays=[dict(type='clue', t0=8.2, t1=11.0, head='INDICE 01', text='« Cherchez où l’on compte les billets avant qu’ils ne soient des chiffres. »'),
+                  dict(type='phone', t0=11.2, t1=15, who='Karim ♥', red=False, msgs=[(11.6, "Amara, où es-tu ?", 'l'), (12.9, "Arrête. Pour nous deux.", 'l')])],
+        sfx=[('ding', 8.2), ('buzz', 11.2), ('riser', 11.8, 2.8)]))
     S.append(Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), 10, mood='end',
-        overlays=[dict(type='vote', t0=0.3, t1=9.8, q='Que doit faire Amara ?', a='Elle continue l’enquête malgré la menace', b='Elle rentre protéger sa famille')],
+        overlays=[dict(type='vote', t0=0.3, t1=9.8, q='Amara montre la clé USB à Karim ?', a='Oui, elle lui fait confiance', b='Non, elle la cache')],
         sfx=[('boom', .3), ('ding', 1.0)]))
     return S
 
