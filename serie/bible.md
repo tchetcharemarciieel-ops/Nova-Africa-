@@ -60,3 +60,7 @@ Chaque vidéo TikTok (30-60 s) suit la même règle :
 
 ## Saisons futures
 Saison 2 : les conséquences politiques. Saison 3 : le réseau mondial derrière le Courtier.
+
+## Fichiers des branches
+- Épisode 2, branche A (Amara montre la clé à Karim) : `serie/episodes/ep02-A-karim-sait.md`
+- Épisode 2, branche B (Amara cache la clé) : `serie/episodes/ep02-B-la-cle-cachee.md`
