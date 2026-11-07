@@ -32,5 +32,31 @@ Nadège a découvert que le registre de la monnaie NOVA contient une « porte d�
 | 7 | **Le Courtier** | Abidjan | L'identité du Courtier est révélée |
 | 8 | **Lancement** | Les trois villes | Le lancement en direct ; la vérité est diffusée — à quel prix ? |
 
+## Série interactive : le public décide
+Chaque vidéo TikTok (30-60 s) suit la même règle :
+1. **Accroche** dans les 2 premières secondes.
+2. **Un rebondissement** (menace, trahison, indice).
+3. **Une question qui reste en tête** (cliffhanger).
+4. **Un vote A/B en commentaire** : l'option majoritaire après 24 h décide de la suite du prochain épisode. Les deux branches sont écrites à l'avance.
+
+## Enjeux personnels d'Amara (ce qui rend chaque décision douloureuse)
+- **Mission :** aider NOVA, l'entreprise qui veut « réparer » la finance africaine, à lancer sa monnaie sans qu'elle tombe aux mains d'une élite. Chaque vérité révélée met le projet — et des milliers d'emplois — en danger.
+- **Famille menacée :** sa petite sœur **Fatou (17)** et sa mère **Mama Awa** à Dakar reçoivent des messages anonymes. Chaque enquête a un prix.
+- **Amour :** **Karim Ndiaye (35)**, ingénieur chez NOVA et compagnon d'Amara. Il l'aime… mais que sait-il ? Est-il un allié, une taupe, ou les deux ?
+- **Choix moral :** publier la vérité (et risquer la stabilité de trois pays) ou se taire (et protéger sa famille).
+
+## Points de décision du public (saison 1)
+| Ép. | Décision A | Décision B |
+|-----|-----------|-----------|
+| 1.2 | Elle continue l'enquête malgré la menace | Elle rentre protéger sa famille |
+| 1.3 | Elle montre la clé USB à Karim | Elle la cache et ne dit rien |
+| 2 | Elle fait confiance à Kofi | Elle l'enquête sur lui d'abord |
+| 3 | Elle laisse Léa effacer les preuves | Elle les copie en secret |
+| 4 | Elle accepte l'offre du ministre | Elle le piège |
+| 5 | Elle publie l'article maintenant | Elle attend un indice de plus |
+| 6 | Elle pardonne à Karim | Elle rompt |
+| 7 | Elle révèle le Courtier en direct | Elle négocie avec lui pour sauver sa famille |
+| 8 | Le lancement a lieu | Le lancement est annulé |
+
 ## Saisons futures
 Saison 2 : les conséquences politiques. Saison 3 : le réseau mondial derrière le Courtier.

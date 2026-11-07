@@ -49,6 +49,18 @@ def text_layer(card):
         d.text((W/2, y0 - 130), card["who"].upper(), font=font(FB, 46), fill=(*AMBER, 255), anchor="mm")
         for i, l in enumerate(ls):
             d.text((W/2, y0 + i*92), l, font=f, fill=(245, 245, 245, 255), anchor="mm")
+    elif kind == "vote":
+        f = font(FB, 62)
+        ls = wrap(d, txt, f, W - 160); y0 = 520
+        for i, l in enumerate(ls):
+            d.text((W/2, y0 + i*84), l, font=f, fill=(245, 245, 245, 255), anchor="mm")
+        for j, (key, opt) in enumerate((("A", card["a"]), ("B", card["b"]))):
+            top = 930 + j*330
+            d.rounded_rectangle([90, top, W-90, top+270], radius=36, outline=(*AMBER, 255), width=6, fill=(0, 0, 0, 150))
+            d.text((190, top+135), key, font=font(FS, 130), fill=(*AMBER, 255), anchor="mm")
+            for i, l in enumerate(wrap(d, opt, font(FB, 48), W - 460)):
+                d.text((300, top+135 - 30*(len(wrap(d, opt, font(FB, 48), W-460))-1) + i*60), l, font=font(FB, 48), fill=(240, 240, 240, 255), anchor="lm")
+        d.text((W/2, 1660), "COMMENTE A OU B — C'EST TOI QUI DÉCIDES", font=font(FB, 40), fill=(*AMBER, 255), anchor="mm")
     elif kind == "end":
         d.text((W/2, H/2), txt, font=font(FS, 80), fill=(235, 232, 225, 255), anchor="mm")
         d.text((W/2, H/2 + 130), card.get("sub", ""), font=font(FB, 44), fill=(*AMBER, 255), anchor="mm")
@@ -109,47 +121,48 @@ P = lambda t, **k: {"k": "place", "t": t, **k}
 N = lambda t, **k: {"k": "narr", "t": t, **k}
 B = lambda d=1.2: {"k": "black", "t": "", "d": d}
 
+V = lambda q, a, b, **k: {"k": "vote", "t": q, "a": a, "b": b, "d": 7.5, **k}
 EP1 = {
  "nova_ep01_partie1": ("NOVA · ÉP.1 « LA VEILLE » · 1/3", 54, [
-   {"k": "title", "t": "NOVA", "sub": "ÉPISODE 1 — LA VEILLE", "d": 4, "bg": "teal"},
+   N("Elle va mourir dans 30 secondes.", bg="red", d=2.8),
+   {"k": "title", "t": "NOVA", "sub": "ÉPISODE 1 — LA VEILLE", "d": 3.2, "bg": "teal"},
    P("LAGUNE EBRIÉ, ABIDJAN — NUIT", bg="teal"),
-   N("La veille du lancement de la monnaie NOVA.", bg="teal"),
    L("Nadège Okoye", "Amara, si tu écoutes ça, c'est que je n'ai pas pu te le dire en face.", bg="teal"),
    L("Nadège Okoye", "Ne fais confiance à personne chez NOVA. Pas même à moi.", bg="teal"),
-   N("Un bruit, derrière elle…", bg="red"), B(1.6),
-   P("DAKAR — LE LENDEMAIN MATIN", bg="amber"),
-   N("« La PDG de NOVA retrouvée morte dans la lagune. »", bg="amber"),
-   L("Le rédacteur", "Amara, ce n'est pas ton dossier.", bg="amber"),
+   N("Elle efface le message… puis l'envoie à un AUTRE numéro.", bg="amber"),
+   N("Un bruit, derrière elle…", bg="red"), B(1.4),
+   P("DAKAR — LE LENDEMAIN", bg="amber"),
+   N("« La PDG de NOVA retrouvée morte. »", bg="amber"),
    L("Amara", "Elle m'a écrit avant de mourir. C'est mon dossier.", bg="amber"),
-   P("LAGUNE — ABIDJAN", bg="teal"),
-   N("Une clé USB cachée dans la doublure de sa robe.", bg="teal"),
-   L("Inspecteur Kofi", "Quelqu'un voulait qu'on la trouve.", bg="teal"),
-   {"k": "end", "t": "À suivre…", "sub": "PARTIE 2 / 3", "d": 3.5, "bg": "dark"}]),
+   N("Mais qui a reçu l'AUTRE message ?", bg="red", d=3.2),
+   N("Et pourquoi Nadège a-t-elle écrit : « Pas même à moi » ?", bg="red", d=3.6),
+   {"k": "end", "t": "Ta théorie en commentaire.", "sub": "PARTIE 2 : LA MENACE", "d": 3.8, "bg": "dark"}]),
  "nova_ep01_partie2": ("NOVA · ÉP.1 « LA VEILLE » · 2/3", 60, [
-   P("SIÈGE DE NOVA, KINSHASA", bg="teal"),
-   N("Quelqu'un efface des traces. Vite.", bg="teal"),
-   L("Léa", "Le lancement aura lieu. Même sans elle.", bg="teal"),
-   N("Accès distant détecté : Abidjan, 02h14.", bg="red"),
-   P("BUREAU DU MINISTRE — ABIDJAN", bg="amber"),
+   N("Amara a 3 heures pour choisir.", bg="red", d=2.8),
+   P("ABIDJAN — BUREAU DU MINISTRE", bg="amber"),
    L("Ibrahim Sow", "Ma petite, le deuil rend paranoïaque. Rentre à Dakar.", bg="amber"),
    L("Amara", "Elle m'a dit de ne faire confiance à personne. Y compris vous ?", bg="amber"),
    N("Un silence. Il ne sourit plus.", bg="red"),
-   {"k": "end", "t": "À suivre…", "sub": "PARTIE 3 / 3", "d": 3.5, "bg": "dark"}]),
+   P("21H47 — SON TÉLÉPHONE VIBRE", bg="dark"),
+   L("Numéro inconnu", "On sait où habite ta sœur Fatou. Elle sort du lycée à 17 h.", bg="red", d=4.2),
+   L("Numéro inconnu", "Rentre à Dakar. Maintenant.", bg="red"),
+   N("Sa mère. Sa petite sœur. Ou la vérité sur NOVA.", bg="red", d=3.4),
+   V("Que doit faire Amara ?", "Elle continue l'enquête, quoi qu'il arrive", "Elle rentre protéger sa famille", bg="dark")]),
  "nova_ep01_partie3": ("NOVA · ÉP.1 « LA VEILLE » · 3/3", 66, [
-   P("APPARTEMENT DE NADÈGE — COCODY", bg="teal"),
-   N("La porte est entrouverte.", bg="teal"),
+   N("Quelqu'un fouille l'appartement de Nadège.", bg="red", d=3),
+   P("COCODY — APPARTEMENT DE NADÈGE", bg="teal"),
    L("Kofi", "Vous êtes la journaliste. Vous êtes en retard.", bg="teal"),
-   L("Amara", "Et vous, vous êtes qui ?", bg="teal"),
    L("Kofi", "Celui qui sait lire ce que Nadège a caché.", bg="teal"),
-   N("INDICE 01 : « Cherchez où l'on compte les billets avant qu'ils ne soient des chiffres. »", bg="amber"),
-   P("TOIT D'ABIDJAN — NUIT", bg="red"),
-   L("Le Courtier", "Ils ont trouvé la clé. Laissez-les courir. Ils nous mèneront aux autres.", bg="red"),
-   {"k": "title", "t": "NOVA", "sub": "ÉPISODE 2 — BIENTÔT", "d": 4.5, "bg": "teal"}]),
- "nova_bande_annonce": ("NOVA · LA SÉRIE", 70, [
-   N("Une PDG morte.", bg="teal", d=2.2), N("Une monnaie qui va changer l'Afrique.", bg="teal", d=3),
-   N("Un secret qui peut faire tomber trois gouvernements.", bg="red", d=3.4),
-   N("Elle a laissé 7 indices.", bg="amber", d=2.6), N("Qui est le Courtier ?", bg="red", d=2.6),
-   {"k": "title", "t": "NOVA", "sub": "LA SÉRIE · BIENTÔT", "d": 4, "bg": "teal"}]),
+   N("INDICE 01 : « Cherchez où l'on compte les billets avant qu'ils ne soient des chiffres. »", bg="amber", d=5.5),
+   L("Karim", "Amara, où es-tu ? Arrête. Pour nous deux.", bg="amber", d=4),
+   N("Karim travaille chez NOVA. Que sait-il ?", bg="red", d=3.2),
+   L("Le Courtier", "Ils ont trouvé la clé. Laissez-les courir.", bg="red"),
+   V("Amara montre la clé USB à Karim ?", "Oui, elle lui fait confiance", "Non, elle la cache", bg="dark")]),
+ "nova_bande_annonce": ("NOVA · LA SÉRIE INTERACTIVE", 70, [
+   N("Une PDG morte.", bg="teal", d=2.2), N("Une monnaie qui peut changer l'Afrique.", bg="teal", d=3),
+   N("Sa famille est menacée.", bg="red", d=2.6), N("L'homme qu'elle aime cache quelque chose.", bg="amber", d=3.2),
+   N("Et c'est TOI qui décides de chaque choix.", bg="red", d=3.4),
+   {"k": "title", "t": "NOVA", "sub": "SÉRIE INTERACTIVE · BIENTÔT", "d": 4, "bg": "teal"}]),
 }
 
 if __name__ == "__main__":
