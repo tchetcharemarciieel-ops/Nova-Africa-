@@ -4,137 +4,153 @@ from runtime import Scene, render_video
 
 def P(who, t0, t1, text): return (t0, t1, who, text)
 def A(ch, kf, poses=None, **k): return dict(ch=ch, kf=kf, poses=poses or [(0, 'idle')], **k)
+def punch(t0, t1, text, size=52, color='#ffffff', y=420, dim=.5): return dict(type='punch', t0=t0, t1=t1, text=text, size=size, color=color, y=y, dim=dim)
+def phone(t0, t1, who, msgs, red=False): return dict(type='phone', t0=t0, t1=t1, who=who, msgs=msgs, red=red)
+def clue(t0, t1, head, text): return dict(type='clue', t0=t0, t1=t1, head=head, text=text)
+def vote(q, a, b, dur=7): return Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), dur, mood='end', fade=False,
+        overlays=[dict(type='vote', t0=.2, t1=dur - .2, q=q, a=a, b=b)], sfx=[('boom', .2), ('ding', 1.0)]) if False else \
+        Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), dur, mood='end', overlays=[dict(type='vote', t0=.2, t1=dur - .2, q=q, a=a, b=b)], sfx=[('boom', .2), ('ding', 1.0)])
+def recap(text, dur=3.0): return Scene(('void', {}), dur, mood='dark', overlays=[punch(.1, dur - .1, text, 50, '#ffd166', 520, .1)], sfx=[('boom', .1)])
+def title(sub, sub2='', dur=2.6): return Scene(('void', {}), dur, mood='dark', overlays=[dict(type='title', t0=.1, t1=dur - .1, text='NOVA', sub=sub, sub2=sub2)], sfx=[('boom', .1)])
+CLOSE = lambda x, z0=1.6, z1=1.85: (z0, z1, x, 600)
 
-# =========================== ÉPISODE 1 ===========================
+# =========================== ÉPISODE 1 — LA VEILLE ===========================
 def ep1():
     S = []
-    # accroche : le meurtre
-    S.append(Scene(('lagoon', {'deck': True}), 13.5, loc=('ABIDJAN', 'Lagune Ébrié — 23h47'), mood='dark', cam=(1.05, 1.16, 300),
-        actors=[
-          A('nadege', [(0, 250), (2.4, 330), (4.5, 330), (7.5, 330), (8.6, 440), (9.0, 500, -8, .5), (9.4, 545, 40, 1.4), (9.9, 575, 140, 2.2), (10.4, 590, 260, 2.6)],
-            [(0, 'idle'), (1.0, 'phone_ear'), (4.3, 'idle'), (7.6, 'flail'), (8.6, 'flail')], scale=1.2),
-          A('courtier', [(0, -140), (5.0, -140), (6.2, 110), (7.6, 255), (8.4, 300), (9.4, 300), (12, 300)],
-            [(0, 'idle'), (7.4, 'push'), (8.3, 'push'), (9.2, 'idle')], scale=1.2, face=1, vis=(5.0, 14)),
-        ],
-        subs=[P('Nadège', 1.2, 4.2, "Amara, si tu écoutes ça… ne fais confiance à personne chez NOVA."),
-              P('Nadège', 4.3, 6.3, "Pas même à moi."),
-              P(None, 10.6, 13, "Quelqu'un voulait qu'elle se taise.")],
-        overlays=[dict(type='punch', t0=11.2, t1=13.4, text='À 23h52,\nNADÈGE OKOYE\nSE TAIT.', size=62, color='#e5383b', y=380, dim=.35, speak=False)],
-        fx=[('splash', 9.9, 586, 930), ('flash', 8.5, .12, '#ffffff'), ('shake', 8.45, 8.9, 6), ('shake', 9.9, 10.3, 7)],
-        sfx=[('whoosh', 6.0), ('boom', 8.45), ('splash', 9.95), ('buzz', 1.0), ('riser', 5.5, 2.8)]))
-    S.append(Scene(('void', {}), 4.2, mood='dark', cut=False, overlays=[dict(type='title', t0=0.2, t1=4.1, text='NOVA', sub='SAISON 1 · ÉPISODE 1 — LA VEILLE', sub2='Une série où TU décides')],
-        sfx=[('boom', .3)]))
-    # Dakar : réception du message
-    S.append(Scene(('newsroom', {}), 11, loc=('DAKAR', 'Rédaction du Quotidien — 7h12'), mood='calm',
-        actors=[A('amara', [(0, 150), (3.2, 330), (4.5, 330)], [(0, 'idle'), (4.0, 'phone_look'), (7.5, 'talk')], scale=1.2),
-                A('redac', [(0, 760), (5.2, 760), (7.2, 520), (11, 520)], [(0, 'idle'), (8.0, 'talk')], scale=1.2, face=-1),
-                A('extra', [(0, 640), (11, 640)], y=-8, scale=.95, face=-1, poses=[(0, 'type')])],
-        overlays=[dict(type='phone', t0=4.3, t1=8.2, who='N. (message vocal)', msgs=[(4.5, '🎙 « Amara, si tu écoutes ça… »', 'l'), (6.2, 'Envoyé à 23h47', 'l')], red=False)],
-        subs=[P('Le rédacteur', 8.4, 10.5, "Ce n'est pas ton dossier, Amara.")],
-        sfx=[('buzz', 3.8), ('ding', 4.5)]))
-    S.append(Scene(('newsroom', {}), 7, mood='tense', cam=(1.05, 1.2, 300), actors=[
-        A('amara', [(0, 330)], [(0, 'point')], scale=1.3), A('redac', [(0, 610)], [(0, 'cross')], scale=1.3, face=-1)],
-        subs=[P('Amara', .4, 3.6, "Elle m'a écrit avant de mourir. C'est mon dossier."),
-              ],
-        overlays=[dict(type='punch', t0=4.2, t1=6.9, text='QUI A REÇU\nL’AUTRE MESSAGE ?', size=60, color='#ffd166', y=420, dim=.55)],
-        fx=[('redpulse', 4.2, 6.9)], sfx=[('riser', 3.6, 2.0), ('boom', 4.2)]))
-    # Abidjan : la clé USB
-    S.append(Scene(('dawn', {'police': True}), 12, loc=('ABIDJAN', 'Lagune — scène de crime — 6h30'), mood='tense',
-        actors=[A('police', [(0, 330), (12, 330)], poses=[(0, 'idle')], scale=1.1, face=-1),
-                A('kofi', [(0, -80), (4.2, 440), (6.5, 500)], [(0, 'idle'), (6.3, 'inspect')], scale=1.25),
-                A('police', [(0, 690), (12, 690)], y=-6, scale=1.05, face=-1, poses=[(0, 'cross')])],
-        subs=[P('Inspecteur Kofi', 7.0, 9.2, "Une clé USB… dans la doublure de sa robe."),
-              P('Inspecteur Kofi', 9.3, 11.8, "Quelqu'un voulait qu'on la trouve.")],
-        sfx=[('whoosh', 3.0)]))
-    # Dakar : MENACE
-    S.append(Scene(('street', {'rain': True}), 11, loc=('ABIDJAN', 'Cocody — 21h47'), mood='tense',
-        actors=[A('amara', [(0, 60), (6.5, 330), (7.2, 330)], [(0, 'idle'), (6.6, 'phone_look')], scale=1.25),
-                A('extra', [(0, 740), (10, -60)], y=-30, scale=.9), A('extraw', [(0, -50), (11, 760)], y=-24, scale=.85)],
-        overlays=[dict(type='phone', t0=6.8, t1=11, who='Numéro inconnu', red=True,
-                       msgs=[(7.0, "On sait où habite ta sœur Fatou.", 'l'), (8.3, "Elle sort du lycée à 17h.", 'l'), (9.6, "Rentre. Maintenant.", 'l')])],
-        sfx=[('buzz', 6.5), ('boom', 7.0), ('type', 8.0, 1.0)], rain=True))
-    # Fatou
-    S.append(Scene(('street', {'rain': False, 'seed': 6}), 7, mood='tense',
-        actors=[A('fatou', [(0, 100), (4.5, 380)], scale=1.2), A('courtier', [(0, -160), (7, 150)], y=-4, scale=1.2, face=1)],
-        subs=[P(None, .3, 3.3, "Fatou, 17 ans, rentre du lycée."), P(None, 3.6, 6.6, "Quelqu'un la suit.")],
-        fx=[('redpulse', 3.5, 6.8)], sfx=[('riser', 3.4, 3.0)]))
-    S.append(Scene(('apartment', {'door': True}), 15, loc=('ABIDJAN', 'Appartement de Nadège — 23h10'), mood='tense',
-        actors=[A('kofi', [(0, -100), (2.6, 250)], [(0, 'idle'), (3.0, 'talk')], scale=1.25),
-                A('amara', [(0, 760), (2.8, 470)], [(0, 'idle'), (8.4, 'phone_look')], scale=1.25, face=-1)],
-        subs=[P('Kofi', 3.0, 5.3, "Nadège a laissé ça pour vous."), P('Amara', 5.5, 8.0, "Ma sœur est chez ma tante. Je continue.")],
-        overlays=[dict(type='clue', t0=8.2, t1=11.0, head='INDICE 01', text='« Cherchez où l’on compte les billets avant qu’ils ne soient des chiffres. »'),
-                  dict(type='phone', t0=11.2, t1=15, who='Karim ♥', red=False, msgs=[(11.6, "Amara, où es-tu ?", 'l'), (12.9, "Arrête. Pour nous deux.", 'l')])],
-        sfx=[('ding', 8.2), ('buzz', 11.2), ('riser', 11.8, 2.8)]))
-    S.append(Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), 10, mood='end',
-        overlays=[dict(type='vote', t0=0.3, t1=9.8, q='Amara montre la clé USB à Karim ?', a='Oui, elle lui fait confiance', b='Non, elle la cache')],
-        sfx=[('boom', .3), ('ding', 1.0)]))
+    S.append(Scene(('lagoon', {'deck': True}), 3.4, loc=('ABIDJAN', 'Lagune — 23h47'), mood='dark', cam=CLOSE(330, 1.5, 1.8),
+        actors=[A('nadege', [(0, 330)], [(0, 'phone_ear')], scale=1.2)],
+        subs=[P('Nadège, PDG de NOVA', .3, 3.2, "Amara… si tu m'entends…")], overlays=[punch(.2, 3.2, "Dans 30 secondes,\nelle sera morte.", 46, '#e5383b', 470, .0)],
+        sfx=[('buzz', .2), ('riser', .5, 2.8)]))
+    S.append(Scene(('lagoon', {'deck': True}), 3.0, mood='dark', cam=(1.1, 1.25, 300, 700),
+        actors=[A('nadege', [(0, 330)], [(0, 'phone_ear')], scale=1.2), A('courtier', [(0, 20), (3, 190)], scale=1.2, face=1)],
+        subs=[P('Nadège', .2, 3, "Ne fais confiance à personne chez NOVA.")]))
+    S.append(Scene(('lagoon', {'deck': True}), 2.2, mood='tense', cam=CLOSE(330, 1.7, 2.0),
+        actors=[A('nadege', [(0, 330)], [(0, 'idle')], scale=1.2, face=-1), A('courtier', [(0, 150), (2.2, 260)], scale=1.2)],
+        sfx=[('whoosh', .2)], fx=[('shake', 1.7, 2.2, 3)]))
+    S.append(Scene(('lagoon', {'deck': True}), 3.6, mood='chase', cam=(1.05, 1.18, 340, 800),
+        actors=[A('nadege', [(0, 330), (.4, 372), (.8, 440), (1.2, 500, -8, .5), (1.6, 545, 40, 1.4), (2.1, 575, 140, 2.2), (2.6, 590, 260, 2.6)],
+                  [(0, 'flail')], scale=1.2),
+                A('courtier', [(0, 250), (.4, 300)], [(0, 'push')], scale=1.2)],
+        fx=[('flash', .38, .12, '#ffffff'), ('shake', .38, .8, 7), ('splash', 2.1, 586, 930), ('shake', 2.1, 2.5, 6)],
+        sfx=[('boom', .38), ('splash', 2.15)]))
+    S.append(Scene(('void', {}), 2.6, mood='dark', overlays=[punch(.1, 2.5, "NADÈGE OKOYE\nPDG DE NOVA\nASSASSINÉE", 56, '#e5383b', 430, .1)], sfx=[('boom', .1)]))
+    S.append(title('SAISON 1 · ÉPISODE 1', 'La série où TU décides', 2.8))
+    S.append(Scene(('newsroom', {}), 3.0, loc=('DAKAR', 'Le lendemain — 7h'), mood='tense', cam=(1.2, 1.4, 330, 650),
+        actors=[A('amara', [(0, 60), (1.6, 330)], [(0, 'idle'), (2.0, 'phone_look')], scale=1.2)], sfx=[('buzz', 2.0)]))
+    S.append(Scene(('newsroom', {}), 3.8, mood='tense', cam=CLOSE(330, 1.7, 2.0), actors=[A('amara', [(0, 330)], [(0, 'phone_look')], scale=1.2)],
+        overlays=[phone(.1, 3.7, "Nadège (message vocal)", [(.3, "Amara, ne fais confiance à personne chez NOVA.", 'l'), (2.0, "Envoyé à 23h47 — hier soir", 'l')])], sfx=[('ding', .3)]))
+    S.append(Scene(('newsroom', {}), 3.0, mood='tense', cam=(1.9, 2.0, 560, 250), actors=[A('amara', [(0, 330)], scale=1.2)],
+        subs=[P(None, .2, 2.9, "Son amie Nadège est morte.")], fx=[('redpulse', 1.0, 3)], sfx=[('boom', .2)]))
+    S.append(Scene(('street', {'rain': True}), 2.8, mood='chase', cam=(1.1, 1.2, 360, 800), loc=('DAKAR', 'Aéroport'),
+        actors=[A('amara', [(0, -100), (2.8, 860)], scale=1.25)], subs=[P(None, .2, 2.7, "Elle part pour Abidjan.")], sfx=[('whoosh', .2)]))
+    S.append(Scene(('dawn', {'police': True}), 3.6, loc=('ABIDJAN', 'Lagune — scène de crime'), mood='tense', cam=CLOSE(440, 1.5, 1.8),
+        actors=[A('kofi', [(0, 440)], [(0, 'inspect')], scale=1.25), A('police', [(0, 640)], scale=1.1, face=-1)],
+        subs=[P('Inspecteur Kofi', .3, 3.4, "Une clé USB… cachée dans sa robe.")], sfx=[('ding', .3)]))
+    S.append(Scene(('apartment', {'door': True}), 4.0, loc=('ABIDJAN', 'Appartement de Nadège — 23h10'), mood='tense', cam=(1.2, 1.5, 360, 700),
+        actors=[A('kofi', [(0, 250)], [(0, 'talk')], scale=1.25), A('amara', [(0, 470)], [(0, 'idle')], scale=1.25, face=-1)],
+        subs=[P('Kofi', .2, 2.0, "Elle l'a laissée pour vous."), P('Amara', 2.1, 3.9, "Pourquoi moi ?")]))
+    S.append(Scene(('apartment', {'door': True}), 3.0, mood='tense', cam=(1.1, 1.3, 360, 700),
+        actors=[A('kofi', [(0, 250)], scale=1.25), A('amara', [(0, 470)], [(0, 'phone_look')], scale=1.25, face=-1)],
+        overlays=[clue(.1, 2.9, 'INDICE 01', '« Cherchez où l’on compte les billets avant qu’ils ne soient des chiffres. »')], sfx=[('ding', .1)]))
+    S.append(Scene(('street', {'rain': True, 'seed': 6}), 4.0, loc=('ABIDJAN', 'Cocody — 21h47'), mood='chase', cam=CLOSE(330, 1.5, 1.8),
+        actors=[A('amara', [(0, 330)], [(0, 'phone_look')], scale=1.25)],
+        overlays=[phone(.1, 3.9, 'Numéro inconnu', [(.3, "On sait où vit ta sœur Fatou.", 'l'), (1.7, "Elle sort du lycée à 17h.", 'l')], red=True)],
+        sfx=[('buzz', .1), ('boom', .4), ('boom', 1.7)], fx=[('redpulse', 1.5, 4)], rain=True))
+    S.append(Scene(('street', {'seed': 8}), 2.8, loc=('DAKAR', 'Lycée — 17h'), mood='chase', cam=(1.1, 1.25, 400, 800),
+        actors=[A('fatou', [(0, 80), (2.8, 480)], scale=1.25), A('courtier', [(0, -120), (2.8, 300)], scale=1.25)],
+        subs=[P(None, .2, 2.7, "Fatou, 17 ans. Quelqu'un la suit.")], fx=[('redpulse', 0, 2.8)], sfx=[('riser', .2, 2.5)]))
+    S.append(Scene(('apartment', {}), 3.4, mood='tense', cam=CLOSE(330, 1.6, 1.9), actors=[A('amara', [(0, 330)], [(0, 'phone_look')], scale=1.25)],
+        overlays=[phone(.1, 3.3, 'Karim ♥', [(.3, "Amara, où es-tu ?", 'l'), (1.5, "Arrête. Pour nous deux.", 'l')])], sfx=[('buzz', .1)]))
+    S.append(Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), 3.2, mood='end', overlays=[punch(.1, 3.1, "QUI EST LE COURTIER ?\nKARIM LE CONNAÎT-IL ?", 44, '#ffd166', 440, .0)], sfx=[('boom', .1)]))
+    S.append(vote("Amara montre la clé USB à Karim ?", 'Oui, elle lui fait confiance', 'Non, elle la cache', 7))
     return S
 
+# =========================== ÉPISODE 2 — BRANCHE A ===========================
 def ep2a():
-    S = []
-    S.append(Scene(('void', {}), 5, mood='dark', overlays=[dict(type='title', t0=.2, t1=4.8, text='NOVA', sub='ÉPISODE 2 — LE REGISTRE', sub2='Le public a voté : elle fait confiance à Karim')], sfx=[('boom', .3)]))
-    S.append(Scene(('apartment', {'palette': 'blue'}), 13, loc=('DAKAR', 'Appartement d’Amara — 23h05'), mood='tense',
-        actors=[A('amara', [(0, 200), (3, 300)], [(0, 'idle'), (4, 'talk')], scale=1.25), A('karim', [(0, -120), (3.6, 520)], [(0, 'idle'), (6, 'type')], scale=1.25, face=1)],
-        subs=[P('Karim', 6, 8.5, "Tu me fais confiance. Je ne le mérite peut-être pas."), P('Amara', 8.7, 10.3, "Alors mérite-le."), P('Karim', 10.5, 12.8, "L'ancien Hôtel de la Monnaie…")],
-        overlays=[dict(type='clue', t0=4.6, t1=6.3, head='INDICE 01', text='« Cherchez où l’on compte les billets avant qu’ils ne soient des chiffres. »')],
-        sfx=[('ding', 4.6)]))
-    S.append(Scene(('dawn', {'cranes': True, 'police': False}), 10, loc=('DAKAR', 'Port — 6h02'), mood='calm',
-        actors=[A('kofi', [(0, -100), (6, 380)], scale=1.25), A('amara', [(0, 760), (5, 560)], scale=1.25, face=-1), A('karim', [(0, 820), (5, 650)], scale=1.25, face=-1)],
-        subs=[P('Kofi', 6.2, 9.6, "Il parle trop vite pour quelqu'un qui n'a rien à cacher.")]))
-    S.append(Scene(('monnaie', {}), 14, loc=('DAKAR', 'Ancien Hôtel de la Monnaie'), mood='tense',
-        actors=[A('amara', [(0, -80), (3, 220), (14, 220)], [(0, 'idle'), (6, 'inspect')], scale=1.25), A('kofi', [(0, -180), (3.4, 380)], [(0, 'idle'), (7, 'inspect'), (10, 'talk')], scale=1.25),
-                A('karim', [(0, -260), (4.0, 540)], [(0, 'idle'), (11, 'hands_up')], scale=1.25, face=1)],
-        subs=[P(None, 6.5, 9, "Sous la dalle : 14 · 07 · 3."), P('Kofi', 9.2, 12.0, "Un traceur GPS. Quelqu'un nous suit."), P('Karim', 12.2, 13.9, "Ce n'est pas moi. Je le jure.")],
-        overlays=[dict(type='clue', t0=7.0, t1=9.1, head='INDICE 02', text='14  ·  07  ·  3')],
-        sfx=[('ding', 7.0), ('boom', 10.0)]))
-    S.append(Scene(('rooftop', {'dakar': True}), 13, loc=('DAKAR', 'Terrasse — 1h12'), mood='end',
-        actors=[A('karim', [(0, 520), (13, 520)], [(0, 'sad'), (3, 'phone_look')], scale=1.3, face=-1), A('amara', [(0, -100), (5, 140), (13, 190)], scale=1.3)],
-        overlays=[dict(type='phone', t0=3, t1=7, who='C.', red=True, msgs=[(3.4, "Elle a la clé.", 'r'), (4.6, "Elle ne sait rien.", 'r')]),
-                  dict(type='punch', t0=9.8, t1=12.8, text='QUI EST « C. » ?', size=70, color='#e5383b', y=430)],
-        subs=[P('Amara', 7.5, 9.5, "Tu écris à qui, Karim ?")], fx=[('redpulse', 9.8, 12.8)], sfx=[('type', 3.2, 1.5), ('boom', 9.8), ('riser', 7.5, 2.2)]))
-    S.append(Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), 10, mood='end',
-        overlays=[dict(type='vote', t0=.3, t1=9.8, q='Amara croit-elle Karim ?', a='Elle lui laisse une dernière chance', b='Elle le met dehors et enquête sur lui')], sfx=[('boom', .3)]))
+    S = [recap("ÉPISODE 2\nLE PUBLIC A VOTÉ :\nELLE MONTRE LA CLÉ\nÀ KARIM", 3.2)]
+    S.append(Scene(('apartment', {}), 3.4, loc=('DAKAR', 'Appartement d’Amara'), mood='tense', cam=(1.2, 1.5, 360, 700),
+        actors=[A('amara', [(0, 260)], [(0, 'talk')], scale=1.25), A('karim', [(0, 520)], scale=1.25, face=-1)],
+        subs=[P('Amara', .2, 1.8, "Je te fais confiance."), P('Karim', 1.9, 3.3, "Je ne le mérite pas.")]))
+    S.append(Scene(('apartment', {}), 3.0, mood='tense', cam=CLOSE(520, 1.6, 1.9), actors=[A('amara', [(0, 260)], scale=1.25), A('karim', [(0, 520)], [(0, 'phone_look')], scale=1.25, face=-1)],
+        overlays=[clue(.1, 2.9, 'INDICE 01', '« Cherchez où l’on compte les billets… »')], sfx=[('ding', .1)]))
+    S.append(Scene(('apartment', {}), 3.0, mood='tense', cam=CLOSE(520, 1.7, 2.0), actors=[A('karim', [(0, 520)], [(0, 'talk')], scale=1.25, face=-1)],
+        subs=[P('Karim', .2, 2.9, "L'ancien Hôtel de la Monnaie !")]))
+    S.append(Scene(('dawn', {'cranes': True, 'police': False}), 3.2, loc=('DAKAR', 'Port — 6h'), mood='calm', cam=(1.1, 1.3, 450, 750),
+        actors=[A('kofi', [(0, -80), (1.6, 380)], scale=1.25), A('amara', [(0, 700)], scale=1.25, face=-1), A('karim', [(0, 790)], scale=1.25, face=-1)],
+        subs=[P('Kofi', 1.7, 3.1, "Il parle trop vite.")]))
+    S.append(Scene(('street', {'seed': 12}), 2.6, mood='chase', cam=(1.1, 1.2, 360, 800),
+        actors=[A('amara', [(0, -100), (2.6, 820)], scale=1.25), A('kofi', [(0, -230), (2.6, 700)], scale=1.25), A('karim', [(0, -360), (2.6, 580)], scale=1.25)], sfx=[('whoosh', .1)]))
+    S.append(Scene(('monnaie', {}), 3.6, loc=('DAKAR', 'Ancien Hôtel de la Monnaie'), mood='tense', cam=(1.2, 1.5, 300, 700),
+        actors=[A('amara', [(0, 260)], [(0, 'inspect')], scale=1.25), A('kofi', [(0, 420)], [(0, 'inspect')], scale=1.25, face=-1)],
+        overlays=[clue(1.0, 3.5, 'INDICE 02', '14 · 07 · 3')], sfx=[('ding', 1.0)]))
+    S.append(Scene(('monnaie', {}), 2.8, mood='chase', cam=CLOSE(420, 1.7, 2.0), actors=[A('kofi', [(0, 420)], [(0, 'inspect')], scale=1.25, face=-1)],
+        subs=[P('Kofi', .2, 2.7, "Un traceur GPS. On nous suit.")], sfx=[('boom', .2)], fx=[('redpulse', .3, 2.8)]))
+    S.append(Scene(('monnaie', {}), 2.8, mood='chase', cam=(1.2, 1.4, 540, 700),
+        actors=[A('kofi', [(0, 300)], [(0, 'point')], scale=1.25), A('karim', [(0, 560)], [(0, 'hands_up')], scale=1.25, face=-1), A('amara', [(0, 180)], scale=1.25)],
+        subs=[P('Karim', .5, 2.7, "Ce n'est pas moi !")], sfx=[('boom', .1)]))
+    S.append(Scene(('rooftop', {'dakar': True}), 3.6, loc=('DAKAR', 'Terrasse — 1h12'), mood='tense', cam=CLOSE(520, 1.6, 1.9),
+        actors=[A('karim', [(0, 520)], [(0, 'phone_look')], scale=1.3, face=-1)],
+        overlays=[phone(.1, 3.5, 'C.', [(.4, "Elle a la clé.", 'r'), (1.7, "Elle ne sait rien.", 'r')], red=True)], sfx=[('buzz', .1), ('type', .4, 1.5)]))
+    S.append(Scene(('rooftop', {'dakar': True}), 3.4, mood='end', cam=(1.1, 1.3, 330, 750),
+        actors=[A('karim', [(0, 540)], [(0, 'sad')], scale=1.3, face=-1), A('amara', [(0, 160), (1.8, 280)], scale=1.3)],
+        subs=[P('Amara', 1.6, 3.2, "Tu écris à qui, Karim ?")], overlays=[punch(1.9, 3.4, "QUI EST « C. » ?", 54, '#e5383b', 330, .45)], sfx=[('boom', 1.9)], fx=[('redpulse', 1.9, 3.4)]))
+    S.append(vote("Amara croit-elle Karim ?", 'Elle lui laisse une dernière chance', 'Elle le met dehors et enquête sur lui', 7))
     return S
 
+# =========================== ÉPISODE 2 — BRANCHE B ===========================
 def ep2b():
-    S = []
-    S.append(Scene(('void', {}), 5, mood='dark', overlays=[dict(type='title', t0=.2, t1=4.8, text='NOVA', sub='ÉPISODE 2 — LE REGISTRE', sub2='Le public a voté : elle cache la clé')], sfx=[('boom', .3)]))
-    S.append(Scene(('apartment', {'palette': 'blue'}), 10, loc=('DAKAR', 'Appartement d’Amara — 23h05'), mood='tense',
-        actors=[A('amara', [(0, 260)], [(0, 'idle'), (4, 'cross')], scale=1.25), A('karim', [(0, 520)], [(0, 'talk')], scale=1.25, face=-1)],
-        subs=[P('Karim', 1, 3.5, "Tu me caches quelque chose."), P('Amara', 4, 7, "Tout le monde cache quelque chose, ces jours-ci."), P(None, 7.3, 9.6, "Elle a glissé la clé dans sa veste.")], sfx=[('boom', 7.3)]))
-    S.append(Scene(('street', {'seed': 12}), 9, loc=('DAKAR', 'Plateau — 6h40'), mood='calm',
-        actors=[A('kofi', [(0, 520), (9, 520)], [(0, 'cross')], scale=1.25, face=-1), A('amara', [(0, -100), (4, 330)], scale=1.25),
-                A('extra', [(0, 760), (9, -40)], y=-30, scale=.9)],
-        subs=[P('Kofi', 4.6, 7, "Les billets, je connais. Je suis comptable judiciaire."), P('Amara', 7.1, 8.8, "Karim ne doit rien savoir.")]))
-    S.append(Scene(('monnaie', {}), 15, loc=('DAKAR', 'Ancien Hôtel de la Monnaie'), mood='tense',
-        actors=[A('amara', [(0, -80), (3, 240)], [(0, 'idle'), (6, 'inspect'), (10, 'sad')], scale=1.25), A('kofi', [(0, -180), (3.4, 420)], [(0, 'idle'), (7, 'inspect')], scale=1.25)],
-        subs=[P(None, 6.2, 8.5, "Une deuxième clé. Et une photo."), P('Amara', 9.5, 12.5, "C'est moi. À quatre ans. Avec Nadège."), P(None, 12.7, 14.8, "« Pour Amara, si je ne peux plus te protéger. »")],
-        overlays=[dict(type='clue', t0=6.4, t1=9.4, head='INDICE 02', text='Une photo : Nadège et une petite fille. Au dos : « Pour Amara. »')], sfx=[('ding', 6.4), ('boom', 12.7)]))
-    S.append(Scene(('monnaie', {}), 8, mood='chase',
-        actors=[A('karim', [(0, 800), (1.2, 560)], [(0, 'hands_up')], scale=1.25, face=-1), A('kofi', [(0, 420)], [(0, 'aim')], scale=1.25, face=1), A('amara', [(0, 240), (3.5, 240), (4, 180, 0, 0)], [(0, 'sad'), (3.5, 'crouch')], scale=1.25)],
-        subs=[P('Karim', .6, 2.8, "Baissez ça ! Je viens la sauver."), P('Amara', 3, 4.2, "Qui « ils » ?")],
-        fx=[('flash', 4.4, .1), ('shake', 4.4, 5.2, 9), ('redpulse', 4.4, 8)], sfx=[('shot', 4.4), ('glass', 4.5)],
-        overlays=[dict(type='punch', t0=5.0, t1=7.8, text='UN TIR.', size=84, color='#e5383b', y=430, dim=.45)]))
-    S.append(Scene(('street', {'seed': 3, 'rain': True}), 11, mood='end', loc=('DAKAR', 'Ruelle — 7h02'),
-        actors=[A('kofi', [(0, 420)], [(0, 'phone_look')], scale=1.3, face=-1), A('amara', [(0, 250)], [(0, 'point')], scale=1.3)],
-        overlays=[dict(type='phone', t0=.5, t1=4.5, who='Le Courtier', red=True, msgs=[(.9, "Dis-lui qui elle est vraiment.", 'l'), (2.4, "Ou je le fais.", 'l')]),
-                  dict(type='punch', t0=7.0, t1=10.8, text='QUI EST VRAIMENT\nAMARA ?', size=66, color='#ffd166', y=400)],
-        subs=[P('Amara', 4.8, 6.8, "Kofi. Qu'est-ce que tu me caches ?")], sfx=[('buzz', .3), ('boom', 7.0), ('riser', 4.8, 2.0)], rain=True))
-    S.append(Scene(('void', {'a': '#120406', 'b': '#2a0b10'}), 10, mood='end',
-        overlays=[dict(type='vote', t0=.3, t1=9.8, q='Amara fait-elle confiance à Kofi ?', a='Elle exige la vérité tout de suite', b='Elle fait semblant de rien et le surveille')], sfx=[('boom', .3)]))
+    S = [recap("ÉPISODE 2\nLE PUBLIC A VOTÉ :\nELLE CACHE\nLA CLÉ", 3.2)]
+    S.append(Scene(('apartment', {}), 3.8, loc=('DAKAR', 'Appartement d’Amara'), mood='tense', cam=(1.2, 1.5, 360, 700),
+        actors=[A('amara', [(0, 260)], [(0, 'cross')], scale=1.25), A('karim', [(0, 520)], [(0, 'talk')], scale=1.25, face=-1)],
+        subs=[P('Karim', .2, 1.9, "Tu me caches quelque chose."), P('Amara', 2.0, 3.7, "Non. Rien du tout.")]))
+    S.append(Scene(('apartment', {}), 2.4, mood='tense', cam=CLOSE(260, 1.8, 2.1), actors=[A('amara', [(0, 260)], [(0, 'idle')], scale=1.25)],
+        subs=[P(None, .2, 2.3, "Elle glisse la clé dans sa veste.")], sfx=[('boom', .2)]))
+    S.append(Scene(('street', {'seed': 12}), 3.2, loc=('DAKAR', 'Plateau — 6h40'), mood='calm', cam=(1.2, 1.4, 420, 750),
+        actors=[A('kofi', [(0, 520)], [(0, 'talk')], scale=1.25, face=-1), A('amara', [(0, -80), (1.2, 330)], scale=1.25)],
+        subs=[P('Kofi', 1.3, 3.1, "L'ancienne Monnaie. Allons-y.")]))
+    S.append(Scene(('street', {'seed': 3}), 2.4, mood='chase', cam=(1.1, 1.2, 360, 800),
+        actors=[A('amara', [(0, -100), (2.4, 820)], scale=1.25), A('kofi', [(0, -240), (2.4, 700)], scale=1.25)], sfx=[('whoosh', .1)]))
+    S.append(Scene(('monnaie', {}), 3.8, loc=('DAKAR', 'Ancien Hôtel de la Monnaie'), mood='tense', cam=(1.2, 1.5, 300, 700),
+        actors=[A('amara', [(0, 240)], [(0, 'inspect')], scale=1.25), A('kofi', [(0, 420)], [(0, 'inspect')], scale=1.25, face=-1)],
+        overlays=[clue(1.0, 3.7, 'INDICE 02', 'Une photo de Nadège avec une petite fille.')], sfx=[('ding', 1.0)]))
+    S.append(Scene(('monnaie', {}), 3.4, mood='tense', cam=CLOSE(240, 1.7, 2.0), actors=[A('amara', [(0, 240)], [(0, 'sad')], scale=1.25)],
+        subs=[P('Amara', .2, 1.9, "C'est moi. À quatre ans."), P('Amara', 2.0, 3.3, "Avec Nadège.")], sfx=[('boom', .2)]))
+    S.append(Scene(('monnaie', {}), 3.0, mood='chase', cam=(1.2, 1.4, 500, 700),
+        actors=[A('karim', [(0, 800), (.7, 590)], [(0, 'hands_up')], scale=1.25, face=-1), A('kofi', [(0, 420)], [(0, 'aim')], scale=1.25), A('amara', [(0, 240)], scale=1.25)],
+        subs=[P('Karim', .8, 2.9, "Baissez ça ! Je viens la sauver.")], sfx=[('boom', .6)]))
+    S.append(Scene(('monnaie', {}), 2.8, mood='chase', cam=(1.1, 1.3, 400, 750),
+        actors=[A('karim', [(0, 590)], [(0, 'hands_up')], scale=1.25, face=-1), A('kofi', [(0, 420)], [(0, 'aim')], scale=1.25), A('amara', [(0, 240), (.8, 200, 0, 0)], [(0, 'idle'), (.8, 'crouch')], scale=1.25)],
+        fx=[('flash', .8, .12), ('shake', .8, 1.6, 10), ('redpulse', .8, 2.8)], sfx=[('shot', .8), ('glass', .9)], overlays=[punch(1.2, 2.7, "UN TIR.", 80, '#e5383b', 430, .45)]))
+    S.append(Scene(('street', {'seed': 3, 'rain': True}), 2.8, mood='chase', cam=(1.1, 1.2, 360, 800),
+        actors=[A('amara', [(0, -100), (2.8, 840)], scale=1.25), A('kofi', [(0, -230), (2.8, 720)], scale=1.25), A('karim', [(0, -360), (2.8, 600)], scale=1.25)], rain=True, sfx=[('whoosh', .1)]))
+    S.append(Scene(('street', {'seed': 3, 'rain': True}), 3.6, loc=('DAKAR', 'Ruelle — 7h02'), mood='tense', cam=CLOSE(420, 1.6, 1.9),
+        actors=[A('kofi', [(0, 420)], [(0, 'phone_look')], scale=1.3, face=-1)],
+        overlays=[phone(.1, 3.5, 'Le Courtier', [(.4, "Dis-lui qui elle est vraiment.", 'l'), (1.8, "Ou je le fais.", 'l')], red=True)], sfx=[('buzz', .1)], rain=True))
+    S.append(Scene(('street', {'seed': 3, 'rain': True}), 3.4, mood='end', cam=(1.2, 1.5, 330, 700),
+        actors=[A('amara', [(0, 250)], [(0, 'point')], scale=1.3), A('kofi', [(0, 450)], [(0, 'idle')], scale=1.3, face=-1)], rain=True,
+        subs=[P('Amara', .2, 1.7, "Kofi. Tu me caches quoi ?")], overlays=[punch(1.8, 3.4, "QUI EST VRAIMENT\nAMARA ?", 48, '#ffd166', 360, .5)], sfx=[('boom', 1.8)]))
+    S.append(vote("Amara fait-elle confiance à Kofi ?", 'Elle exige la vérité tout de suite', 'Elle fait semblant de rien et le surveille', 7))
     return S
 
+# =========================== BANDE-ANNONCE ===========================
 def trailer():
     S = []
-    S.append(Scene(('lagoon', {'deck': True}), 6, mood='dark', cam=(1.05, 1.15, 300),
-        actors=[A('nadege', [(0, 330)], [(0, 'phone_ear')], scale=1.25)], overlays=[dict(type='punch', t0=.5, t1=5.8, text='Elle a découvert\nce qu’on cachait.', size=56, color='#ffffff', y=300, dim=.25)]))
-    S.append(Scene(('office', {}), 5, mood='tense', actors=[A('lea', [(0, 260), (4, 420)], scale=1.25)],
-        overlays=[dict(type='punch', t0=.4, t1=4.8, text='Une monnaie\npour tout changer.', size=56, y=300, dim=.3)]))
-    S.append(Scene(('street', {'rain': True}), 6, mood='chase', actors=[A('amara', [(0, -80), (6, 800)], scale=1.25), A('karim', [(0, -240), (6, 640)], scale=1.25), A('courtier', [(0, -360), (6, 560)], scale=1.25)],
-        overlays=[dict(type='punch', t0=.4, t1=5.8, text='Sa famille est menacée.\nSon amour, suspect.', size=48, color='#e5383b', y=300, dim=.3)], rain=True, sfx=[('whoosh', 1)]))
-    S.append(Scene(('rooftop', {}), 5, mood='end', actors=[A('courtier', [(0, 360)], [(0, 'phone_ear')], scale=1.3)],
-        overlays=[dict(type='punch', t0=.3, t1=4.8, text='Et c’est TOI\nqui décides.', size=66, color='#ffd166', y=330, dim=.35)], sfx=[('boom', .3)]))
-    S.append(Scene(('void', {}), 6, mood='end', overlays=[dict(type='title', t0=.2, t1=5.8, text='NOVA', sub='ÉPISODE 1 · BIENTÔT', sub2='La série interactive · Abonne-toi pour voter')], sfx=[('boom', .3)]))
+    S.append(Scene(('lagoon', {'deck': True}), 2.6, mood='dark', cam=CLOSE(330, 1.5, 1.8), actors=[A('nadege', [(0, 330)], [(0, 'phone_ear')], scale=1.2)],
+        overlays=[punch(.1, 2.5, "Elle savait\nce qu'on cachait.", 46, '#ffffff', 300, .0)], sfx=[('riser', .1, 2.5)]))
+    S.append(Scene(('lagoon', {'deck': True}), 2.2, mood='chase', cam=(1.05, 1.18, 340, 800),
+        actors=[A('nadege', [(0, 330), (.4, 372), (.8, 440), (1.2, 500, -8, .5), (1.6, 545, 40, 1.4), (2.1, 575, 140, 2.2)], [(0, 'flail')], scale=1.2), A('courtier', [(0, 250), (.4, 300)], [(0, 'push')], scale=1.2)],
+        fx=[('flash', .38, .12), ('shake', .38, .8, 7)], sfx=[('boom', .38), ('splash', 2.0)]))
+    S.append(Scene(('office', {}), 2.4, mood='tense', cam=(1.2, 1.4, 340, 700), actors=[A('lea', [(0, 260), (2.4, 420)], scale=1.25)],
+        overlays=[punch(.1, 2.3, "Une monnaie\npour tout changer.", 46, '#ffffff', 300, .3)]))
+    S.append(Scene(('street', {'rain': True}), 2.4, mood='chase', cam=(1.1, 1.2, 360, 800), rain=True,
+        actors=[A('amara', [(0, -100), (2.4, 840)], scale=1.25), A('karim', [(0, -240), (2.4, 700)], scale=1.25), A('courtier', [(0, -380), (2.4, 560)], scale=1.25)], sfx=[('whoosh', .1)]))
+    S.append(Scene(('apartment', {}), 2.6, mood='tense', cam=CLOSE(330, 1.6, 1.9), actors=[A('amara', [(0, 330)], [(0, 'phone_look')], scale=1.25)],
+        overlays=[phone(.1, 2.5, 'Numéro inconnu', [(.3, "On sait où vit ta sœur.", 'l')], red=True)], sfx=[('buzz', .1), ('boom', .4)]))
+    S.append(Scene(('monnaie', {}), 2.4, mood='chase', cam=(1.2, 1.4, 500, 700), actors=[A('kofi', [(0, 420)], [(0, 'aim')], scale=1.25), A('karim', [(0, 590)], [(0, 'hands_up')], scale=1.25, face=-1)],
+        fx=[('flash', 1.2, .12), ('shake', 1.2, 2, 9)], sfx=[('shot', 1.2)], overlays=[punch(.1, 1.1, "Sa famille.\nSon amour.", 46, '#e5383b', 300, .3)]))
+    S.append(Scene(('rooftop', {}), 2.6, mood='end', cam=CLOSE(360, 1.5, 1.8), actors=[A('courtier', [(0, 360)], [(0, 'phone_ear')], scale=1.3)],
+        overlays=[punch(.1, 2.5, "Et c'est TOI\nqui décides.", 54, '#ffd166', 300, .3)], sfx=[('boom', .1)]))
+    S.append(Scene(('void', {}), 4.2, mood='end', overlays=[dict(type='title', t0=.1, t1=4.1, text='NOVA', sub='ÉPISODE 1 · BIENTÔT', sub2="Abonne-toi pour voter")], sfx=[('boom', .1)]))
     return S
 
 JOBS = {'nova_ep01': (ep1, 'NOVA · S1 · ÉP.1 « LA VEILLE »'), 'nova_ep02_A': (ep2a, 'NOVA · S1 · ÉP.2 · BRANCHE A'),
@@ -143,7 +159,7 @@ JOBS = {'nova_ep01': (ep1, 'NOVA · S1 · ÉP.1 « LA VEILLE »'), 'nova_ep02_A'
 if __name__ == '__main__':
     out = os.path.join(os.path.dirname(__file__), '..', '..', 'videos'); os.makedirs(out, exist_ok=True)
     args = sys.argv[1:]
-    if args and args[0] == '--still':     # --still job scene t
+    if args and args[0] == '--still':     # --still job scene t [fichier]
         fn, tag = JOBS[args[1]]; render_video(args[4] if len(args) > 4 else '/tmp/still.png', fn(), tag, still=(int(args[2]), float(args[3])))
     else:
         for k in (args or JOBS):

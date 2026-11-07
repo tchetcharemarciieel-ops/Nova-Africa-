@@ -4,6 +4,7 @@ from gfx import *
 import bgs, sound, tts
 
 FPS = 30
+VOICES = False
 FONT = 'DejaVu Sans'
 
 def interp(kf, t, n=2):
@@ -173,8 +174,8 @@ def draw_loc(c, loc, t):
     c.restore()
 
 class Scene:
-    def __init__(self, bg, dur, actors=(), subs=(), loc=None, overlays=(), fx=(), sfx=(), cam=(1.04, 1.1, 360),
-                 cut=False, mood='calm', rain=False, tint=None):
+    def __init__(self, bg, dur, actors=(), subs=(), loc=None, overlays=(), fx=(), sfx=(), cam=(1.05, 1.12, 360, 800),
+                 cut=True, mood='calm', rain=False, tint=None):
         self.bgspec, self.dur = bg, dur; self.a = list(actors); self.subs = list(subs); self.loc = loc
         self.overlays = list(overlays); self.fx = list(fx); self.sfx = list(sfx); self.cam = cam
         self.cut = cut; self.mood = mood; self.tint = tint
@@ -218,12 +219,11 @@ def render_video(path, scenes, tag, fps=FPS, still=None):
     plans = []
     for sc in scenes:
         b = bgs.make(sc.bgspec[0], **(sc.bgspec[1] if len(sc.bgspec) > 1 else {}))
-        cache = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1080, 1920); cc = cairo.Context(cache); cc.scale(SC, SC)
-        b.static(cc)
         actors = [Actor(sc, d, sc.dur) for d in sc.a]
-        plans.append((sc, b, cache, actors, t0))
+        plans.append((sc, b, None, actors, t0))
         for s_ in sc.sfx: ev.append((t0 + s_[1], s_[0], s_[2:]))
-        moods.append((t0, t0 + sc.dur, sc.mood)); voices(sc, t0, ev)
+        moods.append((t0, t0 + sc.dur, sc.mood))
+        if VOICES: voices(sc, t0, ev)
         for a in actors:   # pas auto
             last = -1
             for i in range(len(a.x)):
@@ -240,18 +240,23 @@ def render_video(path, scenes, tag, fps=FPS, still=None):
     n_done = 0
     for si, (sc, b, cache, actors, T0) in enumerate(plans):
         nfr = int(sc.dur * fps)
+        cs = SC * min(2.0, max(sc.cam[0], sc.cam[1])); cache = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(W * cs), int(H * cs))
+        cc = cairo.Context(cache); cc.scale(cs, cs); b.static(cc)
         frames = range(nfr) if still is None else ([int(still[1] * fps)] if still[0] == si else [])
         for i in frames:
             t = i / fps
             c.set_operator(cairo.OPERATOR_SOURCE); c.set_source_rgb(0, 0, 0); c.paint(); c.set_operator(cairo.OPERATOR_OVER)
             c.save(); c.scale(SC, SC)
-            z0, z1, fx = sc.cam; z = z0 + (z1 - z0) * t / sc.dur
+            z0, z1, fx = sc.cam[:3]; fy = sc.cam[3] if len(sc.cam) > 3 else 900
+            k_ = t / sc.dur; k_ = k_ * k_ * (3 - 2 * k_) * .35 + k_ * .65; z = z0 + (z1 - z0) * k_
             sx = sy = 0
             for f in sc.fx:
                 if f[0] == 'shake' and f[1] <= t <= f[2]:
                     amp = f[3] * (1 - (t - f[1]) / (f[2] - f[1] + 1e-6) * .6); sx += random.uniform(-amp, amp); sy += random.uniform(-amp, amp)
-            c.translate(sx, sy); c.translate(fx, 900); c.scale(z, z); c.translate(-fx, -900)
-            c.save(); c.scale(1 / SC, 1 / SC); c.set_source_surface(cache, 0, 0); c.paint(); c.restore()
+            cx = fx + (W / 2 - fx) * min(1, (z - 1) / .6); cy = fy + (600 - fy) * min(1, (z - 1) / .6)
+            cx = min(max(cx, W - (W - fx) * z), fx * z); cy = min(max(cy, H - (H - fy) * z), fy * z)
+            c.translate(sx, sy); c.translate(cx, cy); c.scale(z, z); c.translate(-fx, -fy)
+            c.save(); c.scale(1 / cs, 1 / cs); c.set_source_surface(cache, 0, 0); c.paint(); c.restore()
             b.anim(c, t)
             for a in sorted(actors, key=lambda a: a.yb):
                 a.draw(c, i, t, b.amb)
@@ -288,10 +293,9 @@ def render_video(path, scenes, tag, fps=FPS, still=None):
             centered(c, tag, W / 2, 132, 20, (1, 1, 1), lw=5, a=.8)
             gt = T0 + t; rect(c, 0, H - 5, W * gt / total, 5, AMBER, .9)
             fade = 1.0
-            if not sc.cut:
-                fade = min(1, t / .25, (sc.dur - t) / .25) if si else min(1, (sc.dur - t) / .25)
-                if si == 0: fade = min(1, (sc.dur - t) / .25, .3 + t / .5)
-                if si == len(plans) - 1: fade = min(1, t / .25, (sc.dur - t) / .6)
+            if si == 0: fade = min(1, t / .25)
+            if si == len(plans) - 1: fade = min(fade, (sc.dur - t) / .5)
+            if not sc.cut: fade = min(fade, t / .25, (sc.dur - t) / .25)
             if fade < 1: rect(c, 0, 0, W, H, (0, 0, 0), 1 - fade)
             c.restore()
             if still is not None:
