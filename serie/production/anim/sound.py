@@ -3,7 +3,9 @@ import numpy as np, wave
 SR = 44100
 rng = np.random.default_rng(11)
 
-def lp(x, n): return np.convolve(x, np.ones(n) / n, 'same')
+def lp(x, n):
+    n = max(1, int(n)); c = np.cumsum(np.insert(x, 0, 0)); y = (c[n:] - c[:-n]) / n; h = n // 2
+    return np.pad(y, (h, len(x) - len(y) - h), mode='edge')
 def env(n, a=.005, d=3.0): 
     t = np.arange(n) / SR; return np.minimum(1, t / a) * np.exp(-t * d)
 def add(buf, t0, x, g=1.0):
@@ -59,7 +61,9 @@ def build(path, total, events, moods):
             pat = [0, 2, 4, 2, 5, 4, 2, 3]
             while tt < b - .1:
                 add(buf, tt, pluck(NOTES[pat[k % 8]] * (2 if k % 3 == 0 else 1), arp * (.6 + .4 * (k % 2))), 1); k += 1; tt += step_
+    vb = np.zeros(n)
     for (t0, kind, args) in events:
+        if kind == 'voice': add(vb, t0, args[0], 1.0); continue
         if kind == 'boom': add(buf, t0, boom(), .95)
         elif kind == 'whoosh': add(buf, t0, whoosh(), .55)
         elif kind == 'splash': add(buf, t0, splash(), .6)
@@ -76,6 +80,7 @@ def build(path, total, events, moods):
     for dly, g in ((.28, .32), (.57, .16)):
         d = int(dly * SR); buf[d:] += buf[:-d] * g * .6
     buf = np.tanh(buf * .9)
+    duck = np.clip(lp((np.abs(vb) > .02).astype(float), 6000) * 3, 0, 1); buf *= (1 - .6 * duck); buf = buf * .85 + vb * 1.25
     f = int(1.2 * SR); buf[:f] *= np.linspace(0, 1, f); buf[-f * 2:] *= np.linspace(1, 0, f * 2)
     buf = buf / max(1e-6, np.abs(buf).max()) * .88
     with wave.open(path, 'wb') as w:

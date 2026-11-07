@@ -61,7 +61,7 @@ CHARS = {
 def _col(h, amb): return tuple(min(1, v * a) for v, a in zip(hx(h), amb))
 
 def draw_char(c, name, x, y, face=1, t=0.0, pose='idle', phase=0.0, speed=0.0,
-              rot=0.0, scale=1.0, amb=(1, 1, 1), rim=None, extra=None):
+              rot=0.0, scale=1.0, amb=(1, 1, 1), rim=None, extra=None, st=None, dt=1/30):
     sp = CHARS[name]; s = sp['s'] * scale
     skin, top, bot = _col(sp['skin'], amb), _col(sp['top'], amb), _col(sp['bot'], amb)
     shoe = tuple(v * .35 for v in amb)
@@ -121,6 +121,14 @@ def draw_char(c, name, x, y, face=1, t=0.0, pose='idle', phase=0.0, speed=0.0,
         arms['f'] = (0.2, 0.1); arms['b'] = (-0.2, 0.1)
     elif pose == 'sad':
         lean2 = .12; arms['f'] = (0.05, .1); arms['b'] = (-0.05, .1)
+    if st is not None:                                      # lissage des poses (transitions fluides)
+        tg = dict(fa=fa, fk=fk, ba=ba, bk=bk, fa1=arms['f'][0], fe=arms['f'][1], ba1=arms['b'][0], be=arms['b'][1],
+                  lean=lean2, hy=hip[1], sy=sh[1])
+        al = 1 - math.exp(-dt * 16)
+        for k_, v_ in tg.items(): st[k_] = st.get(k_, v_) + (v_ - st.get(k_, v_)) * al
+        fa, fk, ba, bk = st['fa'], st['fk'], st['ba'], st['bk']
+        arms = {'f': (st['fa1'], st['fe']), 'b': (st['ba1'], st['be'])}
+        lean2 = st['lean']; hip = (0, st['hy']); sh = (0, st['sy'])
     # --- jambes ---
     lw = 22
     def leg(a, k, col):

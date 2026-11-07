@@ -19,7 +19,7 @@ def ep1():
         subs=[P('Nadège', 1.2, 4.2, "Amara, si tu écoutes ça… ne fais confiance à personne chez NOVA."),
               P('Nadège', 4.3, 6.3, "Pas même à moi."),
               P(None, 10.6, 13, "Quelqu'un voulait qu'elle se taise.")],
-        overlays=[dict(type='punch', t0=11.2, t1=13.4, text='À 23h52,\nNADÈGE OKOYE\nSE TAIT.', size=62, color='#e5383b', y=380, dim=.35)],
+        overlays=[dict(type='punch', t0=11.2, t1=13.4, text='À 23h52,\nNADÈGE OKOYE\nSE TAIT.', size=62, color='#e5383b', y=380, dim=.35, speak=False)],
         fx=[('splash', 9.9, 586, 930), ('flash', 8.5, .12, '#ffffff'), ('shake', 8.45, 8.9, 6), ('shake', 9.9, 10.3, 7)],
         sfx=[('whoosh', 6.0), ('boom', 8.45), ('splash', 9.95), ('buzz', 1.0), ('riser', 5.5, 2.8)]))
     S.append(Scene(('void', {}), 4.2, mood='dark', cut=False, overlays=[dict(type='title', t0=0.2, t1=4.1, text='NOVA', sub='SAISON 1 · ÉPISODE 1 — LA VEILLE', sub2='Une série où TU décides')],
@@ -29,7 +29,7 @@ def ep1():
         actors=[A('amara', [(0, 150), (3.2, 330), (4.5, 330)], [(0, 'idle'), (4.0, 'phone_look'), (7.5, 'talk')], scale=1.2),
                 A('redac', [(0, 760), (5.2, 760), (7.2, 520), (11, 520)], [(0, 'idle'), (8.0, 'talk')], scale=1.2, face=-1),
                 A('extra', [(0, 640), (11, 640)], y=-8, scale=.95, face=-1, poses=[(0, 'type')])],
-        overlays=[dict(type='phone', t0=4.3, t1=8.2, who='N. (message vocal)', msgs=[(4.5, '🎙 0:14 — « Amara, si tu écoutes ça… »', 'l'), (6.2, 'Envoyé à 23h47', 'l')], red=False)],
+        overlays=[dict(type='phone', t0=4.3, t1=8.2, who='N. (message vocal)', msgs=[(4.5, '🎙 « Amara, si tu écoutes ça… »', 'l'), (6.2, 'Envoyé à 23h47', 'l')], red=False)],
         subs=[P('Le rédacteur', 8.4, 10.5, "Ce n'est pas ton dossier, Amara.")],
         sfx=[('buzz', 3.8), ('ding', 4.5)]))
     S.append(Scene(('newsroom', {}), 7, mood='tense', cam=(1.05, 1.2, 300), actors=[

@@ -1,9 +1,9 @@
 """Moteur de scènes : acteurs animés, sous-titres, overlays, caméra, export ffmpeg."""
 import cairo, math, subprocess, os, random, numpy as np
 from gfx import *
-import bgs, sound
+import bgs, sound, tts
 
-FPS = 24
+FPS = 30
 FONT = 'DejaVu Sans'
 
 def interp(kf, t, n=2):
@@ -22,11 +22,15 @@ class Actor:
         n = int(dur * FPS) + 2
         self.x = np.zeros(n); self.yo = np.zeros(n); self.rot = np.zeros(n); self.sp = np.zeros(n)
         self.ph = np.zeros(n); self.face = np.ones(n)
-        stride_ = d.get('stride')
+        self.st = {}
+        for i in range(n):
+            v = interp(kf, i / FPS); self.x[i], self.yo[i], self.rot[i] = v[0], v[1], v[2]
+        w = int(.3 * FPS) | 1; win = np.hanning(w + 2)[1:-1]; win /= win.sum()
+        self.x = np.convolve(np.pad(self.x, w, mode='edge'), win, 'same')[w:-w]
         cur_face = d.get('face', 1); dist = 0.0; prev = None
         faces = d.get('faces')
         for i in range(n):
-            t = i / FPS; v = interp(kf, t); self.x[i], self.yo[i], self.rot[i] = v[0], v[1], v[2]
+            t = i / FPS
             if prev is not None:
                 dx = self.x[i] - prev; sp = abs(dx) * FPS; self.sp[i] = sp
                 if sp > 8 and 'face' not in d: cur_face = 1 if dx > 0 else -1
@@ -48,7 +52,7 @@ class Actor:
         if self.vis and not (self.vis[0] <= t <= self.vis[1]): return
         pose = self.pose_at(t, self.sp[i])
         draw_char(c, self.ch, self.x[i], GROUND + self.yb + self.yo[i], face=self.face[i], t=t + self.d.get('seed', 0),
-                  pose=pose, phase=self.ph[i], speed=self.sp[i], rot=self.rot[i], scale=self.scale, amb=amb)
+                  pose=pose, phase=self.ph[i], speed=self.sp[i], rot=self.rot[i], scale=self.scale, amb=amb, st=self.st, dt=1 / FPS)
 
 def text_lines(c, text, maxw):
     words, lines, cur = text.split(), [], ''
@@ -175,6 +179,35 @@ class Scene:
         self.overlays = list(overlays); self.fx = list(fx); self.sfx = list(sfx); self.cam = cam
         self.cut = cut; self.mood = mood; self.tint = tint
 
+def vkey(who):
+    if not who: return 'narrateur'
+    w = who.lower()
+    if w.strip() == 'c.': return 'courtier'
+    for k, v in (('nadège', 'nadege'), ('n. (', 'nadege'), ('amara', 'amara'), ('kofi', 'kofi'), ('karim', 'karim'), ('rédacteur', 'redac'),
+                 ('courtier', 'courtier'), ('numéro', 'courtier'), ('léa', 'lea'), ('ibrahim', 'ibrahim'), ('fatou', 'fatou')):
+        if k in w: return v
+    return 'narrateur'
+
+def voices(sc, t0, ev):
+    for (a0, a1, who, txt) in sc.subs:
+        ev.append((t0 + a0 + .05, 'voice', (tts.say(txt, vkey(who), a1 - a0 - .1),)))
+    for o in sc.overlays:
+        if o['type'] == 'phone':
+            ms = o['msgs']
+            for i, (dt, text, side) in enumerate(ms):
+                nxt = ms[i + 1][0] if i + 1 < len(ms) else o['t1'] - .2
+                if 'Envoyé' in text: continue
+                ev.append((t0 + dt + .1, 'voice', (tts.say(text, vkey(o['who']), nxt - dt - .1),)))
+        elif o['type'] == 'punch' and o.get('speak', True):
+            ev.append((t0 + o['t0'] + .3, 'voice', (tts.say(o['text'].replace('\n', ' '), 'narrateur', o['t1'] - o['t0'] - .5),)))
+        elif o['type'] == 'clue' and len(o['text']) > 24:
+            ev.append((t0 + o['t0'] + .4, 'voice', (tts.say('Indice. ' + o['text'], 'narrateur', o['t1'] - o['t0'] - .5),)))
+        elif o['type'] == 'vote':
+            q = tts.say(o['q'], 'narrateur'); a = tts.say('Choix A. ' + o['a'], 'narrateur'); b = tts.say('Choix B. ' + o['b'], 'narrateur')
+            t = t0 + o['t0'] + .6
+            for y in (q, a, b): ev.append((t, 'voice', (y,))); t += len(y) / 44100 + .45
+            ev.append((t + .1, 'voice', (tts.say('Commente A ou B. Tu décides.', 'narrateur'),)))
+
 def render_video(path, scenes, tag, fps=FPS, still=None):
     total = sum(s.dur for s in scenes); out = os.path.abspath(path)
     ev = []; steps = []; t0 = 0.0; moods = []
@@ -190,7 +223,7 @@ def render_video(path, scenes, tag, fps=FPS, still=None):
         actors = [Actor(sc, d, sc.dur) for d in sc.a]
         plans.append((sc, b, cache, actors, t0))
         for s_ in sc.sfx: ev.append((t0 + s_[1], s_[0], s_[2:]))
-        moods.append((t0, t0 + sc.dur, sc.mood))
+        moods.append((t0, t0 + sc.dur, sc.mood)); voices(sc, t0, ev)
         for a in actors:   # pas auto
             last = -1
             for i in range(len(a.x)):
