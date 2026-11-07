@@ -127,7 +127,7 @@ def trailer():
         overlays=[dict(type='punch', t0=.4, t1=5.8, text='Sa famille est menacée.\nSon amour, suspect.', size=48, color='#e5383b', y=300, dim=.3)], rain=True, sfx=[('whoosh', 1)]))
     S.append(Scene(('rooftop', {}), 5, mood='end', actors=[A('courtier', [(0, 360)], [(0, 'phone_ear')], scale=1.3)],
         overlays=[dict(type='punch', t0=.3, t1=4.8, text='Et c’est TOI\nqui décides.', size=66, color='#ffd166', y=330, dim=.35)], sfx=[('boom', .3)]))
-    S.append(Scene(('void', {}), 6, mood='end', overlays=[dict(type='title', t0=.2, t1=5.8, text='NOVA', sub='LA SÉRIE INTERACTIVE · ÉPISODE 1 BIENTÔT', sub2='Abonne-toi pour voter')], sfx=[('boom', .3)]))
+    S.append(Scene(('void', {}), 6, mood='end', overlays=[dict(type='title', t0=.2, t1=5.8, text='NOVA', sub='ÉPISODE 1 · BIENTÔT', sub2='La série interactive · Abonne-toi pour voter')], sfx=[('boom', .3)]))
     return S
 
 JOBS = {'nova_ep01': (ep1, 'NOVA · S1 · ÉP.1 « LA VEILLE »'), 'nova_ep02_A': (ep2a, 'NOVA · S1 · ÉP.2 · BRANCHE A'),
