@@ -1,0 +1,13 @@
+{
+  "handle": "@lemonde.cestvous",
+  "lon_start": 10, "spin": 12,
+  "scenes": [
+    {"dur": 4, "grey": true, "banner": ["Hier", "195 pays sans président"], "voice": "Hier, le monde entier n'avait aucun président."},
+    {"dur": 5, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "counter": ["Présidents", 0, 12], "banner": ["Aujourd'hui", "Le monde s'allume"], "green": true, "voice": "Aujourd'hui, les premiers abonnés prennent le pouvoir."},
+    {"dur": 5, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "pulse": ["Central African Rep.","Dem. Rep. Congo","Congo"], "focus": "Central African Rep.", "banner": ["Tirage au sort", "Ton pays t'attend"], "voice": "Chaque abonné reçoit un pays, tiré au sort, de la Centrafrique au Congo."},
+    {"dur": 5, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "banner": ["Ton rôle", "Tu fais les lois"], "voice": "Tu es président. Tu appliques les lois, tu gères ton peuple.", "green": true},
+    {"dur": 6, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "banner": ["La règle", "Le plus liké gagne"], "voice": "Chaque jour, vous votez en commentaire. Le plus liké devient la loi."},
+    {"dur": 8, "card": {"header": "Avis aux présidents · Jour 1", "question": "Première loi mondiale ?", "choices": [["A","Taxe sur\nles armes"],["B","Eau gratuite\npour tous"],["C","Frontières\nouvertes"]], "footer": "Écris A, B ou C en commentaire · Demain : Jour 2"}, "voice": "Première loi mondiale. A, B, ou C ? Commente, le plus liké gagne.", "green": true},
+    {"dur": 3, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "banner": ["Pas encore de pays ?", "Abonne-toi !"], "voice": "Abonne-toi pour recevoir ton pays.", "green": true}
+  ]
+}
