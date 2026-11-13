@@ -197,12 +197,16 @@ def main():
     out = f"out/{day}"
     os.makedirs("out", exist_ok=True)
     fps = 12 if fast else FPS
+    dj = f"out/{day}_dur.json"
+    if os.path.exists(dj):  # durées calées sur la voix off
+        for sc, dd in zip(ep["scenes"], json.load(open(dj))):
+            sc["dur"] = dd
     total = sum(s["dur"] for s in ep["scenes"])
-    cmd = ["ffmpeg", "-y", "-v", "error", "-f", "image2pipe", "-framerate", str(fps), "-i", "-", "-vf", "scale=720:1280"]
-    audio = f"{out}.mp3"
-    if os.path.exists(audio):
+    cmd = ["ffmpeg", "-y", "-v", "error", "-f", "image2pipe", "-framerate", str(fps), "-i", "-"]
+    audio = next((a for a in (f"{out}.wav", f"{out}.mp3") if os.path.exists(a)), "")
+    if audio:
         cmd += ["-i", audio, "-c:a", "aac", "-shortest"]
-    cmd += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "veryfast", "-crf", "20", f"{out}.mp4"]
+    cmd += ["-vf", "scale=720:1280", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "veryfast", "-crf", "20", f"{out}.mp4"]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     gt = 0.0
     for sc in ep["scenes"]:
