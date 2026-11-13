@@ -5,12 +5,12 @@
    "dur": 4,
    "banner": [
     "La Plateforme",
-    "195 secteurs"
+    "10 gros secteurs"
    ],
    "hud": [
     [
      "Secteurs",
-     "195"
+     "10"
     ],
     [
      "Citoyens",
@@ -20,7 +20,7 @@
    "map": {
     "reveal": 0.8
    },
-   "voice": "Voici la plateforme. Cent quatre-vingt-quinze secteurs, chacun avec ses ressources.",
+   "voice": "Voici la plateforme. Dix gros secteurs, chacun avec ses ressources.",
    "green": true
   },
   {
@@ -31,14 +31,14 @@
    ],
    "map": {
     "reveal": null,
-    "highlight": 160,
+    "highlight": 0,
     "zoom": {
-     "sector": 160,
-     "to": 2.8
+     "sector": 0,
+     "to": 1.7
     },
-    "chip": "Secteur 161 · Espace · 1000 €"
+    "chip": "Secteur 1 · Espace · 1000 €"
    },
-   "voice": "Chaque secteur a mille euros de budget, et ses propres atouts : or, pétrole, espace, pêche."
+   "voice": "Chaque secteur a mille euros de budget, et ses propres atouts : or, pétrole, espace, eau."
   },
   {
    "dur": 6,
@@ -146,19 +146,29 @@
    "map": {
     "reveal": 0.01,
     "marks": [
-     163,
-     78,
-     54,
-     181,
-     21,
-     115,
-     125,
-     150,
-     128
+     0,
+     3,
+     6,
+     8
     ]
    },
    "voice": "Chaque jour, il se passe des choses dans chaque secteur. Les présidents doivent décider.",
    "green": true
+  },
+  {
+   "dur": 4,
+   "banner": [
+    "Bientôt",
+    "La guerre"
+   ],
+   "map": {
+    "reveal": 0.01,
+    "war": [
+     0,
+     3
+    ]
+   },
+   "voice": "Et bientôt, les secteurs entreront en guerre."
   },
   {
    "dur": 7,
@@ -193,7 +203,7 @@
    "hud": [
     [
      "Secteurs",
-     "195"
+     "10"
     ],
     [
      "Citoyens",

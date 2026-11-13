@@ -2,12 +2,13 @@
 import os, numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-N = 195
+N = 10
 PW, PH = 640, 680          # taille de la plaque à l'écran
 SC = 2                     # sur-échantillonnage
 RES = [("Mines d'or", (240, 190, 60)), ("Pétrole", (90, 90, 110)), ("Agriculture", (110, 200, 90)),
        ("Pêche", (70, 170, 230)), ("Technologie", (170, 110, 240)), ("Forêt", (40, 150, 90)),
-       ("Énergie solaire", (250, 140, 60)), ("Espace", (230, 90, 140))]
+       ("Énergie solaire", (250, 140, 60)), ("Espace", (230, 90, 140)),
+       ("Eau", (60, 200, 200)), ("Diamants", (200, 220, 255))]
 GREY = np.array((74, 82, 96), dtype=np.uint8)
 EDGE = np.array((16, 22, 42), dtype=np.uint8)
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -32,7 +33,7 @@ def build():
         return z["lab"], z["cent"], z["res"], z["order"]
     rng = np.random.default_rng(2026)
     seeds = np.column_stack([rng.uniform(0, PW, N), rng.uniform(0, PH, N)])
-    for _ in range(4):  # relaxation de Lloyd : cellules régulières
+    for _ in range(12):  # relaxation de Lloyd : cellules régulières
         lab = _labels(seeds, PW // 2, PH // 2) if False else _labels(seeds / 2, PW // 2, PH // 2)
         ys, xs = np.mgrid[0:PH // 2, 0:PW // 2]
         for i in range(N):
@@ -40,7 +41,7 @@ def build():
             if m.any():
                 seeds[i] = (xs[m].mean() * 2, ys[m].mean() * 2)
     lab = _labels(seeds * SC, PW * SC, PH * SC)
-    res = rng.integers(0, len(RES), N)
+    res = rng.permutation(len(RES))[:N]
     order = rng.permutation(N)           # ordre d'apparition
     np.savez_compressed(CACHE, lab=lab, cent=seeds, res=res, order=order)
     return lab, seeds, res, order
@@ -48,7 +49,8 @@ def build():
 
 LAB, CENT, RESID, ORDER = build()
 RANK = np.empty(N, dtype=np.int32); RANK[ORDER] = np.arange(N)
-EDGES = (LAB != np.roll(LAB, 1, 0)) | (LAB != np.roll(LAB, 1, 1))
+_e = (LAB != np.roll(LAB, 1, 0)) | (LAB != np.roll(LAB, 1, 1))
+EDGES = _e | np.roll(_e, 1, 0) | np.roll(_e, 1, 1) | np.roll(_e, 2, 0) | np.roll(_e, 2, 1)
 PAL = np.array([RES[r][1] for r in RESID], dtype=np.float32)
 rj = np.random.default_rng(5).uniform(0.88, 1.08, N)[:, None]
 PAL = np.clip(PAL * rj, 0, 255).astype(np.uint8)
@@ -90,10 +92,26 @@ def draw(bg, spec, tf, W=720, H=1280):
         for i, s in enumerate(spec.get("marks", [])):
             t0 = 0.05 + 0.5 * i / max(1, len(spec["marks"]))
             if tf > t0:
-                px, py = ox + CENT[s][0] * 0.9, oy + CENT[s][1] * 0.9
+                px, py = ox + CENT[s][0] * 0.9 + 58, oy + CENT[s][1] * 0.9 - 52
                 r = 16 + 5 * abs(np.sin((tf - t0) * 9))
                 d.ellipse([px - r, py - r, px + r, py + r], fill=(231, 60, 60, 235), outline=(255, 255, 255), width=3)
                 d.text((px, py), "!", font=f(24), fill=(255, 255, 255), anchor="mm")
+    if not z:
+        for s in range(N):
+            if RANK[s] < k:
+                px, py = ox + CENT[s][0] * 0.9, oy + CENT[s][1] * 0.9
+                d.text((px, py - 10), str(s + 1), font=f(46), fill=(255, 255, 255), anchor="mm", stroke_width=3, stroke_fill=(16, 22, 42))
+                d.text((px, py + 28), RES[RESID[s]][0], font=f(19), fill=(255, 255, 255), anchor="mm", stroke_width=3, stroke_fill=(16, 22, 42))
+    war = spec.get("war")
+    if war and not z:
+        a, b = (np.array(CENT[war[0]]) * 0.9 + (ox, oy)), (np.array(CENT[war[1]]) * 0.9 + (ox, oy))
+        pulse = 0.5 + 0.5 * np.sin(tf * 14)
+        d.line([tuple(a), tuple(b)], fill=(231, 60, 60, 255), width=10)
+        for pt in (a, b):
+            d.ellipse([pt[0] - 26, pt[1] - 26, pt[0] + 26, pt[1] + 26], fill=(231, 60, 60, int(150 + 100 * pulse)), outline=(255, 255, 255), width=4)
+        mid = (a + b) / 2
+        d.rounded_rectangle([mid[0] - 44, mid[1] - 26, mid[0] + 44, mid[1] + 26], 12, fill=(15, 20, 45, 240), outline=(231, 60, 60), width=3)
+        d.text(tuple(mid), "VS", font=f(34), fill=(255, 255, 255), anchor="mm")
     if z and spec.get("chip"):
         txt = spec["chip"]
         d.rounded_rectangle([ox + 20, oy + VH - 80, ox + VW - 20, oy + VH - 14], 16, fill=(15, 20, 45, 235), outline=(70, 230, 120), width=3)
