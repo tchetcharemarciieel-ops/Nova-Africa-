@@ -6,7 +6,7 @@ Si out/<jour>.mp3 (voix off) existe, elle est ajoutée automatiquement.
 """
 import json, math, sys, os, subprocess, hashlib, colorsys
 import numpy as np
-import street
+import street, plateforme
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 W, H, FPS = 720, 1280, 24
@@ -112,7 +112,10 @@ def card(img, c, t):
     d = ImageDraw.Draw(img, "RGBA")
     d.rounded_rectangle([50, 230, W - 50, 960], 30, fill=(250, 244, 230, 245), outline=NAVY, width=6)
     center_text(d, 252, c["header"].upper(), F(20), (150, 80, 60))
-    center_text(d, 290, c["question"].upper(), F(32), NAVY)
+    qs = 32
+    while d.textlength(c["question"].upper(), font=F(qs)) > W - 130:
+        qs -= 2
+    center_text(d, 290, c["question"].upper(), F(qs), NAVY)
     ys = 360
     for i, (letter, label) in enumerate(c["choices"]):
         prog = min(1, max(0, (t - 0.35 * i) / 0.4))
@@ -176,7 +179,9 @@ def frame(ep, scene, t, gt, state):
     if scene.get("grey"):
         owners = set()
     pulse = set(scene.get("pulse", [])) if int(t * 3) % 2 == 0 else set()
-    if scene.get("street"):
+    if scene.get("map") is not None:
+        img = plateforme.draw(BG, scene["map"], t / scene["dur"], W, H)
+    elif scene.get("street"):
         img = street.draw(scene["street"], t / scene["dur"], W, H)
     elif not scene.get("card"):
         draw_globe(img, lon0, owners, pulse)

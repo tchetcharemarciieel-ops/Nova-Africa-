@@ -81,6 +81,8 @@ def person(d, x, y, sc, role, phase, face, look, run=False, up=False, carry=Fals
         shirt, pants = (76, 88, 110), (50, 58, 78)
     elif role == "gang":
         shirt, pants = (28, 28, 34), (20, 20, 26)
+    elif role == "military":
+        shirt, pants = (78, 98, 52), (60, 72, 44)
     sw = math.sin(phase) * (16 if run else 11) * s
     # jambes
     for sgn in (-1, 1):
@@ -125,6 +127,8 @@ def person(d, x, y, sc, role, phase, face, look, run=False, up=False, carry=Fals
         d.arc([x - 8 * s + face * 3 * s, hy + 6 * s, x + 8 * s + face * 3 * s, hy + (6 + mo) * s + 8 * s], 10, 170, fill=(120, 40, 40), width=int(2.5 * s))
         if role == "president":
             d.rectangle([x - 22 * s, hy - 34 * s, x + 22 * s, hy - 24 * s], fill=(46, 170, 90))  # képi
+        if role == "military":
+            d.pieslice([x - 28 * s, hy - 34 * s, x + 28 * s, hy + 12 * s], 180, 360, fill=(70, 86, 48))
 
 
 def bubble(d, x, y, text):
