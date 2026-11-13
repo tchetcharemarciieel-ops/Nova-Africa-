@@ -6,6 +6,7 @@ Si out/<jour>.mp3 (voix off) existe, elle est ajoutée automatiquement.
 """
 import json, math, sys, os, subprocess, hashlib, colorsys
 import numpy as np
+import street
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 W, H, FPS = 720, 1280, 24
@@ -138,6 +139,15 @@ def counter(img, label, value):
     center_text(d, 252, str(value), F(66), (70, 230, 120))
 
 
+def hud(img, items):
+    d = ImageDraw.Draw(img, "RGBA")
+    for i, (lab, val) in enumerate(items):
+        x0 = 60 + i * 310
+        d.rounded_rectangle([x0, 205, x0 + 290, 280], 16, fill=(15, 20, 45, 225), outline=(70, 230, 120) if i == 0 else (120, 180, 255), width=3)
+        d.text((x0 + 18, 213), lab.upper(), font=F(17), fill=(200, 210, 240))
+        d.text((x0 + 272, 262), str(val), font=F(36), fill=(70, 230, 120) if i == 0 else (120, 180, 255), anchor="rd")
+
+
 def bubble(img, items):
     d = ImageDraw.Draw(img, "RGBA")
     for (name, who, x, y) in items:
@@ -166,7 +176,9 @@ def frame(ep, scene, t, gt, state):
     if scene.get("grey"):
         owners = set()
     pulse = set(scene.get("pulse", [])) if int(t * 3) % 2 == 0 else set()
-    if not scene.get("card"):
+    if scene.get("street"):
+        img = street.draw(scene["street"], t / scene["dur"], W, H)
+    elif not scene.get("card"):
         draw_globe(img, lon0, owners, pulse)
     else:
         draw_globe(img, lon0, owners, pulse)
@@ -177,6 +189,8 @@ def frame(ep, scene, t, gt, state):
         a = scene["counter"]
         val = int(a[1] + (a[2] - a[1]) * min(1, t / (scene["dur"] * 0.8)))
         counter(img, a[0], val)
+    if scene.get("hud"):
+        hud(img, scene["hud"])
     if scene.get("bubbles"):
         bubble(img, scene["bubbles"])
     if scene.get("card"):

@@ -1,13 +1,49 @@
 {
   "handle": "@lemonde.cestvous",
-  "lon_start": 10, "spin": 12,
+  "lon_start": 20, "spin": 14,
   "scenes": [
-    {"dur": 4, "grey": true, "banner": ["Hier", "195 pays sans président"], "voice": "Hier, le monde entier n'avait aucun président."},
-    {"dur": 5, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "counter": ["Présidents", 0, 12], "banner": ["Aujourd'hui", "Le monde s'allume"], "green": true, "voice": "Aujourd'hui, les premiers abonnés prennent le pouvoir."},
-    {"dur": 5, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "pulse": ["Central African Rep.","Dem. Rep. Congo","Congo"], "focus": "Central African Rep.", "banner": ["Tirage au sort", "Ton pays t'attend"], "voice": "Chaque abonné reçoit un pays, tiré au sort, de la Centrafrique au Congo."},
-    {"dur": 5, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "banner": ["Ton rôle", "Tu fais les lois"], "voice": "Tu es président. Tu appliques les lois, tu gères ton peuple.", "green": true},
-    {"dur": 6, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "banner": ["La règle", "Le plus liké gagne"], "voice": "Chaque jour, vous votez en commentaire. Le plus liké devient la loi."},
-    {"dur": 8, "card": {"header": "Avis aux présidents · Jour 1", "question": "Première loi mondiale ?", "choices": [["A","Taxe sur\nles armes"],["B","Eau gratuite\npour tous"],["C","Frontières\nouvertes"]], "footer": "Écris A, B ou C en commentaire · Demain : Jour 2"}, "voice": "Première loi mondiale. A, B, ou C ? Commente, le plus liké gagne.", "green": true},
-    {"dur": 3, "reveal": ["France","Brazil","Cameroon","Dem. Rep. Congo","Central African Rep.","Congo","Nigeria","Senegal","Morocco","Canada","Japan","India"], "banner": ["Pas encore de pays ?", "Abonne-toi !"], "voice": "Abonne-toi pour recevoir ton pays.", "green": true}
+    {"dur": 4, "all": true, "banner": ["Bienvenue", "Le monde, c'est vous"], "hud": [["Budget","0"],["Citoyens","0"]],
+     "voice": "Bienvenue dans le monde. Ici, tu es citoyen, et tes likes sont le budget.", "green": true},
+    {"dur": 4, "banner": ["Le pouvoir", "Le président"], "hud": [["Budget","0"],["Citoyens","0"]],
+     "street": {"sky": "day", "actors": [
+       {"role":"president","x":[-0.12,0.42],"t":[0.05,0.5],"y":0.6},
+       {"role":"citizen","x":[1.12,0.78],"t":[0,0.5],"y":0.3,"face":-1},
+       {"role":"citizen","x":[1.12,0.64],"t":[0.1,0.55],"y":0.85},
+       {"role":"citizen","x":[-0.12,0.14],"t":[0,0.4],"y":0.4},
+       {"role":"citizen","x":0.9,"y":0.95,"up":[0.5,1],"face":-1},
+       {"role":"citizen","x":[-0.12,0.28],"t":[0.2,0.6],"y":0.95}],
+      "say": [{"actor":0,"t":[0.55,1.0],"text":"Bonjour, citoyens !"}]},
+     "voice": "Voici le président. C'est lui qui prend les décisions."},
+    {"dur": 5, "banner": ["Le conseil", "Réunion des ministres"],
+     "street": {"sky": "day", "actors": [
+       {"role":"president","x":0.46,"y":0.6,"face":1},
+       {"role":"minister","x":[1.12,0.68],"t":[0,0.35],"y":0.5,"carry":[0,1]},
+       {"role":"minister","x":[-0.12,0.22],"t":[0,0.35],"y":0.5},
+       {"role":"minister","x":[1.12,0.84],"t":[0.1,0.4],"y":0.75,"carry":[0,1]},
+       {"role":"citizen","x":[-0.12,0.1],"t":[0,0.35],"y":0.95},
+       {"role":"citizen","x":0.3,"y":0.95,"face":-1}],
+      "say": [{"actor":0,"t":[0.2,0.5],"text":"Conseil !"},{"actor":4,"t":[0.5,0.75],"text":"Non !"},{"actor":5,"t":[0.75,1.0],"text":"Si !"}]},
+     "voice": "Il tient conseil avec ses ministres. Il y a des rencontres, et parfois des conflits."},
+    {"dur": 5, "banner": ["Alerte !", "Les gangs rôdent"],
+     "street": {"sky": "dusk", "actors": [
+       {"role":"citizen","x":[0.1,0.46],"t":[0,0.45],"y":0.6,"carry":[0,0.5],"up":[0.5,1],"color":[52,152,219]},
+       {"role":"gang","x":[1.12,0.58],"t":[0,0.5],"y":0.6,"run":true,"show":[0,0.52]},
+       {"role":"gang","x":[0.58,-0.2],"t":[0.55,1.0],"y":0.6,"run":true,"carry":[0,1],"show":[0.52,1]},
+       {"role":"gang","x":[1.12,0.74],"t":[0.05,0.5],"y":0.85,"run":true,"show":[0,0.52]},
+       {"role":"gang","x":[0.74,-0.2],"t":[0.6,1.0],"y":0.85,"run":true,"show":[0.52,1]},
+       {"role":"citizen","x":[0.8,1.2],"t":[0.2,0.7],"y":0.95,"run":true,"up":[0.2,0.7]},
+       {"role":"citizen","x":[0.3,-0.2],"t":[0.3,0.8],"y":0.95,"run":true,"up":[0.3,0.8]}],
+      "say": [{"actor":0,"t":[0.55,1.0],"text":"Au voleur !"}]},
+     "voice": "Mais attention. Les gangs rôdent, et les braquages arrivent."},
+    {"dur": 7, "card": {"header": "Première loi · Jour 1", "question": "Que décide le président ?", "choices": [["A","Plus de police\nCoût : 40"],["B","Aide aux commerces\nCoût : 25"],["C","Parler aux gangs\nCoût : 10"]], "footer": "Citoyens : vote A, B ou C en commentaire"},
+     "voice": "Première loi. A, B, ou C ? Les citoyens votent en commentaire.", "green": true},
+    {"dur": 4, "banner": ["Rejoins le monde", "Deviens citoyen"], "hud": [["Budget","0"],["Citoyens","0"]],
+     "street": {"sky": "day", "actors": [
+       {"role":"president","x":0.5,"y":0.6,"up":true},
+       {"role":"citizen","x":0.2,"y":0.9,"up":true},{"role":"citizen","x":0.78,"y":0.9,"up":true},
+       {"role":"minister","x":0.33,"y":0.7,"up":true},{"role":"citizen","x":0.67,"y":0.7,"up":true},
+       {"role":"citizen","x":0.09,"y":0.5,"up":true},{"role":"citizen","x":0.9,"y":0.5,"up":true}],
+      "say": [{"actor":0,"t":[0.1,1.0],"text":"Abonne-toi !"}]},
+     "voice": "Abonne-toi pour devenir citoyen. Like pour remplir le budget.", "green": true}
   ]
 }
