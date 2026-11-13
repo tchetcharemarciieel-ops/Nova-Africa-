@@ -205,7 +205,7 @@ def main():
     cmd = ["ffmpeg", "-y", "-v", "error", "-f", "image2pipe", "-framerate", str(fps), "-i", "-"]
     audio = next((a for a in (f"{out}.wav", f"{out}.mp3") if os.path.exists(a)), "")
     if audio:
-        cmd += ["-i", audio, "-c:a", "aac", "-shortest"]
+        cmd += ["-i", audio, "-af", "highpass=f=80,loudnorm=I=-13:TP=-1:LRA=7", "-ar", "44100", "-ac", "2", "-c:a", "aac", "-b:a", "192k", "-shortest"]
     cmd += ["-vf", "scale=720:1280", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "veryfast", "-crf", "20", f"{out}.mp4"]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     gt = 0.0
