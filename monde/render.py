@@ -6,7 +6,7 @@ Si out/<jour>.mp3 (voix off) existe, elle est ajoutée automatiquement.
 """
 import json, math, sys, os, subprocess, hashlib, colorsys
 import numpy as np
-import street, plateforme
+import street, plateforme, foot
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 W, H, FPS = 720, 1280, 24
@@ -179,7 +179,9 @@ def frame(ep, scene, t, gt, state):
     if scene.get("grey"):
         owners = set()
     pulse = set(scene.get("pulse", [])) if int(t * 3) % 2 == 0 else set()
-    if scene.get("map") is not None:
+    if scene.get("foot") is not None:
+        img = foot.draw(BG, scene["foot"], t / scene["dur"], W, H)
+    elif scene.get("map") is not None:
         img = plateforme.draw(BG, scene["map"], t / scene["dur"], W, H)
     elif scene.get("street"):
         img = street.draw(scene["street"], t / scene["dur"], W, H)

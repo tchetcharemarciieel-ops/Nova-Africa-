@@ -1,1 +1,3 @@
-{"day": 1, "owners": [], "laws": [], "note": "état du monde, mis à jour chaque jour après le vote"}
+{"club": "NOVA FC", "budget": 0, "supporters": 0, "stade": 1, "pelouse": 1, "sieges": 1,
+ "effectif": {"GB": null, "DG": null, "DC1": null, "DC2": null, "DD": null, "MG": null, "MC": null, "MD": null, "AG": null, "AC": null, "AD": null},
+ "note": "état du club, mis à jour après chaque vote"}

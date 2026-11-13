@@ -1,0 +1,131 @@
+{
+ "handle": "@lemonde.cestvous",
+ "scenes": [
+  {
+   "dur": 5,
+   "banner": [
+    "Nouveau club",
+    "NOVA FC"
+   ],
+   "hud": [
+    [
+     "Budget",
+     "0 €"
+    ],
+    [
+     "Supporters",
+     "0"
+    ]
+   ],
+   "foot": {
+    "crowd": 0.12,
+    "worn": true,
+    "slots": false,
+    "club": "NOVA FC"
+   },
+   "voice": "Voici mon club. Un petit stade, une pelouse abîmée, et zéro joueur."
+  },
+  {
+   "dur": 5,
+   "banner": [
+    "Comment ça marche",
+    "Likes = budget"
+   ],
+   "hud": [
+    [
+     "Budget",
+     "0 €"
+    ],
+    [
+     "Supporters",
+     "0"
+    ]
+   ],
+   "foot": {
+    "crowd": 0.4,
+    "worn": true,
+    "slots": false,
+    "ball": true,
+    "club": "NOVA FC"
+   },
+   "voice": "Les likes, c'est le budget du club. Les abonnés, ce sont les supporters.",
+   "green": true
+  },
+  {
+   "dur": 9,
+   "banner": [
+    "Le onze de départ",
+    "Quel poste tu veux ?"
+   ],
+   "foot": {
+    "crowd": 0.4,
+    "slots": true,
+    "club": "NOVA FC"
+   },
+   "voice": "Il faut onze joueurs. Commente le poste que tu veux jouer : gardien, défenseur, milieu ou attaquant. Le commentaire le plus liké devient titulaire."
+  },
+  {
+   "dur": 6,
+   "card": {
+    "header": "Première amélioration",
+    "question": "On améliore quoi ?",
+    "choices": [
+     [
+      "A",
+      "Le stade\nCoût : 100 €"
+     ],
+     [
+      "B",
+      "La pelouse\nCoût : 50 €"
+     ],
+     [
+      "C",
+      "Les sièges\nCoût : 30 €"
+     ]
+    ],
+    "footer": "Supporters : like le commentaire A, B ou C"
+   },
+   "voice": "Première amélioration. A, B, ou C ? Les supporters votent en likant le commentaire.",
+   "green": true
+  },
+  {
+   "dur": 5,
+   "banner": [
+    "Bientôt",
+    "Les compétitions"
+   ],
+   "foot": {
+    "trophies": [
+     "LIGUE DES CHAMPIONS",
+     "COUPE DU MONDE DES CLUBS"
+    ]
+   },
+   "voice": "Ensuite, les matchs, la Ligue des Champions, et la Coupe du monde des clubs."
+  },
+  {
+   "dur": 4,
+   "banner": [
+    "Rejoins le club",
+    "Deviens supporter"
+   ],
+   "hud": [
+    [
+     "Budget",
+     "0 €"
+    ],
+    [
+     "Supporters",
+     "0"
+    ]
+   ],
+   "foot": {
+    "crowd": 1.0,
+    "filled": 11,
+    "ball": true,
+    "club": "NOVA FC"
+   },
+   "voice": "Abonne-toi pour devenir supporter, et pour jouer dans mon équipe.",
+   "green": true
+  }
+ ]
+}
