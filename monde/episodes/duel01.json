@@ -1,0 +1,10 @@
+{
+  "handle": "@lemonde.cestvous",
+  "lon_start": 20, "spin": 14,
+  "scenes": [
+    {"dur": 4, "all": true, "banner": ["Chaque jour", "Une chose disparaît"], "voice": "Chaque jour, une chose disparaît du monde. Et c'est toi qui choisis."},
+    {"dur": 4, "all": true, "banner": ["Pays, aliments, métiers", "Tout peut disparaître"], "voice": "Un pays, un aliment, un métier, une invention. Tout peut disparaître.", "green": true},
+    {"dur": 6, "card": {"header": "Duel du jour · Jour 1", "question": "Qui disparaît du monde ?", "choices": [["A","Le football"],["B","Les réseaux\nsociaux"]], "footer": "Like le commentaire de ton choix · Le moins liké disparaît"}, "voice": "Aujourd'hui : le football, ou les réseaux sociaux ? Like le commentaire de ton choix. Le moins liké disparaît du monde.", "green": true},
+    {"dur": 4, "all": true, "banner": ["Demain", "L'un des deux n'existe plus"], "voice": "Demain, l'un des deux n'existera plus. Écris le prochain duel en commentaire, et abonne-toi.", "green": true}
+  ]
+}

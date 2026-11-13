@@ -161,6 +161,8 @@ def frame(ep, scene, t, gt, state):
         k = int(len(lst) * min(1, t / (scene["dur"] * 0.8)))
         owners = set(lst[:k]) | set(state.get("owners", []))
         n = len(owners)
+    if scene.get("all"):
+        owners = set(COUNTRIES); n = len(owners)
     if scene.get("grey"):
         owners = set()
     pulse = set(scene.get("pulse", [])) if int(t * 3) % 2 == 0 else set()
