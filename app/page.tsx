@@ -5,7 +5,7 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import { ProLigne, Poste, Chargement, Erreur } from "@/components/Blocs";
 import { api, messageErreur, type Besoin, type Me, type Offre, type Resume } from "@/lib/api";
-import { moi } from "@/lib/session";
+import { moi, secretExistant } from "@/lib/session";
 
 type Filtre = "tout" | "besoins" | "offres";
 
@@ -16,8 +16,10 @@ export default function Accueil() {
   const [me, setMe] = useState<Me | null>(null);
   const [filtre, setFiltre] = useState<Filtre>("tout");
   const [erreur, setErreur] = useState("");
+  const [nouveau, setNouveau] = useState(false);
 
   useEffect(() => {
+    setNouveau(!secretExistant());
     api.search("", "", 5).then(setPros).catch(e => { setPros([]); setErreur(messageErreur(e)); });
     api.listNeeds(20).then(setBesoins).catch(() => setBesoins([]));
     api.listJobs(20).then(setOffres).catch(() => setOffres([]));
@@ -34,6 +36,13 @@ export default function Accueil() {
   return (
     <main className="page">
       <section className="carte"><div className="marque-ligne"><b>Kargora</b><span>Trouve quelqu&apos;un de confiance, en Centrafrique et partout.</span></div></section>
+      {nouveau && (
+        <section className="carte"><div className="in">
+          <h2>Bienvenue sur Kargora</h2>
+          <p className="mute" style={{ marginBottom: 12 }}>Crée ton compte pour publier, répondre et recevoir des messages. Ça prend une minute, sans mot de passe.</p>
+          <div className="lignes"><Link href="/inscription" className="btn plein">Créer mon compte</Link><Link href="/connexion" className="btn">Se connecter</Link></div>
+        </div></section>
+      )}
       <section className="carte">
         <div className="compose">
           <Avatar nom={me?.nom || "Moi"} taille={46} />

@@ -95,3 +95,8 @@ textarea{min-height:96px}
 .bas a svg{display:block;margin:0 auto 1px}
 .bas a.on{color:var(--g)}.bas a.on:before{content:"";position:absolute;top:-5px;left:25%;right:25%;height:3px;border-radius:2px;background:var(--g)}
 .marque-ligne{padding:12px 16px}.marque-ligne b{display:block;font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--g)}.marque-ligne span{color:var(--sub);font-size:14.5px}
+a.ligne,a.ligne:hover,a.ligne *{text-decoration:none}
+a.ligne{color:var(--txt)}
+a.ligne:after{content:"›";margin-left:auto;color:var(--sub);font-size:26px;line-height:1}
+a.ligne .corps{flex:1}
+a.ligne:hover{background:var(--gbg)}

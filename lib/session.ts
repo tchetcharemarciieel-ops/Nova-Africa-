@@ -39,3 +39,19 @@ export async function assurerMoi(nom?: string): Promise<{ me: Me; secret: string
   garder(me);
   return { me, secret };
 }
+
+/** Efface l'identité de ce téléphone (le compte reste dans la base, on le retrouve avec le code). */
+export function deconnecter() { try { localStorage.removeItem(SK); localStorage.removeItem(MK); } catch { /* ignore */ } }
+
+/** Se connecter avec le code de connexion (le secret) sur un autre téléphone. */
+export async function seConnecter(code: string): Promise<Me> {
+  const secret = code.replace(/\s+/g, "").toLowerCase();
+  if (secret.length < 32 || secret.length > 200 || !/^[0-9a-f]+$/.test(secret)) throw new ApiError("CODE");
+  const me = await api.me(secret);
+  if (!me) throw new ApiError("CODE");
+  localStorage.setItem(SK, secret);
+  garder(me);
+  return me;
+}
+/** Le code est affiché par groupes de 6 caractères pour être lisible et recopiable. */
+export const formaterCode = (s: string) => (s.match(/.{1,6}/g) || []).join(" ");

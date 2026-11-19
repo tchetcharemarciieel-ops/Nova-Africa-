@@ -10,7 +10,7 @@ const SCHEMA = {
   rp_invite_info: ["p_code"], rp_confirm: ["p_code", "p_travail", "p_note", "p_avis", "p_prenom"],
   rp_post_need: ["p_secret", "p_titre", "p_metier", "p_lieu", "p_details"], rp_list_needs: ["p_limit"],
   rp_post_job: ["p_secret", "p_titre", "p_organisation", "p_lieu", "p_type", "p_details"], rp_list_jobs: ["p_limit"],
-  rp_send_message: ["p_secret", "p_to", "p_texte"], rp_inbox: ["p_secret"], rp_thread: ["p_secret", "p_conversation"], rp_unread: ["p_secret"],
+  rp_send_message: ["p_secret", "p_to", "p_texte"], rp_inbox: ["p_secret"], rp_thread: ["p_secret", "p_conversation"], rp_unread: ["p_secret"], rp_update_profile: ["p_secret", "p_nom", "p_metier", "p_lieu", "p_apropos", "p_langues", "p_telephone"],
 };
 const db = { members: [], profiles: [], invites: [], confs: [], needs: [], jobs: [], convs: [], msgs: [] };
 const hex = n => Array.from({ length: n }, () => Math.floor(Math.random() * 16).toString(16)).join("");
@@ -35,6 +35,7 @@ const fns = {
   rp_send_message: a => { const m = need(a.p_secret); if (a.p_to === m.id || !db.members.some(x => x.id === a.p_to)) fail("RP_DEST"); const key = [m.id, a.p_to].sort().join("|"); let c = db.convs.find(x => x.key === key); if (!c) { c = { id: uuid(), key, a: m.id, b: a.p_to }; db.convs.push(c); } c.derniere = now(); db.msgs.push({ id: uuid(), conv: c.id, from: m.id, texte: a.p_texte, lu: false, cree_le: now() }); return c.id; },
   rp_inbox: a => { const m = need(a.p_secret); return db.convs.filter(c => c.a === m.id || c.b === m.id).map(c => { const o = db.members.find(x => x.id === (c.a === m.id ? c.b : c.a)); const ms = db.msgs.filter(x => x.conv === c.id); return { conversation_id: c.id, autre_id: o.id, autre_nom: o.nom, derniere: c.derniere, apercu: ms[ms.length - 1].texte, non_lus: ms.filter(x => x.from !== m.id && !x.lu).length }; }); },
   rp_thread: a => { const m = need(a.p_secret); const c = db.convs.find(x => x.id === a.p_conversation && (x.a === m.id || x.b === m.id)) || fail("RP_CONV"); const o = db.members.find(x => x.id === (c.a === m.id ? c.b : c.a)); db.msgs.filter(x => x.conv === c.id && x.from !== m.id).forEach(x => { x.lu = true; }); return { autre_id: o.id, autre_nom: o.nom, messages: db.msgs.filter(x => x.conv === c.id).map(x => ({ id: x.id, moi: x.from === m.id, texte: x.texte, cree_le: x.cree_le })) }; },
+  rp_update_profile: a => { const m = need(a.p_secret); const p = db.profiles.find(x => x.member_id === m.id) || fail("RP_PROFIL"); if (a.p_nom.trim().length < 2) fail("RP_NOM"); let tel = (a.p_telephone || "").replace(/\D/g, ""); if (tel.length === 8) tel = "236" + tel; Object.assign(p, { nom: a.p_nom, metier: a.p_metier, lieu: a.p_lieu, apropos: a.p_apropos, langues: a.p_langues, telephone: tel || null }); m.nom = a.p_nom; return null; },
   rp_unread: a => { const m = mem(a.p_secret); if (!m) return 0; return db.msgs.filter(x => { const c = db.convs.find(k => k.id === x.conv); return (c.a === m.id || c.b === m.id) && x.from !== m.id && !x.lu; }).length; },
 };
 async function brancher(ctx, log) {
@@ -155,6 +156,62 @@ async function brancher(ctx, log) {
   ok(await vis(cli.getByText(/1 chantier confirmé/)), "recherche : chantier confirmé affiché");
   await cli.selectOption("#l", "PK5");
   ok(await vis(cli.getByText(/Aucun professionnel/)), "recherche : autre quartier vide");
+
+
+  // compte, page Moi, paramètres, connexion par code, modification de la carte
+  const nouv = await tel();
+  await nouv.goto(U + "/");
+  ok(await vis(nouv.getByRole("link", { name: "Créer mon compte" })), "visiteur : « Créer mon compte » sur l'accueil");
+  ok(await vis(nouv.getByRole("link", { name: "Se connecter" })), "visiteur : « Se connecter » sur l'accueil");
+  await nouv.goto(U + "/moi");
+  ok(await vis(nouv.getByText("Tu n'es pas connecté(e) sur ce téléphone.")), "Moi sans compte : invitation à se connecter");
+  await nouv.goto(U + "/inscription");
+  await nouv.getByRole("button", { name: "Créer mon compte" }).click();
+  ok(await vis(nouv.getByRole("alert").filter({ hasText: "Écris ton nom" })), "inscription : nom obligatoire");
+  await nouv.fill("#nom", "Marie Kette");
+  await nouv.getByRole("button", { name: "Créer mon compte" }).click();
+  ok(await vis(nouv.getByRole("alert").filter({ hasText: "Coche la case" })), "inscription : case à cocher obligatoire");
+  await nouv.getByLabel(/J'ai lu/).check();
+  await nouv.getByRole("button", { name: "Créer mon compte" }).click();
+  await nouv.waitForURL(/\/moi\?bienvenue=1/);
+  ok(await vis(nouv.getByRole("heading", { name: "Marie Kette" })), "Moi : le nom s'affiche");
+  ok(await vis(nouv.getByText("Compte créé.")), "Moi : message de bienvenue");
+  ok(await vis(nouv.getByRole("link", { name: "Créer ma carte pro" })), "Moi : invitation à créer sa carte");
+  await nouv.screenshot({ path: SHOT + "/rp4-moi.png", fullPage: true });
+  await nouv.goto(U + "/parametres");
+  ok(await vis(nouv.getByRole("heading", { name: "Paramètres" })), "page Paramètres");
+  await nouv.getByRole("button", { name: "Afficher mon code" }).click();
+  const code = (await nouv.getByLabel("Mon code de connexion").innerText()).trim();
+  ok(/^([0-9a-f]{6} ){11}[0-9a-f]{6}$/.test(code), "le code est affiché par groupes de 6 : " + code.slice(0, 20) + "…");
+  await nouv.getByRole("button", { name: "Quitter ce téléphone" }).click();
+  ok(await vis(nouv.getByText(/Sans ton code de connexion/)), "quitter : avertissement avant d'effacer");
+  await nouv.getByRole("button", { name: "Oui, quitter" }).click();
+  await nouv.waitForURL(U + "/");
+  ok(await vis(nouv.getByRole("link", { name: "Créer mon compte" })), "après avoir quitté : on revient visiteur");
+  await nouv.goto(U + "/connexion");
+  await nouv.fill("#code", "0000 abcd");
+  await nouv.getByRole("button", { name: "Se connecter" }).click();
+  ok(await vis(nouv.getByRole("alert").filter({ hasText: "Code non reconnu" })), "connexion : mauvais code refusé");
+  await nouv.fill("#code", code);
+  await nouv.getByRole("button", { name: "Se connecter" }).click();
+  await nouv.waitForURL(/\/moi$/);
+  ok(await vis(nouv.getByRole("heading", { name: "Marie Kette" })), "connexion avec le code : compte retrouvé");
+
+  // modifier sa carte
+  await nouv.goto(U + "/creer");
+  await nouv.fill("#nom", "Marie Kette"); await nouv.selectOption("#metier", "Couture et mode"); await nouv.selectOption("#lieu", "PK5");
+  await nouv.getByRole("button", { name: "Créer ma carte" }).click();
+  await nouv.waitForURL(/\/p\/marie-kette-/);
+  await nouv.goto(U + "/moi");
+  ok(await vis(nouv.getByRole("link", { name: "Modifier" })), "Moi : bouton Modifier la carte");
+  await nouv.getByRole("link", { name: "Modifier" }).click();
+  await nouv.waitForURL(/\/moi\/carte/);
+  await nouv.selectOption("#metier", "Coiffure et beauté");
+  await nouv.fill("#apropos", "Couture et coiffure, 5 ans d'expérience à PK5.");
+  await nouv.getByRole("button", { name: "Enregistrer" }).click();
+  await nouv.waitForURL(/\/p\/marie-kette-/);
+  ok(await vis(nouv.getByText("Coiffure et beauté").first()), "la carte montre le nouveau métier");
+  ok(await vis(nouv.getByText(/Niveau 2/).first()), "la carte passe au niveau 2 après la présentation");
 
   // aucun renvoi vers WhatsApp nulle part
   let wa = 0;

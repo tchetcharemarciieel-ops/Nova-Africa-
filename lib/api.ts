@@ -14,6 +14,8 @@ export const MESSAGES_ERREUR: Record<string, string> = {
   RP_DEST: "Tu ne peux pas écrire à cette personne.",
   RP_TEL: "Ce numéro n'est pas valide.",
   RP_CONV: "Cette conversation n'existe pas.",
+  RP_PROFIL: "Tu n'as pas encore de carte.",
+  CODE: "Code non reconnu. Vérifie-le et réessaie.",
   RESEAU: "Connexion impossible. Vérifie ta connexion et réessaie.",
   CONFIG: "L'application n'est pas configurée.",
 };
@@ -49,6 +51,8 @@ export const api = {
   me: (secret: string) => rpc<Me | null>("rp_me", { p_secret: secret }),
   createProfile: (secret: string, nom: string, metier: string, lieu: string, apropos: string, langues: string[], telephone: string | null) =>
     rpc<string>("rp_create_profile", { p_secret: secret, p_nom: nom, p_metier: metier, p_lieu: lieu, p_apropos: apropos, p_langues: langues, p_telephone: telephone }),
+  updateProfile: (secret: string, nom: string, metier: string, lieu: string, apropos: string, langues: string[], telephone: string | null) =>
+    rpc<null>("rp_update_profile", { p_secret: secret, p_nom: nom, p_metier: metier, p_lieu: lieu, p_apropos: apropos, p_langues: langues, p_telephone: telephone }),
   getProfile: (slug: string) => rpc<Profil | null>("rp_get_profile", { p_slug: slug }),
   search: (metier: string, lieu: string, limit = 30) => rpc<Resume[]>("rp_search_profiles", { p_metier: metier, p_lieu: lieu, p_limit: limit }),
   createInvite: (secret: string) => rpc<string>("rp_create_invite", { p_secret: secret }),
