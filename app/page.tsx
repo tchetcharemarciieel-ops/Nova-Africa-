@@ -19,26 +19,32 @@ export default function Accueil() {
 
   return (
     <main className="page">
-      <section className="carte"><div className="in">
-        <h1>Trouve quelqu&apos;un de confiance.</h1>
+      <section className="hero">
+        <span className="kicker">Réseau pro · Centrafrique</span>
+        <h1>Trouve quelqu&apos;un de <em>confiance</em>.</h1>
         <p className="lead">Des professionnels dont les clients ont confirmé le travail. Tu leur écris directement ici.</p>
         <div className="lignes">
-          <Link href="/creer" className="btn plein">Créer ma carte pro</Link>
-          <Link href="/besoins/nouveau" className="btn">J&apos;ai besoin de…</Link>
+          <Link href="/creer" className="btn or">Créer ma carte pro</Link>
+          <Link href="/besoins/nouveau" className="btn clair">J&apos;ai besoin de…</Link>
         </div>
-      </div></section>
+      </section>
+      <div className="titre-sec" style={{ marginTop: 4 }}>Que cherches-tu ?</div>
+      <div className="defile">
+        {[["Plomberie", "#1f6f8b"], ["Électricité", "#d4a017"], ["Couture et mode", "#c4511f"], ["Mécanique auto", "#4c5a53"], ["Coiffure et beauté", "#8e3b6e"], ["Menuiserie", "#7a3a12"], ["Informatique", "#1e8e5a"], ["Cuisine et traiteur", "#c4511f"]].map(([m, c]) =>
+          <Link key={m} className="puce" href={`/chercher?m=${encodeURIComponent(m)}`} style={{ ["--c" as string]: c }}><i aria-hidden="true" />{m}</Link>)}
+      </div>
       {erreur && <Erreur texte={erreur} />}
 
-      <h2 style={{ fontSize: 15, margin: "14px 4px 8px", color: "var(--g)" }}>Besoins récents</h2>
+      <div className="titre-sec">Besoins récents</div>
       {besoins === null ? <Chargement /> : besoins.length === 0 ? <p className="vide">Aucun besoin publié. <Link href="/besoins/nouveau">Publie le tien</Link>.</p>
         : besoins.map(b => <Poste key={b.id} nom={b.nom} soustitre={`${b.metier} · ${b.lieu}`} temps={b.cree_le} titre={b.titre} texte={b.details} action="Répondre" href={`/messages/nouveau?to=${b.member_id}&nom=${encodeURIComponent(b.nom)}&sujet=${encodeURIComponent(`Je réponds à ton besoin : ${b.titre}`)}`} />)}
 
       {offres && offres.length > 0 && <>
-        <h2 style={{ fontSize: 15, margin: "14px 4px 8px", color: "var(--g)" }}>Offres d&apos;emploi</h2>
+        <div className="titre-sec">Offres d&apos;emploi</div>
         {offres.map(o => <Poste key={o.id} nom={o.organisation} soustitre={`${o.lieu}`} temps={o.cree_le} titre={o.titre} texte={o.details} etiquette={o.type} action="Postuler" href={`/messages/nouveau?to=${o.member_id}&nom=${encodeURIComponent(o.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${o.titre}`)}`} />)}
       </>}
 
-      <h2 style={{ fontSize: 15, margin: "14px 4px 8px", color: "var(--g)" }}>Professionnels</h2>
+      <div className="titre-sec">Professionnels</div>
       <section className="carte">
         {pros === null ? <Chargement /> : pros.length === 0 ? <p className="in mute">Aucune carte pour l&apos;instant. <Link href="/creer">Crée la première.</Link></p>
           : pros.map(p => <ProLigne key={p.slug} p={p} />)}

@@ -57,9 +57,9 @@ function Contenu() {
       <article className="carte">
         <div className="bandeau" aria-hidden="true" />
         <div className="profil-tete">
-          <span style={{ border: "4px solid #fff", borderRadius: "50%", display: "inline-block", background: "#fff" }}><Avatar nom={p.nom} taille={88} /></span>
-          <h1 className="nom" style={{ color: "var(--encre)", margin: "6px 0 0", fontSize: 24 }}>{p.nom}</h1>
-          <p>{p.metier}</p>
+          <span className="anneau"><Avatar nom={p.nom} taille={92} /></span>
+          <h1 className="nom" style={{ color: "var(--encre)", margin: "8px 0 0" }}>{p.nom}</h1>
+          <p><span className="tag">{p.metier}</span></p>
           <p className="mute petit">{p.lieu} · {p.langues.join(", ") || "Français"}</p>
           {nouveau && <p className="info" style={{ marginTop: 10 }}>Ta carte est prête. Envoie-la à tes clients, et fais confirmer tes premiers chantiers.</p>}
           <div className="lignes" style={{ marginTop: 12 }}>

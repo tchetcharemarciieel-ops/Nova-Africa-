@@ -20,7 +20,7 @@ export function Poste({ nom, soustitre, temps, titre, texte, action, href, etiqu
   nom: string; soustitre: string; temps: string; titre: string; texte?: string; action: string; href: string; etiquette?: string;
 }) {
   return (
-    <article className="carte">
+    <article className={`carte poste ${etiquette ? "offre" : "besoin"}`}>
       <div className="post-t">
         <Avatar nom={nom} taille={46} />
         <span style={{ minWidth: 0 }}><b>{nom}</b><small className="mute petit" style={{ display: "block" }}>{soustitre} · {depuis(temps)}</small></span>
