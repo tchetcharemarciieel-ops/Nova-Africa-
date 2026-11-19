@@ -1,0 +1,33 @@
+:root { --vert: #14532d; --vert-clair: #1f7a46; --or: #d4a017; --fond: #fbf8f1; --bord: #e6dfcd; --encre: #1b2a20; --gris: #5c6b61; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--fond); color: var(--encre); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.5; }
+a { color: var(--vert); }
+.wrap { max-width: 640px; margin: 0 auto; padding: 20px 16px 56px; }
+header.top { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; max-width: 640px; margin: 0 auto; }
+header.top a.logo { font-weight: 800; text-decoration: none; color: var(--vert); font-size: 18px; }
+h1 { font-size: 32px; line-height: 1.15; margin: 8px 0 12px; }
+h2 { font-size: 20px; margin: 28px 0 10px; }
+p.lead { font-size: 18px; color: var(--gris); margin: 0 0 20px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 20px; border-radius: 12px; border: 0; font-weight: 700; font-size: 16px; text-decoration: none; cursor: pointer; background: var(--vert); color: #fff; }
+.btn.or { background: var(--or); color: #1b1608; }
+.btn.clair { background: #fff; color: var(--vert); border: 1.5px solid var(--vert); }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.card { background: #fff; border: 1px solid var(--bord); border-radius: 16px; padding: 18px; }
+.steps { display: grid; gap: 10px; padding: 0; list-style: none; margin: 0; }
+.steps li { display: flex; gap: 12px; align-items: flex-start; }
+.steps b { flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--or); color: #1b1608; display: grid; place-items: center; }
+label { display: block; font-weight: 600; margin: 14px 0 6px; }
+input, select, textarea { width: 100%; min-height: 48px; padding: 10px 12px; border: 1.5px solid var(--bord); border-radius: 10px; font: inherit; background: #fff; color: var(--encre); }
+textarea { min-height: 100px; }
+input:focus, select:focus, textarea:focus { outline: 2.5px solid var(--or); outline-offset: 1px; }
+.checks { display: flex; gap: 14px; flex-wrap: wrap; }
+.checks label { display: flex; align-items: center; gap: 6px; font-weight: 500; margin: 0; }
+.checks input { width: 20px; min-height: 20px; }
+.err { background: #fde8e8; border: 1px solid #f3b6b6; color: #7a1b1b; padding: 10px 12px; border-radius: 10px; margin-top: 14px; }
+.note { font-size: 14px; color: var(--gris); }
+.badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #eaf5ee; color: var(--vert); }
+.pro-nom { font-size: 28px; font-weight: 800; margin: 6px 0 2px; }
+.pro-meta { color: var(--gris); margin: 0 0 14px; }
+.list { display: grid; gap: 12px; margin-top: 16px; }
+.demo { background: #fff7e0; border: 1px solid #ecd58c; border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 0 0 16px; }
