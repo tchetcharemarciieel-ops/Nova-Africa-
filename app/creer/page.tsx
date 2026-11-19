@@ -57,9 +57,9 @@ export default function Creer() {
         <textarea id="apropos" name="apropos" maxLength={300} placeholder="Ex. 8 ans d'expérience, travaux de plomberie et de salle de bain." />
         <label>Langues</label>
         <div className="checks">{LANGUES.map(x => <label key={x}><input type="checkbox" name="langues" value={x} defaultChecked={x === "Français"} /> {x}</label>)}</div>
-        <div className="checks" style={{ marginTop: 8 }}><label><input type="checkbox" name="montrer" /> Montrer mon numéro sur ma carte (facultatif)</label></div>
-        <label htmlFor="telephone">Numéro de téléphone</label><input id="telephone" name="telephone" type="tel" inputMode="tel" autoComplete="tel" placeholder="70 12 34 56" />
-        <p className="mute petit" style={{ marginTop: 6 }}>Les clients t&apos;écrivent dans l&apos;application. Ton numéro reste caché sauf si tu le montres.</p>
+        <div className="checks" style={{ marginTop: 8 }}><label><input type="checkbox" name="montrer" /> Montrer mon numéro WhatsApp sur ma carte (facultatif)</label></div>
+        <label htmlFor="telephone">Numéro WhatsApp (facultatif)</label><input id="telephone" name="telephone" type="tel" inputMode="tel" autoComplete="tel" placeholder="70 12 34 56" />
+        <p className="mute petit" style={{ marginTop: 6 }}>Les clients t&apos;écrivent dans l&apos;application. Ton numéro reste caché sauf si tu coches la case : alors un bouton WhatsApp apparaît sur ta carte.</p>
         {erreur && <Erreur texte={erreur} />}
         <p style={{ marginTop: 18 }}><button className="btn plein bloc" type="submit" disabled={envoi}>{envoi ? "Création…" : "Créer ma carte"}</button></p>
       </form>

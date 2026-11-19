@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import Icone from "@/components/Icone";
-import { ProLigne, Poste, Chargement, Erreur } from "@/components/Blocs";
+import { ProLigne, Poste, Chargement, Erreur, EtatVide } from "@/components/Blocs";
 import { api, messageErreur, type Besoin, type Me, type Offre, type Resume } from "@/lib/api";
 import { moi, secretExistant } from "@/lib/session";
 
@@ -69,12 +69,9 @@ export default function Accueil() {
       </div>
 
       {!charge ? <Chargement /> : fil.length === 0 ? (
-        <section className="vide-carte">
-          <span className="vide-ico"><Icone nom={filtre === "offres" ? "emplois" : "recherche"} taille={30} trait={1.5} /></span>
-          <h2>{filtre === "tout" ? "Rien pour l'instant" : "Aucune annonce dans cette catégorie pour le moment"}</h2>
-          <p>{filtre === "tout" ? "Aucune annonce n'a encore été publiée. Sois le premier : les professionnels te répondent ici." : "Reviens un peu plus tard, ou publie la première."}</p>
-          <Link href={filtre === "offres" ? "/emplois/nouveau" : "/besoins/nouveau"} className="btn plein">{filtre === "offres" ? "Publier la première offre" : "Publier le premier besoin"}</Link>
-        </section>
+        <EtatVide icone={filtre === "offres" ? "emplois" : "recherche"} titre={filtre === "tout" ? "Rien pour l'instant" : "Aucune annonce dans cette catégorie pour le moment"}
+          texte={filtre === "tout" ? "Aucune annonce n'a encore été publiée. Sois le premier : les professionnels te répondent ici." : "Reviens un peu plus tard, ou publie la première."}
+          href={filtre === "offres" ? "/emplois/nouveau" : "/besoins/nouveau"} action={filtre === "offres" ? "Publier la première offre" : "Publier le premier besoin"} />
       ) : fil.map(e => e.t === "b"
           ? <Poste key={e.x.id} nom={e.x.nom} soustitre={`${e.x.metier} · ${e.x.lieu}`} temps={e.d} titre={e.x.titre} texte={e.x.details} action="Répondre" href={`/messages/nouveau?to=${e.x.member_id}&nom=${encodeURIComponent(e.x.nom)}&sujet=${encodeURIComponent(`Je réponds à ton besoin : ${e.x.titre}`)}`} />
           : <Poste key={e.x.id} nom={e.x.organisation} carre soustitre={e.x.lieu} temps={e.d} titre={e.x.titre} texte={e.x.details} etiquette={e.x.type} action="Postuler" href={`/messages/nouveau?to=${e.x.member_id}&nom=${encodeURIComponent(e.x.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${e.x.titre}`)}`} />)}
@@ -87,9 +84,11 @@ export default function Accueil() {
       </section>
       <section className="carte"><div className="in">
         <h2>Pourquoi se fier</h2>
-        <p><b>Des preuves.</b> Un chantier compte seulement quand le client le confirme avec un lien envoyé par le professionnel.</p>
-        <p style={{ marginTop: 8 }}><b>Des niveaux clairs.</b> Profil créé, profil complet, puis identité vérifiée et entreprise déclarée quand ils seront disponibles.</p>
-        <p style={{ marginTop: 8 }}><b>Des avis honnêtes.</b> Publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, avec une explication.</p>
+        <ul className="liste-conf">
+          <li><span className="badge-vert"><Icone nom="bouclier" taille={22} /></span><div><b>Des preuves</b><span className="t">Un chantier compte seulement quand le client le confirme avec un lien envoyé par le professionnel.</span></div></li>
+          <li><span className="badge-vert"><Icone nom="niveaux" taille={22} /></span><div><b>Des niveaux clairs</b><span className="t">Profil créé, profil complet, puis identité vérifiée et entreprise déclarée quand ils seront disponibles.</span></div></li>
+          <li><span className="badge-vert"><Icone nom="etoile" taille={22} /></span><div><b>Des avis honnêtes</b><span className="t">Publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, avec une explication.</span></div></li>
+        </ul>
       </div></section>
       <p className="mute petit" style={{ padding: "0 4px" }}><Link href="/a-propos">À propos de Kargora et confidentialité</Link></p>
     </main>

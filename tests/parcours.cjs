@@ -184,6 +184,7 @@ async function brancher(ctx, log) {
   await nouv.goto(U + "/moi");
   ok(await vis(nouv.getByText("Tu n'es pas connecté(e) sur ce téléphone.")), "Moi sans compte : invitation à se connecter");
   await nouv.goto(U + "/inscription");
+  await nouv.screenshot({ path: SHOT + "/rp6-inscription.png", fullPage: true });
   await nouv.getByRole("button", { name: "Créer mon compte" }).click();
   ok(await vis(nouv.getByRole("alert").filter({ hasText: "Écris ton nom" })), "inscription : nom obligatoire");
   await nouv.fill("#nom", "Marie Kette");
@@ -194,6 +195,14 @@ async function brancher(ctx, log) {
   await nouv.waitForURL(/\/moi\?bienvenue=1/);
   ok(await vis(nouv.getByRole("heading", { name: "Marie Kette" })), "Moi : le nom s'affiche");
   ok(await vis(nouv.getByText("Compte créé.")), "Moi : message de bienvenue");
+  const codeAffiche = (await nouv.getByLabel("Mon code de connexion").first().innerText()).trim();
+  ok(/^([0-9a-f]{6} ){11}[0-9a-f]{6}$/.test(codeAffiche), "juste après l'inscription : le code de connexion est visible");
+  ok(await vis(nouv.getByRole("button", { name: "Copier mon code" })), "bouton « Copier mon code »");
+  const hrefWa = await nouv.getByRole("link", { name: /M'envoyer mon code sur WhatsApp/ }).getAttribute("href");
+  ok(hrefWa.startsWith("https://wa.me/?text=") && decodeURIComponent(hrefWa).includes(codeAffiche), "bouton WhatsApp : lien pré-rempli avec le code");
+  await nouv.screenshot({ path: SHOT + "/rp6-code.png", fullPage: true });
+  await nouv.getByRole("button", { name: "J'ai noté mon code" }).click();
+  ok(await nouv.getByText("Compte créé.").count() === 0, "le bloc du code se ferme");
   ok(await vis(nouv.getByRole("link", { name: "Créer ma carte pro" })), "Moi : invitation à créer sa carte");
   await nouv.screenshot({ path: SHOT + "/rp4-moi.png", fullPage: true });
   await nouv.goto(U + "/parametres");
@@ -226,15 +235,27 @@ async function brancher(ctx, log) {
   await nouv.waitForURL(/\/moi\/carte/);
   await nouv.selectOption("#metier", "Coiffure et beauté");
   await nouv.fill("#apropos", "Couture et coiffure, 5 ans d'expérience à PK5.");
+  await nouv.getByLabel(/Montrer mon numéro WhatsApp/).check();
+  await nouv.fill("#telephone", "70 12 34 56");
   await nouv.getByRole("button", { name: "Enregistrer" }).click();
   await nouv.waitForURL(/\/p\/marie-kette-/);
   ok(await vis(nouv.getByText("Coiffure et beauté").first()), "la carte montre le nouveau métier");
   ok(await vis(nouv.getByText(/Niveau 2/).first()), "la carte passe au niveau 2 après la présentation");
+  const slugMarie = nouv.url().split("/p/")[1].split("?")[0];
+  await cli.goto(U + "/p/" + slugMarie);
+  const waHref = await cli.getByRole("link", { name: "WhatsApp", exact: true }).getAttribute("href");
+  ok(waHref.startsWith("https://wa.me/23670123456"), "profil vu par un visiteur : bouton WhatsApp quand le numéro est montré");
+  ok(await vis(cli.getByRole("link", { name: "Message", exact: true })), "profil : le bouton Message reste à côté de WhatsApp");
+  await cli.screenshot({ path: SHOT + "/rp6-profil-wa.png", fullPage: true });
+  await nouv.goto(U + "/creer");
+  ok(await vis(nouv.getByRole("heading", { name: "Ma carte pro" })), "page carte pro accessible");
+  await cli.goto(U + "/creer");
+  ok(await vis(cli.getByText("Sango", { exact: true })), "Sango est proposé dans les langues");
 
   // aucun renvoi vers WhatsApp nulle part
   let wa = 0;
   for (const u of ["/", "/creer", "/chercher", "/publier", "/besoins", "/emplois", "/messages", "/p/" + slug]) { await cli.goto(U + u); await cli.waitForTimeout(300); wa += (await cli.content()).includes("wa.me") ? 1 : 0; }
-  ok(wa === 0, "aucun lien vers WhatsApp");
+  ok(wa === 0, "aucun lien WhatsApp quand aucun numéro n'est montré");
   await cli.goto(U + "/"); await cli.waitForTimeout(500);
   await cli.screenshot({ path: SHOT + "/rp3-accueil.png", fullPage: true });
   ok(log.length === 0, "noms de paramètres conformes aux fonctions : " + JSON.stringify(log));

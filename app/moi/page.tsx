@@ -8,11 +8,12 @@ import Icone from "@/components/Icone";
 import LigneMenu from "@/components/LigneMenu";
 import { Chargement } from "@/components/Blocs";
 import { api, type Me, type Profil } from "@/lib/api";
-import { moi } from "@/lib/session";
+import { formaterCode, moi, secretExistant } from "@/lib/session";
 
 function Contenu() {
   const bienvenue = useSearchParams().get("bienvenue") === "1";
   const [ferme, setFerme] = useState(false);
+  const [copie, setCopie] = useState(false);
   const [me, setMe] = useState<Me | null | undefined>(undefined);
   const [carte, setCarte] = useState<Profil | null>(null);
   useEffect(() => {
@@ -29,11 +30,17 @@ function Contenu() {
   return (
     <main className="page">
       {bienvenue && !ferme && (
-        <div className="alerte" role="status">
-          <span className="alerte-ico"><Icone nom="info" taille={20} /></span>
-          <p><b>Compte créé.</b> Va dans <Link href="/parametres">Paramètres</Link> pour noter ton code de connexion : il te permet de retrouver ton compte si tu changes de téléphone.</p>
-          <button type="button" className="alerte-x" aria-label="Fermer ce message" onClick={() => setFerme(true)}><Icone nom="fermer" taille={18} /></button>
-        </div>
+        <section className="code-carte" role="status">
+          <h2>Compte créé.</h2>
+          <p className="mute petit">Voici ton code de connexion. Garde-le : il te permet de retrouver ton compte si tu changes ou perds ton téléphone.</p>
+          <p className="code" aria-label="Mon code de connexion">{formaterCode(secretExistant() || "")}</p>
+          <div className="lignes">
+            <button type="button" className="btn plein" onClick={async () => { try { await navigator.clipboard.writeText(formaterCode(secretExistant() || "")); setCopie(true); } catch { setCopie(false); } }}><Icone nom="copier" taille={18} />{copie ? "Code copié" : "Copier mon code"}</button>
+            <a className="btn-wa" href={`https://wa.me/?text=${encodeURIComponent(`Mon code de connexion Kargora (à garder pour moi) : ${formaterCode(secretExistant() || "")}`)}`} target="_blank" rel="noopener noreferrer"><Icone nom="whatsapp" taille={18} />M&apos;envoyer mon code sur WhatsApp</a>
+          </div>
+          <p className="info" style={{ marginTop: 12, marginBottom: 12 }}><b>Important :</b> ce code donne accès à ton compte. Envoie-le seulement à toi-même (ta conversation « Moi » ou ton numéro), jamais à quelqu&apos;un d&apos;autre.</p>
+          <button type="button" className="btn bloc" onClick={() => setFerme(true)}>J&apos;ai noté mon code</button>
+        </section>
       )}
       <section className="carte"><div className="in profil-ligne">
         <Avatar nom={me.nom} taille={68} badge />

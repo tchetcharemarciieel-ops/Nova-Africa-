@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
+import Icone from "@/components/Icone";
 import { Chargement, Erreur } from "@/components/Blocs";
 import { NIVEAUX, depuis, formatPhone } from "@/lib/constants";
 import { api, messageErreur, type Me, type Profil } from "@/lib/api";
@@ -69,6 +70,7 @@ function Contenu() {
               <button className="btn" type="button" onClick={async () => { const r = await partager(`Ma carte pro : ${p.nom}, ${p.metier}`, url); setInfo(r === "copie" ? "Lien de ta carte copié." : r === "partage" ? "Carte partagée." : ""); }}>Partager ma carte</button>
             </> : <>
               <Link className="btn plein" href={`/messages/nouveau?to=${p.member_id}&nom=${encodeURIComponent(p.nom)}`}>Message</Link>
+              {p.telephone && <a className="btn-wa" href={`https://wa.me/${p.telephone}?text=${encodeURIComponent(`Bonjour ${p.nom}, je t'ai trouvé sur Kargora.`)}`} target="_blank" rel="noopener noreferrer"><Icone nom="whatsapp" taille={18} />WhatsApp</a>}
               {p.telephone && <a className="btn" href={`tel:+${p.telephone}`}>Appeler {formatPhone(p.telephone)}</a>}
             </>}
           </div>

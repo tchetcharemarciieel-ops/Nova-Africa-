@@ -24,15 +24,15 @@ export default function Inscription() {
     catch (err) { setErreur(messageErreur(err)); setEnvoi(false); }
   }
   return (
-    <main className="page"><section className="carte"><div className="in">
+    <main className="page auth"><section className="carte form"><div className="in">
       <h1>Créer mon compte</h1>
       <p className="lead">Une minute, sans mot de passe. Ton compte est lié à ce téléphone, et tu reçois un code pour le retrouver ailleurs.</p>
       <form onSubmit={envoyer} noValidate>
         <label htmlFor="nom">Ton nom</label><input id="nom" name="nom" autoComplete="name" maxLength={60} placeholder="Ex. Joseph Ngaïkosset" />
-        <div className="checks" style={{ marginTop: 10 }}><label><input type="checkbox" name="ok" /> J&apos;ai lu <Link href="/a-propos">À propos et confidentialité</Link> : c&apos;est une version de test.</label></div>
+        <label className="case"><input type="checkbox" name="ok" /><span>J&apos;ai lu la page <Link href="/a-propos">À propos et confidentialité</Link> (version de test).</span></label>
         {erreur && <Erreur texte={erreur} />}
         <p style={{ marginTop: 16 }}><button className="btn plein bloc" type="submit" disabled={envoi}>{envoi ? "Création…" : "Créer mon compte"}</button></p>
-        <p className="mute petit" style={{ textAlign: "center" }}>Tu as déjà un compte ? <Link href="/connexion">Se connecter</Link></p>
+        <p className="lien-bas">Tu as déjà un compte ? <Link href="/connexion">Se connecter</Link></p>
       </form>
     </div></section></main>
   );

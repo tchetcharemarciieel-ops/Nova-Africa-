@@ -46,8 +46,8 @@ export default function ModifierCarte() {
         <label htmlFor="apropos">Ce que tu sais faire</label><textarea id="apropos" name="apropos" maxLength={300} defaultValue={carte.apropos} />
         <label>Langues</label>
         <div className="checks">{LANGUES.map(x => <label key={x}><input type="checkbox" name="langues" value={x} defaultChecked={carte.langues.includes(x)} /> {x}</label>)}</div>
-        <div className="checks" style={{ marginTop: 8 }}><label><input type="checkbox" name="montrer" defaultChecked={!!carte.telephone} /> Montrer mon numéro sur ma carte</label></div>
-        <label htmlFor="telephone">Numéro de téléphone</label><input id="telephone" name="telephone" type="tel" inputMode="tel" defaultValue={carte.telephone ? carte.telephone.replace(/^236/, "") : ""} placeholder="70 12 34 56" />
+        <div className="checks" style={{ marginTop: 8 }}><label><input type="checkbox" name="montrer" defaultChecked={!!carte.telephone} /> Montrer mon numéro WhatsApp sur ma carte</label></div>
+        <label htmlFor="telephone">Numéro WhatsApp (facultatif)</label><input id="telephone" name="telephone" type="tel" inputMode="tel" defaultValue={carte.telephone ? carte.telephone.replace(/^236/, "") : ""} placeholder="70 12 34 56" />
         {erreur && <Erreur texte={erreur} />}
         <p style={{ marginTop: 18 }}><button className="btn plein bloc" type="submit" disabled={envoi}>{envoi ? "Enregistrement…" : "Enregistrer"}</button></p>
       </form>

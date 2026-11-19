@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
-import { Chargement, Erreur } from "@/components/Blocs";
+import { Chargement, Erreur, EtatVide } from "@/components/Blocs";
 import { depuis } from "@/lib/constants";
 import { api, messageErreur, type Conversation } from "@/lib/api";
 import { secretExistant } from "@/lib/session";
@@ -23,7 +23,7 @@ export default function Messages() {
   return (
     <main className="page">
       <section className="carte"><div className="in"><h1>Messages</h1></div>
-        {liste === null ? <Chargement /> : liste.length === 0 ? <p className="in mute">Aucun message pour l&apos;instant. Écris à un professionnel depuis sa carte, ou réponds à un <Link href="/besoins">besoin</Link>.</p>
+        {liste === null ? <Chargement /> : liste.length === 0 ? null
           : liste.map(c => (
             <Link key={c.conversation_id} href={`/messages/${c.conversation_id}`} className="ligne">
               <Avatar nom={c.autre_nom} taille={48} />
@@ -31,6 +31,7 @@ export default function Messages() {
               <span style={{ textAlign: "right" }}><small>{depuis(c.derniere)}</small>{c.non_lus > 0 && <span className="tag" style={{ background: "var(--v)", color: "#fff" }}>{c.non_lus}</span>}</span>
             </Link>))}
       </section>
+      {liste !== null && liste.length === 0 && <EtatVide icone="message" titre="Aucun message pour l'instant" texte="Écris à un professionnel depuis sa carte, ou réponds à un besoin : tes conversations apparaissent ici." href="/besoins" action="Voir les besoins" />}
       {erreur && <Erreur texte={erreur} />}
     </main>
   );

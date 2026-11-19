@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ProLigne, Chargement, Erreur } from "@/components/Blocs";
+import { ProLigne, Chargement, Erreur, EtatVide } from "@/components/Blocs";
 import { LIEUX, METIERS } from "@/lib/constants";
 import { api, messageErreur, type Resume } from "@/lib/api";
 
@@ -35,10 +35,10 @@ function Contenu() {
         <select id="l" value={l} onChange={e => maj("l", e.target.value)}><option value="">Tous les quartiers</option>{LIEUX.map(x => <option key={x}>{x}</option>)}</select>
       </div></section>
       {erreur && <Erreur texte={erreur} />}
-      <section className="carte" aria-live="polite">
-        {liste === null ? <Chargement /> : liste.length === 0 && !erreur ? <p className="in mute">Aucun professionnel pour ces critères. <Link href="/besoins/nouveau">Publie un besoin</Link> ou <Link href="/creer">crée ta carte</Link>.</p>
-          : liste.map(p => <ProLigne key={p.slug} p={p} />)}
-      </section>
+      <div aria-live="polite">
+        {liste === null ? <section className="carte"><Chargement /></section> : liste.length === 0 && !erreur ? <EtatVide icone="reseau" titre="Aucun professionnel pour ces critères" texte="Change le métier ou le quartier, ou publie ce que tu cherches : les professionnels te répondent." href="/besoins/nouveau" action="Publier un besoin" />
+          : <section className="carte">{liste.map(p => <ProLigne key={p.slug} p={p} />)}</section>}
+      </div>
     </main>
   );
 }

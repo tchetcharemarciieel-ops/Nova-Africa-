@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Icone, { type NomIcone } from "./Icone";
 import Avatar from "./Avatar";
 import { depuis } from "@/lib/constants";
 import type { Resume } from "@/lib/api";
@@ -39,3 +40,14 @@ export function Poste({ nom, soustitre, temps, titre, texte, action, href, etiqu
 
 export function Chargement() { return <p className="mute petit" role="status" style={{ padding: 12 }}>Chargement…</p>; }
 export function Erreur({ texte }: { texte: string }) { return <p className="err" role="alert" style={{ margin: "8px 0" }}>{texte}</p>; }
+
+export function EtatVide({ icone, titre, texte, href, action }: { icone: NomIcone; titre: string; texte: string; href?: string; action?: string }) {
+  return (
+    <section className="vide-carte">
+      <span className="vide-ico"><Icone nom={icone} taille={30} trait={1.5} /></span>
+      <h2>{titre}</h2>
+      <p>{texte}</p>
+      {href && action && <Link href={href} className="btn plein">{action}</Link>}
+    </section>
+  );
+}
