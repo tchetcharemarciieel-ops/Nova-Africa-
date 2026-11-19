@@ -57,10 +57,11 @@ function Contenu() {
       <article className="carte">
         <div className="bandeau" aria-hidden="true" />
         <div className="profil-tete">
-          <span className="anneau"><Avatar nom={p.nom} taille={92} /></span>
-          <h1 className="nom" style={{ color: "var(--encre)", margin: "8px 0 0" }}>{p.nom}</h1>
-          <p><span className="tag">{p.metier}</span></p>
+          <span className="anneau"><Avatar nom={p.nom} taille={88} /></span>
+          <h1 className="nom">{p.nom}</h1>
+          <p>{p.metier}</p>
           <p className="mute petit">{p.lieu} · {p.langues.join(", ") || "Français"}</p>
+          <p className="petit" style={{ marginTop: 6 }}><b style={{ color: "var(--g)" }}>{p.chantiers} chantier{p.chantiers > 1 ? "s" : ""} confirmé{p.chantiers > 1 ? "s" : ""}</b>{p.chantiers > 0 && <> · <span className="etoiles">★</span> {String(p.moyenne).replace(".", ",")}</>} · Niveau {p.niveau}/4</p>
           {nouveau && <p className="info" style={{ marginTop: 10 }}>Ta carte est prête. Envoie-la à tes clients, et fais confirmer tes premiers chantiers.</p>}
           <div className="lignes" style={{ marginTop: 12 }}>
             {proprietaire ? <>
@@ -75,17 +76,12 @@ function Contenu() {
           {lienConf && <p className="petit" style={{ marginTop: 8, wordBreak: "break-all" }}>Lien à envoyer à ton client : <b>{lienConf}</b></p>}
           {erreur && <Erreur texte={erreur} />}
         </div>
-        <div className="stats">
-          <div className="st"><b>{p.chantiers}</b><span>chantiers confirmés</span></div>
-          <div className="st"><b>{p.chantiers ? String(p.moyenne).replace(".", ",") : "–"}</b><span>note moyenne</span></div>
-          <div className="st"><b>{p.niveau}/4</b><span>niveau</span></div>
-        </div>
       </article>
 
       <section className="carte"><div className="in">
-        <h2>Niveau de confiance <small>{NIVEAUX[p.niveau - 1].nom}</small></h2>
-        <div className="niveaux" aria-hidden="true">{NIVEAUX.map(n => <i key={n.n} className={n.n <= p.niveau ? "on" : ""} />)}</div>
-        <p className="mute petit">Niveaux 3 et 4 (identité vérifiée, entreprise déclarée) : bientôt. {proprietaire && p.niveau === 1 && "Pour passer au niveau 2, écris au moins 20 lettres dans « ce que tu sais faire »."}</p>
+        <h2>Niveau de confiance</h2>
+        <ul className="etapes">{NIVEAUX.map(n => <li key={n.n} className={n.n <= p.niveau ? "ok" : ""}><i aria-hidden="true">{n.n <= p.niveau ? "✓" : ""}</i><span>{n.nom}{n.n > 2 && <> <span className="tag a">bientôt</span></>}</span></li>)}</ul>
+        {proprietaire && p.niveau === 1 && <p className="mute petit">Pour passer au niveau 2, écris au moins 20 lettres dans « ce que tu sais faire ».</p>}
       </div></section>
 
       {p.apropos && <section className="carte"><div className="in"><h2>À propos</h2><p>{p.apropos}</p></div></section>}
@@ -94,15 +90,16 @@ function Contenu() {
         <h2>Chantiers confirmés <small>{p.chantiers}</small></h2>
         {p.avis.length === 0 ? <p className="mute">Pas encore de chantier confirmé. Il apparaît quand un client confirme avec le lien envoyé par le professionnel.</p>
           : p.avis.map((a, i) => (
-            <div key={i} style={{ padding: "10px 0", borderTop: i ? "1px solid var(--b)" : 0 }}>
-              <b>{a.travail}</b> <span className="etoiles" aria-label={`${a.note} sur 5`}>{"★".repeat(a.note)}</span>
-              {a.avis && <p>« {a.avis} »</p>}
-              <p className="mute petit">{a.prenom || "Un client"} · chantier confirmé · {depuis(a.cree_le)}</p>
+            <div key={i} className="chantier">
+              <span className="coche" aria-hidden="true">✓</span>
+              <div><b>{a.travail}</b> <span className="etoiles" aria-label={`${a.note} sur 5`}>{"★".repeat(a.note)}</span>
+                {a.avis && <p>« {a.avis} »</p>}
+                <p className="mute petit">{a.prenom || "Un client"} · chantier confirmé · {depuis(a.cree_le)}</p></div>
             </div>))}
       </div></section>
 
       {qr && <section className="carte"><div className="qr"><img src={qr} alt={`QR code de la carte de ${p.nom}`} /><span className="mute petit">Montre ce code, ou imprime-le pour ton atelier.</span></div></section>}
-      <p className="mute petit" style={{ padding: "0 4px" }}><b>Notre règle sur les avis :</b> publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, et nous disons pourquoi. Personne ne peut payer pour les faire disparaître.</p>
+      <p className="mute petit" style={{ padding: "0 16px" }}><b>Notre règle sur les avis :</b> publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, et nous disons pourquoi. Personne ne peut payer pour les faire disparaître.</p>
     </main>
   );
 }

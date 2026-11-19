@@ -1,56 +1,67 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Avatar from "@/components/Avatar";
 import { ProLigne, Poste, Chargement, Erreur } from "@/components/Blocs";
-import { api, messageErreur, type Besoin, type Offre, type Resume } from "@/lib/api";
+import { api, messageErreur, type Besoin, type Me, type Offre, type Resume } from "@/lib/api";
+import { moi } from "@/lib/session";
+
+type Filtre = "tout" | "besoins" | "offres";
 
 export default function Accueil() {
   const [pros, setPros] = useState<Resume[] | null>(null);
   const [besoins, setBesoins] = useState<Besoin[] | null>(null);
   const [offres, setOffres] = useState<Offre[] | null>(null);
+  const [me, setMe] = useState<Me | null>(null);
+  const [filtre, setFiltre] = useState<Filtre>("tout");
   const [erreur, setErreur] = useState("");
 
   useEffect(() => {
     api.search("", "", 5).then(setPros).catch(e => { setPros([]); setErreur(messageErreur(e)); });
-    api.listNeeds(4).then(setBesoins).catch(() => setBesoins([]));
-    api.listJobs(3).then(setOffres).catch(() => setOffres([]));
+    api.listNeeds(20).then(setBesoins).catch(() => setBesoins([]));
+    api.listJobs(20).then(setOffres).catch(() => setOffres([]));
+    moi().then(setMe).catch(() => {});
   }, []);
+
+  const fil = useMemo(() => {
+    const b = filtre === "offres" ? [] : (besoins ?? []).map(x => ({ t: "b" as const, d: x.cree_le, x }));
+    const o = filtre === "besoins" ? [] : (offres ?? []).map(x => ({ t: "o" as const, d: x.cree_le, x }));
+    return [...b, ...o].sort((p, q) => (q.d > p.d ? 1 : -1));
+  }, [besoins, offres, filtre]);
+  const charge = besoins !== null && offres !== null;
 
   return (
     <main className="page">
-      <section className="hero">
-        <span className="kicker">Réseau pro · Centrafrique</span>
-        <h1>Trouve quelqu&apos;un de <em>confiance</em>.</h1>
-        <p className="lead">Des professionnels dont les clients ont confirmé le travail. Tu leur écris directement ici.</p>
-        <div className="lignes">
-          <Link href="/creer" className="btn or">Créer ma carte pro</Link>
-          <Link href="/besoins/nouveau" className="btn clair">J&apos;ai besoin de…</Link>
+      <section className="carte">
+        <div className="compose">
+          <Avatar nom={me?.nom || "Moi"} taille={46} />
+          <Link href="/besoins/nouveau" className="faux">Que cherches-tu aujourd&apos;hui ?</Link>
+        </div>
+        <div className="raccourcis">
+          <Link href="/besoins/nouveau" style={{ color: "var(--besoin)" }}><span className="puce-pt" aria-hidden="true" />Un besoin</Link>
+          <Link href="/emplois/nouveau" style={{ color: "var(--g)" }}><span className="puce-pt" aria-hidden="true" />Une offre</Link>
+          <Link href="/creer" style={{ color: "#1f5f8b" }}><span className="puce-pt" aria-hidden="true" />Ma carte</Link>
         </div>
       </section>
-      <div className="titre-sec" style={{ marginTop: 4 }}>Que cherches-tu ?</div>
-      <div className="defile">
-        {[["Plomberie", "#1f6f8b"], ["Électricité", "#d4a017"], ["Couture et mode", "#c4511f"], ["Mécanique auto", "#4c5a53"], ["Coiffure et beauté", "#8e3b6e"], ["Menuiserie", "#7a3a12"], ["Informatique", "#1e8e5a"], ["Cuisine et traiteur", "#c4511f"]].map(([m, c]) =>
-          <Link key={m} className="puce" href={`/chercher?m=${encodeURIComponent(m)}`} style={{ ["--c" as string]: c }}><i aria-hidden="true" />{m}</Link>)}
-      </div>
       {erreur && <Erreur texte={erreur} />}
 
-      <div className="titre-sec">Besoins récents</div>
-      {besoins === null ? <Chargement /> : besoins.length === 0 ? <p className="vide">Aucun besoin publié. <Link href="/besoins/nouveau">Publie le tien</Link>.</p>
-        : besoins.map(b => <Poste key={b.id} nom={b.nom} soustitre={`${b.metier} · ${b.lieu}`} temps={b.cree_le} titre={b.titre} texte={b.details} action="Répondre" href={`/messages/nouveau?to=${b.member_id}&nom=${encodeURIComponent(b.nom)}&sujet=${encodeURIComponent(`Je réponds à ton besoin : ${b.titre}`)}`} />)}
+      <div className="chips" role="group" aria-label="Filtrer le fil">
+        {([["tout", "Tout"], ["besoins", "Besoins"], ["offres", "Offres"]] as const).map(([k, n]) =>
+          <button key={k} type="button" className={`chip${filtre === k ? " on" : ""}`} aria-pressed={filtre === k} onClick={() => setFiltre(k)}>{n}</button>)}
+      </div>
 
-      {offres && offres.length > 0 && <>
-        <div className="titre-sec">Offres d&apos;emploi</div>
-        {offres.map(o => <Poste key={o.id} nom={o.organisation} soustitre={`${o.lieu}`} temps={o.cree_le} titre={o.titre} texte={o.details} etiquette={o.type} action="Postuler" href={`/messages/nouveau?to=${o.member_id}&nom=${encodeURIComponent(o.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${o.titre}`)}`} />)}
-      </>}
+      {!charge ? <Chargement /> : fil.length === 0 ? <p className="vide">Rien pour l&apos;instant. <Link href="/besoins/nouveau">Publie un besoin</Link> ou <Link href="/emplois/nouveau">une offre</Link>.</p>
+        : fil.map(e => e.t === "b"
+          ? <Poste key={e.x.id} nom={e.x.nom} soustitre={`${e.x.metier} · ${e.x.lieu}`} temps={e.d} titre={e.x.titre} texte={e.x.details} action="Répondre" href={`/messages/nouveau?to=${e.x.member_id}&nom=${encodeURIComponent(e.x.nom)}&sujet=${encodeURIComponent(`Je réponds à ton besoin : ${e.x.titre}`)}`} />
+          : <Poste key={e.x.id} nom={e.x.organisation} carre soustitre={e.x.lieu} temps={e.d} titre={e.x.titre} texte={e.x.details} etiquette={e.x.type} action="Postuler" href={`/messages/nouveau?to=${e.x.member_id}&nom=${encodeURIComponent(e.x.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${e.x.titre}`)}`} />)}
 
-      <div className="titre-sec">Professionnels</div>
+      <div className="sec-t" style={{ marginTop: 6 }}>Professionnels</div>
       <section className="carte">
         {pros === null ? <Chargement /> : pros.length === 0 ? <p className="in mute">Aucune carte pour l&apos;instant. <Link href="/creer">Crée la première.</Link></p>
           : pros.map(p => <ProLigne key={p.slug} p={p} />)}
         <div className="lien-act"><Link href="/chercher">Voir tous les professionnels</Link></div>
       </section>
-
       <section className="carte"><div className="in">
         <h2>Pourquoi se fier</h2>
         <p><b>Des preuves.</b> Un chantier compte seulement quand le client le confirme avec un lien envoyé par le professionnel.</p>

@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icone from "./Icone";
-import { api } from "@/lib/api";
-import { secretExistant } from "@/lib/session";
+import Avatar from "./Avatar";
+import { api, type Me } from "@/lib/api";
+import { moi, secretExistant } from "@/lib/session";
 
 export function BarreHaut() {
   const [nonLus, setNonLus] = useState(0);
+  const [me, setMe] = useState<Me | null>(null);
   const path = usePathname();
   useEffect(() => {
     let vivant = true;
@@ -17,6 +19,7 @@ export function BarreHaut() {
       if (!s) return;
       try { const n = await api.unread(s); if (vivant) setNonLus(n); } catch { /* silencieux */ }
     }
+    moi().then(m => { if (vivant) setMe(m); }).catch(() => {});
     charger();
     const t = setInterval(charger, 30000);
     return () => { vivant = false; clearInterval(t); };
@@ -24,8 +27,8 @@ export function BarreHaut() {
   return (
     <header className="barre">
       <div className="barre-in">
-        <Link href="/" className="marque" aria-label="Réseau pro, accueil"><b aria-hidden="true">R</b></Link>
-        <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /> Chercher un métier, un quartier</Link>
+        <Link href={me?.slug ? `/p/${me.slug}` : "/creer"} className="moi-av" aria-label={me?.slug ? "Ma carte" : "Créer ma carte"}><Avatar nom={me?.nom || "Moi"} taille={38} /></Link>
+        <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /> Chercher</Link>
         <Link href="/messages" className="icone" aria-label={nonLus ? `Messages, ${nonLus} non lus` : "Messages"}>
           <Icone nom="message" />{nonLus > 0 && <span className="badge" aria-hidden="true">{nonLus > 9 ? "9+" : nonLus}</span>}
         </Link>
@@ -38,13 +41,13 @@ const ITEMS = [
   { href: "/", nom: "Accueil", icone: "accueil" as const },
   { href: "/chercher", nom: "Réseau", icone: "reseau" as const },
   { href: "/publier", nom: "Publier", icone: "publier" as const },
+  { href: "/emplois", nom: "Emplois", icone: "emplois" as const },
   { href: "/messages", nom: "Messages", icone: "message" as const },
-  { href: "/creer", nom: "Moi", icone: "moi" as const },
 ];
 
 export function BarreBas() {
   const path = usePathname();
-  const actif = (h: string) => (h === "/" ? path === "/" : h === "/publier" ? ["/publier", "/besoins", "/emplois"].some(p => path.startsWith(p)) : h === "/creer" ? path.startsWith("/creer") || path.startsWith("/p/") : path.startsWith(h));
+  const actif = (h: string) => (h === "/" ? path === "/" : h === "/publier" ? ["/publier", "/besoins", "/creer"].some(p => path.startsWith(p)) : h === "/chercher" ? path.startsWith("/chercher") || path.startsWith("/p/") : path.startsWith(h));
   return (
     <nav className="bas" aria-label="Navigation principale">
       {ITEMS.map(i => <Link key={i.href} href={i.href} className={actif(i.href) ? "on" : ""} aria-current={actif(i.href) ? "page" : undefined}><span><Icone nom={i.icone} /><span style={{ display: "block" }}>{i.nom}</span></span></Link>)}

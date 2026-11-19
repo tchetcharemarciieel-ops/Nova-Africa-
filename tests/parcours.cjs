@@ -62,7 +62,7 @@ async function brancher(ctx, log) {
   const pro = await tel(), cli = await tel();
 
   await pro.goto(U + "/");
-  ok(await vis(pro.getByRole("heading", { name: /Trouve quelqu'un de confiance/ })), "accueil");
+  ok(await vis(pro.getByRole("link", { name: /Que cherches-tu aujourd'hui/ })), "accueil");
   await pro.goto(U + "/creer");
   await pro.getByRole("button", { name: "Créer ma carte" }).click();
   ok(await vis(pro.getByText("Écris ton nom")), "erreur : nom vide");
