@@ -63,6 +63,11 @@ async function brancher(ctx, log) {
 
   await pro.goto(U + "/");
   ok(await vis(pro.getByRole("link", { name: /Que cherches-tu aujourd'hui/ })), "accueil");
+  ok(await vis(pro.getByText("Kargora", { exact: true }).first()), "le nom Kargora est affiché");
+  await pro.goto(U + "/a-propos");
+  ok(await vis(pro.getByRole("heading", { name: "À propos de Kargora" })), "page À propos");
+  ok(await vis(pro.getByText(/Version de test/).first()), "À propos : version de test annoncée");
+  ok((await pro.title()).includes("Kargora"), "titre de l'onglet : Kargora");
   await pro.goto(U + "/creer");
   await pro.getByRole("button", { name: "Créer ma carte" }).click();
   ok(await vis(pro.getByText("Écris ton nom")), "erreur : nom vide");

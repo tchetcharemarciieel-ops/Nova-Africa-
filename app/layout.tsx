@@ -3,8 +3,8 @@ import { BarreBas, BarreHaut } from "@/components/Barres";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Réseau pro : trouve quelqu'un de confiance",
-  description: "Des professionnels avec des chantiers confirmés par leurs clients. Messages dans l'application.",
+  title: "Kargora : trouve quelqu'un de confiance",
+  description: "Kargora : des professionnels dont les clients ont confirmé le travail, des besoins, des offres d'emploi, des messages dans l'application. En Centrafrique et partout.",
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0f4c3a" };
 
