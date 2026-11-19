@@ -64,7 +64,25 @@ async function brancher(ctx, log) {
 
   await pro.goto(U + "/");
   ok(await vis(pro.getByRole("link", { name: /Que cherches-tu aujourd'hui/ })), "accueil");
-  ok(await vis(pro.getByText("Kargora", { exact: true }).first()), "le nom Kargora est affiché");
+  ok(await vis(pro.getByRole("heading", { name: "Kargora" })), "le nom Kargora est affiché dans la carte d'accueil");
+  ok(await vis(pro.getByRole("link", { name: "Créer mon compte" })), "carte d'accueil : bouton Créer mon compte (visiteur)");
+  ok(await vis(pro.getByRole("link", { name: "Se connecter" })), "carte d'accueil : bouton Se connecter (visiteur)");
+  ok(await vis(pro.getByText("Rien pour l'instant")), "état vide : titre rassurant");
+  ok(await vis(pro.getByRole("link", { name: "Publier le premier besoin" })), "état vide : vrai bouton Publier le premier besoin");
+  await pro.screenshot({ path: SHOT + "/rp5-accueil-vide.png", fullPage: true });
+  await pro.getByRole("button", { name: "Offres" }).click();
+  ok(await vis(pro.getByText("Aucune annonce dans cette catégorie pour le moment")), "état vide d'une catégorie");
+  ok(await vis(pro.getByRole("link", { name: "Publier la première offre" })), "état vide offres : bouton adapté");
+  for (const nom of ["Un besoin", "Une offre", "Ma carte"]) ok(await vis(pro.getByRole("link", { name: nom, exact: true }).first()), `raccourci en pilule : ${nom}`);
+  // PWA
+  const man = await (await pro.request.get(U + "/manifest.webmanifest")).json();
+  ok(man.name === "Kargora" && man.short_name === "Kargora" && man.theme_color === "#064e3b" && man.display === "standalone" && man.start_url === "/", "manifeste : nom, couleur, affichage, adresse de départ");
+  ok(man.icons.some(i => i.sizes === "192x192") && man.icons.some(i => i.sizes === "512x512") && man.icons.some(i => i.purpose === "maskable"), "manifeste : icônes 192, 512 et maskable");
+  for (const i of man.icons) ok((await pro.request.get(U + i.src)).status() === 200, "icône accessible : " + i.src);
+  ok((await pro.request.get(U + "/sw.js")).status() === 200 && (await pro.request.get(U + "/offline.html")).status() === 200, "service worker et page hors connexion présents");
+  const head = await pro.locator("head").innerHTML();
+  ok(/rel="manifest"/.test(head) && /apple-mobile-web-app-title" content="Kargora"/.test(head) && /name="theme-color" content="#064e3b"/.test(head) && /apple-touch-icon/.test(head), "balises Apple, Android et couleur du thème");
+  ok(/mobile-web-app-capable|apple-mobile-web-app-capable/.test(head), "balise d'application installable");
   await pro.goto(U + "/a-propos");
   ok(await vis(pro.getByRole("heading", { name: "À propos de Kargora" })), "page À propos");
   ok(await vis(pro.getByText(/Version de test/).first()), "À propos : version de test annoncée");
