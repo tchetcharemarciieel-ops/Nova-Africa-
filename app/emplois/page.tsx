@@ -2,24 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { depuis, readOffres, waLien, type Offre } from "@/lib/data";
+import { Poste, Chargement, Erreur } from "@/components/Blocs";
+import { api, messageErreur, type Offre } from "@/lib/api";
 
 export default function Emplois() {
   const [liste, setListe] = useState<Offre[] | null>(null);
-  useEffect(() => { setListe(readOffres()); }, []);
+  const [erreur, setErreur] = useState("");
+  useEffect(() => { api.listJobs(50).then(setListe).catch(e => { setListe([]); setErreur(messageErreur(e)); }); }, []);
   return (
-    <main className="wrap">
-      <h1>Offres d&apos;emploi</h1>
-      <p className="lead">Emplois, stages et missions à Bangui. Postule sur WhatsApp avec ta carte.</p>
-      <Link href="/emplois/nouveau" className="btn b2" style={{ width: "100%" }}>Publier une offre</Link>
-      <p className="demo">Version de test : tu vois seulement les offres publiées sur ce téléphone. Aucune offre n&apos;est vérifiée pour l&apos;instant : méfie-toi de toute offre qui demande de l&apos;argent.</p>
-      {liste === null ? <p className="note">Chargement…</p> : liste.length === 0 ? <p className="vide">Aucune offre pour l&apos;instant.</p>
-        : liste.map(o => (
-          <article key={o.id} className="pro" style={{ display: "block" }}>
-            <b>{o.titre}</b><small>{o.organisation} · {o.lieu} · {o.type} · {depuis(o.creeLe)}</small>
-            {o.details && <p style={{ margin: "8px 0", fontSize: 15 }}>{o.details}</p>}
-            <a className="btn b1" style={{ width: "100%" }} href={waLien(o.telephone, `Bonjour, je postule à l'offre « ${o.titre} ». Voici ma carte pro : `)} target="_blank" rel="noopener noreferrer">Postuler sur WhatsApp</a>
-          </article>))}
+    <main className="page">
+      <section className="carte"><div className="in"><h1>Offres d&apos;emploi</h1><p className="lead">Emplois, stages et missions. Postule par message dans l&apos;application.</p><Link href="/emplois/nouveau" className="btn plein">Publier une offre</Link>
+        <p className="info" style={{ marginTop: 12 }}>Aucune offre n&apos;est vérifiée pour l&apos;instant. Méfie-toi de toute offre qui demande de l&apos;argent.</p></div></section>
+      {erreur && <Erreur texte={erreur} />}
+      {liste === null ? <Chargement /> : liste.length === 0 && !erreur ? <p className="vide">Aucune offre pour l&apos;instant.</p>
+        : liste.map(o => <Poste key={o.id} nom={o.organisation} soustitre={o.lieu} temps={o.cree_le} titre={o.titre} texte={o.details} etiquette={o.type} action="Postuler" href={`/messages/nouveau?to=${o.member_id}&nom=${encodeURIComponent(o.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${o.titre}`)}`} />)}
     </main>
   );
 }
