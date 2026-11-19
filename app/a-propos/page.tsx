@@ -25,7 +25,7 @@ export default function APropos() {
           <li>Ne partage jamais un mot de passe, un code ou un numéro de carte, ni dans les messages ni dans une annonce. Une vraie offre d&apos;emploi ne demande jamais d&apos;argent.</li>
         </ul>
       </div></section>
-      <p style={{ padding: "0 16px" }}><Link className="btn" href="/">Retour à l&apos;accueil</Link></p>
+      <p style={{ padding: "0 4px" }}><Link className="btn" href="/">Retour à l&apos;accueil</Link></p>
     </main>
   );
 }

@@ -99,7 +99,7 @@ function Contenu() {
       </div></section>
 
       {qr && <section className="carte"><div className="qr"><img src={qr} alt={`QR code de la carte de ${p.nom}`} /><span className="mute petit">Montre ce code, ou imprime-le pour ton atelier.</span></div></section>}
-      <p className="mute petit" style={{ padding: "0 16px" }}><b>Notre règle sur les avis :</b> publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, et nous disons pourquoi. Personne ne peut payer pour les faire disparaître.</p>
+      <p className="mute petit" style={{ padding: "0 4px" }}><b>Notre règle sur les avis :</b> publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, et nous disons pourquoi. Personne ne peut payer pour les faire disparaître.</p>
     </main>
   );
 }

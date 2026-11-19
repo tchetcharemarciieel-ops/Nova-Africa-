@@ -28,9 +28,9 @@ export function BarreHaut() {
     <header className="barre">
       <div className="barre-in">
         <Link href="/moi" className="moi-av" aria-label="Mon profil"><Avatar nom={me?.nom || "Moi"} taille={38} /></Link>
-        <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /> Chercher</Link>
+        <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /> Chercher un métier, un quartier</Link>
         <Link href="/messages" className="icone" aria-label={nonLus ? `Messages, ${nonLus} non lus` : "Messages"}>
-          <Icone nom="message" />{nonLus > 0 && <span className="badge" aria-hidden="true">{nonLus > 9 ? "9+" : nonLus}</span>}
+          <Icone nom="message" taille={22} />{nonLus > 0 && <span className="badge" aria-hidden="true">{nonLus > 9 ? "9+" : nonLus}</span>}
         </Link>
       </div>
     </header>
@@ -50,7 +50,7 @@ export function BarreBas() {
   const actif = (h: string) => (h === "/" ? path === "/" : h === "/publier" ? ["/publier", "/besoins", "/creer"].some(p => path.startsWith(p)) : h === "/chercher" ? path.startsWith("/chercher") || path.startsWith("/p/") : path.startsWith(h));
   return (
     <nav className="bas" aria-label="Navigation principale">
-      {ITEMS.map(i => <Link key={i.href} href={i.href} className={actif(i.href) ? "on" : ""} aria-current={actif(i.href) ? "page" : undefined}><span><Icone nom={i.icone} /><span style={{ display: "block" }}>{i.nom}</span></span></Link>)}
+      {ITEMS.map(i => <Link key={i.href} href={i.href} className={actif(i.href) ? "on" : ""} aria-current={actif(i.href) ? "page" : undefined}><span><Icone nom={i.icone} taille={24} trait={actif(i.href) ? 2 : 1.6} /><span style={{ display: "block" }}>{i.nom}</span></span></Link>)}
     </nav>
   );
 }

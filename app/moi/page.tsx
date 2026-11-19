@@ -4,12 +4,15 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Avatar from "@/components/Avatar";
+import Icone from "@/components/Icone";
+import LigneMenu from "@/components/LigneMenu";
 import { Chargement } from "@/components/Blocs";
 import { api, type Me, type Profil } from "@/lib/api";
 import { moi } from "@/lib/session";
 
 function Contenu() {
   const bienvenue = useSearchParams().get("bienvenue") === "1";
+  const [ferme, setFerme] = useState(false);
   const [me, setMe] = useState<Me | null | undefined>(undefined);
   const [carte, setCarte] = useState<Profil | null>(null);
   useEffect(() => {
@@ -25,29 +28,36 @@ function Contenu() {
   );
   return (
     <main className="page">
-      {bienvenue && <p className="info" style={{ margin: "8px 12px" }}><b>Compte créé.</b> Va dans <Link href="/parametres">Paramètres</Link> pour noter ton code de connexion : il te permet de retrouver ton compte si tu changes de téléphone.</p>}
-      <section className="carte"><div className="in" style={{ display: "flex", gap: 14, alignItems: "center" }}>
-        <Avatar nom={me.nom} taille={72} />
-        <div><h1 style={{ margin: 0, fontSize: 22 }}>{me.nom}</h1><p className="mute petit">Compte sur ce téléphone</p></div>
+      {bienvenue && !ferme && (
+        <div className="alerte" role="status">
+          <span className="alerte-ico"><Icone nom="info" taille={20} /></span>
+          <p><b>Compte créé.</b> Va dans <Link href="/parametres">Paramètres</Link> pour noter ton code de connexion : il te permet de retrouver ton compte si tu changes de téléphone.</p>
+          <button type="button" className="alerte-x" aria-label="Fermer ce message" onClick={() => setFerme(true)}><Icone nom="fermer" taille={18} /></button>
+        </div>
+      )}
+      <section className="carte"><div className="in profil-ligne">
+        <Avatar nom={me.nom} taille={68} badge />
+        <div style={{ minWidth: 0 }}><h1 style={{ margin: 0, fontSize: 22 }}>{me.nom}</h1><p className="mute petit">Compte sur ce téléphone</p><span className="statut"><span aria-hidden="true" />Actif</span></div>
       </div></section>
 
-      <section className="carte"><div className="in">
+      <section className="carte-pro">
+        <span className="carte-pro-ico"><Icone nom="carte" taille={26} trait={1.5} /></span>
         <h2>Ma carte pro</h2>
         {carte ? <>
-          <p><b>{carte.metier}</b> · {carte.lieu}</p>
-          <p className="mute petit">{carte.chantiers} chantier{carte.chantiers > 1 ? "s" : ""} confirmé{carte.chantiers > 1 ? "s" : ""} · Niveau {carte.niveau}/4</p>
-          <div className="lignes" style={{ marginTop: 10 }}><Link className="btn plein" href={`/p/${carte.slug}`}>Voir ma carte</Link><Link className="btn" href="/moi/carte">Modifier</Link></div>
+          <p className="cp-txt"><b>{carte.metier}</b> · {carte.lieu}</p>
+          <p className="cp-sous">{carte.chantiers} chantier{carte.chantiers > 1 ? "s" : ""} confirmé{carte.chantiers > 1 ? "s" : ""} · Niveau {carte.niveau}/4</p>
+          <div className="lignes" style={{ marginTop: 14 }}><Link className="btn-blanc" href={`/p/${carte.slug}`}>Voir ma carte</Link><Link className="btn-fantome" href="/moi/carte">Modifier</Link></div>
         </> : <>
-          <p className="mute" style={{ marginBottom: 10 }}>Montre ton travail et fais-le confirmer par tes clients.</p>
-          <Link className="btn plein" href="/creer">Créer ma carte pro</Link>
+          <p className="cp-txt">Montre ton travail et fais-le confirmer par tes clients : c&apos;est ce qui donne confiance.</p>
+          <div style={{ marginTop: 14 }}><Link className="btn-blanc" href="/creer">Créer ma carte pro</Link></div>
         </>}
-      </div></section>
+      </section>
 
-      <section className="carte">
-        <Link className="ligne" href="/messages"><span className="corps"><span><b>Mes messages</b><small>Conversations avec les professionnels et les clients</small></span></span></Link>
-        <Link className="ligne" href="/publier"><span className="corps"><span><b>Publier</b><small>Un besoin, une offre d&apos;emploi</small></span></span></Link>
-        <Link className="ligne" href="/parametres"><span className="corps"><span><b>Paramètres</b><small>Mon code de connexion, quitter ce téléphone</small></span></span></Link>
-        <Link className="ligne" href="/a-propos"><span className="corps"><span><b>À propos et confidentialité</b><small>Version de test</small></span></span></Link>
+      <section className="carte menu">
+        <LigneMenu href="/messages" icone="message" teinte="bleu" titre="Mes messages" sous="Conversations avec les professionnels et les clients" />
+        <LigneMenu href="/publier" icone="publier" teinte="vert" titre="Publier" sous="Un besoin, une offre d'emploi" />
+        <LigneMenu href="/parametres" icone="reglages" teinte="gris" titre="Paramètres" sous="Mon code de connexion, quitter ce téléphone" />
+        <LigneMenu href="/a-propos" icone="bouclier" teinte="ambre" titre="À propos et confidentialité" sous="Version de test" />
       </section>
     </main>
   );

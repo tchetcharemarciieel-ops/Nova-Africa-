@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Chargement } from "@/components/Blocs";
+import LigneMenu from "@/components/LigneMenu";
 import type { Me } from "@/lib/api";
 import { deconnecter, formaterCode, moi, secretExistant } from "@/lib/session";
 
@@ -52,8 +53,8 @@ export default function Parametres() {
         </>}
       </div></section>
 
-      <section className="carte">
-        <Link className="ligne" href="/a-propos"><span className="corps"><span><b>À propos et confidentialité</b><small>Version de test de Kargora</small></span></span></Link>
+      <section className="carte menu">
+        <LigneMenu href="/a-propos" icone="bouclier" teinte="ambre" titre="À propos et confidentialité" sous="Version de test de Kargora" />
       </section>
     </main>
   );

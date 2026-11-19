@@ -37,5 +37,5 @@ export function Poste({ nom, soustitre, temps, titre, texte, action, href, etiqu
   );
 }
 
-export function Chargement() { return <p className="mute petit" role="status" style={{ padding: 16 }}>Chargement…</p>; }
-export function Erreur({ texte }: { texte: string }) { return <p className="err" role="alert" style={{ margin: "8px 12px" }}>{texte}</p>; }
+export function Chargement() { return <p className="mute petit" role="status" style={{ padding: 12 }}>Chargement…</p>; }
+export function Erreur({ texte }: { texte: string }) { return <p className="err" role="alert" style={{ margin: "8px 0" }}>{texte}</p>; }

@@ -78,7 +78,7 @@ export default function Accueil() {
         <p style={{ marginTop: 8 }}><b>Des niveaux clairs.</b> Profil créé, profil complet, puis identité vérifiée et entreprise déclarée quand ils seront disponibles.</p>
         <p style={{ marginTop: 8 }}><b>Des avis honnêtes.</b> Publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, avec une explication.</p>
       </div></section>
-      <p className="mute petit" style={{ padding: "0 16px" }}><Link href="/a-propos">À propos de Kargora et confidentialité</Link></p>
+      <p className="mute petit" style={{ padding: "0 4px" }}><Link href="/a-propos">À propos de Kargora et confidentialité</Link></p>
     </main>
   );
 }
