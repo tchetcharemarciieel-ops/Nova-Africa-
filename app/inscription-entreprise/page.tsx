@@ -43,7 +43,7 @@ export default function InscriptionEntreprise() {
   return (
     <main className="page auth"><section className="carte form"><div className="in">
       <h1>Inscription Entreprise / ONG</h1>
-      <p className="lead">Après l&apos;inscription, ta page est <b>« En attente de vérification »</b>. Elle passe au badge vert <b>« Entreprise vérifiée »</b> quand nous avons contrôlé tes documents. <Link href="/verification">Voir les règles de vérification</Link>.</p>
+      <p className="lead">Après l&apos;inscription, ta page est <b>« En attente de vérification »</b>. Elle passe au badge bleu <b>« Entreprise vérifiée »</b> quand nous avons contrôlé tes documents. <Link href="/verification">Voir les règles de vérification</Link>.</p>
       <form onSubmit={envoyer} noValidate>
         <ChampPhoto avatar carre etiquette="Logo (facultatif)" nom={nom} valeur={logo} onChange={setLogo} />
         <label htmlFor="nom">Nom de l&apos;entreprise ou de l&apos;organisation</label><input id="nom" name="nom" maxLength={80} autoComplete="organization" value={nom} onChange={e => setNom(e.target.value)} />

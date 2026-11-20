@@ -43,7 +43,7 @@ export default function PageEntreprise() {
           <p>{o.secteur}</p>
           <p className="mute petit">{o.lieu}{o.adresse ? ` · ${o.adresse}` : ""}</p>
           <p style={{ marginTop: 10 }}>{verifiee ? <Verifiee /> : <Verifiee attente />}</p>
-          {verifiee && <p className="petit" style={{ marginTop: 6, color: "#067647" }}><b>Entreprise vérifiée</b> : RCCM et NIF contrôlés par l&apos;équipe Kargora.</p>}
+          {verifiee && <p className="petit" style={{ marginTop: 6, color: "#4338CA" }}><b>Entreprise vérifiée</b> : RCCM et NIF contrôlés par l&apos;équipe Kargora.</p>}
           {!verifiee && <p className="mute petit" style={{ marginTop: 6 }}>Les documents de cette entreprise n&apos;ont pas encore été contrôlés. {proprio ? "Nous te contactons sur le WhatsApp du responsable RH." : "Sois prudent : une vraie offre ne demande jamais d'argent."}</p>}
           <div className="lignes" style={{ marginTop: 12 }}>
             {proprio ? <>

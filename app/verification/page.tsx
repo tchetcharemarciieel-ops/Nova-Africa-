@@ -9,7 +9,7 @@ export default function Verification() {
     <main className="page legal">
       <section className="carte"><div className="in">
         <h1>Règles de vérification</h1>
-        <p className="lead">Voici comment une entreprise ou une ONG obtient le badge vert, et ce qu&apos;il veut dire.</p>
+        <p className="lead">Voici comment une entreprise ou une ONG obtient le badge bleu, et ce qu&apos;il veut dire.</p>
         <h2>Les trois statuts</h2>
         <p style={{ marginTop: 10 }}><Verifiee attente /> À l&apos;inscription, la page est en attente : elle est visible, mais aucun contrôle n&apos;a eu lieu.</p>
         <p style={{ marginTop: 10 }}><Verifiee /> Après contrôle de ses documents par l&apos;équipe Kargora.</p>

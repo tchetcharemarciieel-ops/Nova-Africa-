@@ -86,7 +86,7 @@ export default function Accueil() {
         <div className="sec-tete"><span className="sur">Ce que tu peux faire</span><h2>Tout pour montrer ton travail et être trouvé.</h2><p>Une carte pro, des photos, des preuves, des messages : au même endroit.</p></div>
         <div className="bento">
           <article className="bc noir b-l">
-            <div className="deco" aria-hidden="true"><i style={{ background: "linear-gradient(135deg,#34d399,#047857)" }} /><i style={{ background: "linear-gradient(135deg,#fbbf24,#b45309)" }} /><i style={{ background: "linear-gradient(135deg,#67e8f9,#0e7490)" }} /><i style={{ background: "linear-gradient(135deg,#a7f3d0,#059669)" }} /></div>
+            <div className="deco" aria-hidden="true"><i style={{ background: "linear-gradient(135deg,#22D3EE,#4F46E5)" }} /><i style={{ background: "linear-gradient(135deg,#fbbf24,#b45309)" }} /><i style={{ background: "linear-gradient(135deg,#67e8f9,#0e7490)" }} /><i style={{ background: "linear-gradient(135deg,#C7D2FE,#2563EB)" }} /></div>
             <span className="halo v"><Icone nom="photo" taille={26} trait={1.6} /></span>
             <h3>Ta galerie de réalisations</h3><p>Chantiers, diplômes, attestations : montre-les en photos avec une légende. Un clic, et l&apos;image s&apos;ouvre en grand.</p>
           </article>
@@ -133,7 +133,7 @@ export default function Accueil() {
             <div className="pilules">
               <Link href="/publier/realisation" className="pilule" style={{ background: "#EEF4FF", color: "#1D4ED8" }}><Icone nom="photo" taille={18} />Réalisation</Link>
               <Link href="/besoins/nouveau" className="pilule" style={{ background: "#FEF3F2", color: "#C4320A" }}><Icone nom="recherche" taille={18} />Un besoin</Link>
-              <Link href="/emplois/nouveau" className="pilule" style={{ background: "#ECFDF3", color: "#067647" }}><Icone nom="emplois" taille={18} />Une offre</Link>
+              <Link href="/emplois/nouveau" className="pilule" style={{ background: "#EEF2FF", color: "#4338CA" }}><Icone nom="emplois" taille={18} />Une offre</Link>
             </div>
           </section>
         )}
@@ -172,9 +172,9 @@ export default function Accueil() {
 
       <section className="sec sombre"><div className="wrap sombre-grille">
         <div>
-          <span className="sur" style={{ background: "rgba(52,211,153,.15)", color: "#6ee7b7" }}>Espace Entreprises &amp; ONG</span>
+          <span className="sur" style={{ background: "rgba(34,211,238,.15)", color: "#A5B4FC" }}>Espace Entreprises &amp; ONG</span>
           <h2>Recrute des profils <em>vérifiés</em>, sans fausses offres.</h2>
-          <p className="l">Inscris ton entreprise, publie tes offres d&apos;emploi et reçois les candidatures par messages. Après contrôle de tes documents, ton badge vert apparaît.</p>
+          <p className="l">Inscris ton entreprise, publie tes offres d&apos;emploi et reçois les candidatures par messages. Après contrôle de tes documents, ton badge bleu apparaît.</p>
           <ul className="coches">
             <li><span className="halo v"><Icone nom="coche" taille={16} trait={2.6} /></span>Numéro RCCM et NIF (ou agrément ONG) contrôlés, jamais affichés</li>
             <li><span className="halo v"><Icone nom="coche" taille={16} trait={2.6} /></span>Une page vitrine avec ton logo et tes offres actives</li>
@@ -185,7 +185,7 @@ export default function Accueil() {
         <div className="statuts">
           <div className="statut-c"><Verifiee attente /><p>À l&apos;inscription : ta page est visible, en attente de contrôle.</p></div>
           <div className="statut-c"><Verifiee /><p>Après contrôle du RCCM et du NIF par l&apos;équipe Kargora.</p></div>
-          <p style={{ color: "rgba(255,255,255,.65)", fontSize: 14 }}>Le badge ne garantit pas l&apos;entreprise : il dit que ses documents ont été contrôlés. <Link href="/verification" style={{ color: "#6ee7b7", fontWeight: 700 }}>Règles de vérification</Link></p>
+          <p style={{ color: "rgba(255,255,255,.65)", fontSize: 14 }}>Le badge ne garantit pas l&apos;entreprise : il dit que ses documents ont été contrôlés. <Link href="/verification" style={{ color: "#A5B4FC", fontWeight: 700 }}>Règles de vérification</Link></p>
         </div>
       </div></section>
 

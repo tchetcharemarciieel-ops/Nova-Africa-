@@ -15,9 +15,9 @@ const SCHEMA = {
   rp_photos: ["p_slug"], rp_photo_full: ["p_id"], rp_add_parcours: ["p_secret", "p_genre", "p_titre", "p_organisme", "p_periode"], rp_delete_parcours: ["p_secret", "p_id"],
   rp_post_create: ["p_secret", "p_texte", "p_data", "p_thumb"], rp_list_posts: ["p_limit"], rp_post_photo: ["p_id"], rp_delete_post: ["p_secret", "p_id"],
   rp_org_register: ["p_secret", "p_nom", "p_secteur", "p_lieu", "p_adresse", "p_apropos", "p_logo", "p_logo_mini", "p_rccm", "p_nif", "p_rh_nom", "p_rh_tel"],
-  rp_org_get: ["p_slug"], rp_org_post_job: ["p_secret", "p_titre", "p_lieu", "p_type", "p_details"], rp_stats: [],
+  rp_org_get: ["p_slug"], rp_org_post_job: ["p_secret", "p_titre", "p_lieu", "p_type", "p_details"], rp_stats: [], rp_save_score: ["p_secret", "p_jeu", "p_jour", "p_points"], rp_scores: ["p_slug"],
 };
-const db = { members: [], profiles: [], invites: [], confs: [], needs: [], jobs: [], convs: [], msgs: [], photos: [], posts: [], parcours: [], orgs: [] };
+const db = { members: [], profiles: [], invites: [], confs: [], needs: [], jobs: [], convs: [], msgs: [], photos: [], posts: [], parcours: [], orgs: [], scores: [] };
 const taille = { photo: 0, mini: 0, data: 0, thumb: 0, logo: 0 };
 const hex = n => Array.from({ length: n }, () => Math.floor(Math.random() * 16).toString(16)).join("");
 const uuid = () => `${hex(8)}-${hex(4)}-4${hex(3)}-a${hex(3)}-${hex(12)}`;
@@ -56,6 +56,8 @@ const fns = {
   rp_org_register: a => { const m = need(a.p_secret); if (db.orgs.some(o => o.member_id === m.id)) fail("RP_DEJA"); if (a.p_rccm.length < 4 || a.p_nif.length < 4 || a.p_rh_nom.length < 2) fail("RP_ORG"); let tel = a.p_rh_tel.replace(/\D/g, ""); if (tel.length === 8) tel = "236" + tel; if (a.p_logo) taille.logo = a.p_logo.length; const slug = a.p_nom.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-") + "-" + hex(4); db.orgs.push({ member_id: m.id, slug, nom: a.p_nom, secteur: a.p_secteur, lieu: a.p_lieu, adresse: a.p_adresse, apropos: a.p_apropos, logo: a.p_logo, logo_mini: a.p_logo_mini, rccm: a.p_rccm, nif: a.p_nif, rh_nom: a.p_rh_nom, rh_tel: tel, statut: "attente" }); m.nom = a.p_nom; return slug; },
   rp_org_get: a => { const o = db.orgs.find(x => x.slug === a.p_slug); if (!o) return null; return { slug: o.slug, member_id: o.member_id, nom: o.nom, secteur: o.secteur, lieu: o.lieu, adresse: o.adresse, apropos: o.apropos, logo: o.logo, statut: o.statut, cree_le: now(), offres: db.jobs.filter(j => j.member_id === o.member_id).reverse() }; },
   rp_org_post_job: a => { const m = need(a.p_secret); const o = db.orgs.find(x => x.member_id === m.id) || fail("RP_ORG"); db.jobs.push({ id: uuid(), member_id: m.id, titre: a.p_titre, organisation: o.nom, lieu: a.p_lieu, type: a.p_type, details: a.p_details, cree_le: now() }); return uuid(); },
+  rp_save_score: a => { const m = need(a.p_secret); if (db.scores.some(x => x.m === m.id && x.jeu === a.p_jeu && x.jour === a.p_jour)) return null; db.scores.push({ m: m.id, jeu: a.p_jeu, jour: a.p_jour, points: a.p_points }); return null; },
+  rp_scores: a => { const p = db.profiles.find(x => x.slug === a.p_slug); if (!p) return null; const l = db.scores.filter(x => x.m === p.member_id); return { total: l.reduce((t, x) => t + x.points, 0), jours: new Set(l.map(x => x.jour)).size }; },
   rp_stats: () => ({ profils: db.profiles.length, entreprises: db.orgs.filter(o => o.statut === "verifiee").length, offres: db.jobs.length, chantiers: db.confs.length }),
   rp_unread: a => { const m = mem(a.p_secret); if (!m) return 0; return db.msgs.filter(x => { const c = db.convs.find(k => k.id === x.conv); return (c.a === m.id || c.b === m.id) && x.from !== m.id && !x.lu; }).length; },
 };
@@ -117,7 +119,7 @@ async function brancher(ctx, log) {
   ok(await pro.getByText(/version de test/i).count() === 0, "plus aucune mention « version de test »");
   // PWA
   const man = await (await pro.request.get(U + "/manifest.webmanifest")).json();
-  ok(man.name === "Kargora" && man.theme_color === "#064e3b" && man.display === "standalone", "manifeste");
+  ok(man.name === "Kargora" && man.theme_color.toLowerCase() === "#0f172a" && man.display === "standalone", "manifeste");
   ok((await pro.request.get(U + "/sw.js")).status() === 200 && (await pro.request.get(U + "/offline.html")).status() === 200, "service worker et page hors connexion");
 
   // ===== inscription professionnel avec photo
@@ -224,6 +226,38 @@ async function brancher(ctx, log) {
   ok(await pro.getByText("Chantier terminé à Bimbo : plomberie complète en 6 jours.").count() === 0, "filtre quartier : autre quartier masque la réalisation");
   await pro.selectOption('select[aria-label^="Filtrer par quartier"]', "Bimbo");
   ok(await vis(pro.getByText("Chantier terminé à Bimbo : plomberie complète en 6 jours.")), "filtre quartier : Bimbo la montre");
+
+  // ===== jeux quotidiens
+  ok(await vis(pro.getByRole("link", { name: "Jeux", exact: true })), "barre du bas : onglet Jeux");
+  await pro.goto(U + "/jeux");
+  ok(await vis(pro.getByRole("heading", { name: "Jeux de réflexion pro" })), "page Jeux");
+  for (const n of ["Le Lien Pro", "Grille Logique", "Quiz Business"]) ok(await vis(pro.getByText(n, { exact: true })), "jeu : " + n);
+  for (const [u, nom] of [["/jeux/lien-pro", "Le Lien Pro"], ["/jeux/quiz", "Quiz Business"]]) {
+    await pro.goto(U + u);
+    for (let i = 0; i < 5; i++) {
+      await pro.locator(".jeu-opt").first().click();
+      ok(await vis(pro.getByRole("status")), nom + " : retour après la réponse " + (i + 1));
+      await pro.getByRole("button", { name: i < 4 ? "Question suivante" : "Voir mon score" }).click();
+    }
+    ok(await vis(pro.getByText(/\d+ \/ 100/)), nom + " : score final");
+    await pro.goto(U + u);
+    ok(await vis(pro.getByText(/déjà joué aujourd'hui/)), nom + " : un seul score par jour");
+  }
+  await pro.goto(U + "/jeux/grille");
+  const vides = await pro.locator('.cell:not(.fixe)').count();
+  ok(vides >= 6 && vides <= 12, "grille : " + vides + " cases à remplir");
+  await pro.getByRole("button", { name: "Vérifier" }).click();
+  ok(await vis(pro.getByRole("alert").filter({ hasText: "Remplis toutes les cases" })), "grille : vérifier une grille incomplète");
+  for (let k = 0; k < vides; k++) { await pro.locator('.cell:not(.fixe)').nth(k).click(); await pro.getByRole("button", { name: "1", exact: true }).click(); }
+  await pro.getByRole("button", { name: "Vérifier" }).click();
+  ok(await vis(pro.getByRole("alert").filter({ hasText: "erreur" })), "grille : une mauvaise grille est refusée");
+  await pro.goto(U + "/p/" + slug);
+  ok(await vis(pro.getByRole("heading", { name: "Entraînement pro" })), "profil : bloc Entraînement pro");
+  ok(await vis(pro.locator(".score-jeux b")), "profil : points affichés");
+  await cli.goto(U + "/p/" + slug);
+  ok(await vis(cli.getByRole("heading", { name: "Entraînement pro" })), "profil vu par un visiteur : score des jeux");
+  await pro.screenshot({ path: SHOT + "/k7-profil-score.png" });
+  await pro.goto(U + "/jeux"); await pro.screenshot({ path: SHOT + "/k8-jeux.png", fullPage: true });
 
   // ===== confirmation d'un chantier par la cliente
   await pro.goto(U + "/p/" + slug);

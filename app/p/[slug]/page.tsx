@@ -9,7 +9,8 @@ import { Chargement, Erreur } from "@/components/Blocs";
 import ChampPhoto from "@/components/ChampPhoto";
 import Lightbox from "@/components/Lightbox";
 import { NIVEAUX, depuis, formatPhone } from "@/lib/constants";
-import { api, messageErreur, type Me, type Parcours, type Profil, type Realisation } from "@/lib/api";
+import { api, messageErreur, type Me, type Parcours, type Profil, type Realisation, type ScoresJeux } from "@/lib/api";
+import { resume } from "@/lib/jeux";
 import type { Image } from "@/lib/image";
 import { getSecret, moi } from "@/lib/session";
 
@@ -30,6 +31,8 @@ function Contenu() {
   const [info, setInfo] = useState("");
   const [erreur, setErreur] = useState("");
   const [galerie, setGalerie] = useState<Realisation[]>([]);
+  const [sj, setSj] = useState<ScoresJeux | null>(null);
+  useEffect(() => { api.scores(String(slug)).then(setSj).catch(() => setSj(null)); }, [slug]);
   const [ouverte, setOuverte] = useState<Realisation | null>(null);
   const [ajout, setAjout] = useState(false);
   const [img, setImg] = useState<Image | null>(null);
@@ -166,6 +169,19 @@ function Contenu() {
           </div>
         ) : <p style={{ marginTop: 14 }}><button type="button" className="btn plein" onClick={() => setAjout(true)}><Icone nom="photo" taille={18} />Ajouter une photo</button></p>)}
       </div></section>
+
+      {(() => {
+        const local = proprietaire ? resume() : null;
+        const total = Math.max(sj?.total ?? 0, local?.total ?? 0), jours = Math.max(sj?.jours ?? 0, local?.jours ?? 0);
+        if (total <= 0 && !proprietaire) return null;
+        return (
+          <section className="carte"><div className="in">
+            <h2>Entraînement pro</h2>
+            <div className="score-jeux"><b>{total}</b><span className="mute">points de jeux de réflexion · {jours} jour{jours > 1 ? "s" : ""} joué{jours > 1 ? "s" : ""}</span></div>
+            {proprietaire && <p style={{ marginTop: 10 }}><Link className="btn petit" href="/jeux">Jouer aujourd&apos;hui</Link></p>}
+          </div></section>
+        );
+      })()}
 
       <section className="carte"><div className="in">
         <h2>Chantiers confirmés <small>{p.chantiers}</small></h2>

@@ -18,7 +18,7 @@ export default function HeroMockup() {
         </div>
         <div className="mock-note"><span>★★★★★</span> 5,0 · 12 chantiers confirmés</div>
         <div className="mock-galerie" aria-hidden="true">
-          <i style={{ background: "linear-gradient(135deg,#34D399,#047857)" }} />
+          <i style={{ background: "linear-gradient(135deg,#22D3EE,#4F46E5)" }} />
           <i style={{ background: "linear-gradient(135deg,#FBBF24,#B45309)" }} />
           <i style={{ background: "linear-gradient(135deg,#67E8F9,#0E7490)" }} />
         </div>

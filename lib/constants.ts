@@ -13,7 +13,7 @@ export const LANGUES = ["Français", "Sango", "Anglais"] as const;
 export const TYPES_OFFRE = ["CDI", "CDD", "Stage", "Mission"] as const;
 
 export const initiales = (nom: string) => nom.split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0]?.toUpperCase()).join("") || "?";
-const PALETTE = ["#0f4c3a", "#b8470a", "#7a3a12", "#1f6f8b", "#8a5a00", "#5a3d8a"];
+const PALETTE = ["#312E81", "#b8470a", "#7a3a12", "#1f6f8b", "#8a5a00", "#5a3d8a"];
 export function couleur(nom: string): string { let h = 0; for (const ch of nom) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return PALETTE[h % PALETTE.length]; }
 export function depuis(iso: string): string {
   const m = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));

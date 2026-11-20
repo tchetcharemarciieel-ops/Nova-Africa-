@@ -46,6 +46,7 @@ export type Parcours = { id: string; genre: "experience" | "formation"; titre: s
 export type Realisation = { id: string; thumb: string; legende: string };
 export type Publication = { id: string; member_id: string; nom: string; slug: string | null; org_slug: string | null; verifiee: boolean; photo: string | null; lieu: string; texte: string; thumb: string | null; cree_le: string };
 export type Org = { slug: string; member_id: string; nom: string; secteur: string; lieu: string; adresse: string; apropos: string; logo: string | null; statut: Statut; offres: { id: string; titre: string; lieu: string; type: string; details: string; cree_le: string }[]; cree_le: string };
+export type ScoresJeux = { total: number; jours: number };
 export type Chiffres = { profils: number; entreprises: number; offres: number; chantiers: number };
 export type Resume = { photo?: string | null; slug: string; nom: string; metier: string; lieu: string; chantiers: number; niveau: 1 | 2 };
 export type Besoin = { photo?: string | null; id: string; member_id: string; nom: string; titre: string; metier: string; lieu: string; details: string; cree_le: string };
@@ -92,5 +93,7 @@ export const api = {
     rpc<string>("rp_org_register", { p_secret: secret, p_nom: o.nom, p_secteur: o.secteur, p_lieu: o.lieu, p_adresse: o.adresse, p_apropos: o.apropos, p_logo: o.logo, p_logo_mini: o.logoMini, p_rccm: o.rccm, p_nif: o.nif, p_rh_nom: o.rhNom, p_rh_tel: o.rhTel }),
   orgGet: (slug: string) => rpc<Org | null>("rp_org_get", { p_slug: slug }),
   orgPostJob: (secret: string, titre: string, lieu: string, type: string, details: string) => rpc<string>("rp_org_post_job", { p_secret: secret, p_titre: titre, p_lieu: lieu, p_type: type, p_details: details }),
+  saveScore: (secret: string, jeu: string, jour: string, points: number) => rpc<null>("rp_save_score", { p_secret: secret, p_jeu: jeu, p_jour: jour, p_points: points }),
+  scores: (slug: string) => rpc<ScoresJeux | null>("rp_scores", { p_slug: slug }),
   stats: () => rpc<Chiffres>("rp_stats", {}),
 };

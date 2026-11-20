@@ -49,6 +49,7 @@ export function BarreHaut() {
 const ITEMS = [
   { href: "/", nom: "Accueil", icone: "accueil" as const },
   { href: "/chercher", nom: "Réseau", icone: "reseau" as const },
+  { href: "/jeux", nom: "Jeux", icone: "jeux" as const },
   { href: "/publier", nom: "Publier", icone: "publier" as const },
   { href: "/emplois", nom: "Emplois", icone: "emplois" as const },
   { href: "/messages", nom: "Messages", icone: "message" as const },

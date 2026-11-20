@@ -2,7 +2,7 @@ import Link from "next/link";
 import Icone, { type NomIcone } from "./Icone";
 
 const TEINTES = {
-  bleu: ["#EEF4FF", "#1D4ED8"], vert: ["#ECFDF3", "#047857"], gris: ["#F2F4F7", "#475467"], ambre: ["#FFFAEB", "#B54708"], rose: ["#FDF2FA", "#C11574"],
+  bleu: ["#EEF4FF", "#1D4ED8"], vert: ["#EEF2FF", "#4F46E5"], gris: ["#F2F4F7", "#475467"], ambre: ["#FFFAEB", "#B54708"], rose: ["#FDF2FA", "#C11574"],
 } as const;
 
 export default function LigneMenu({ href, icone, teinte, titre, sous }: { href: string; icone: NomIcone; teinte: keyof typeof TEINTES; titre: string; sous: string }) {

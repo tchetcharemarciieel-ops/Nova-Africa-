@@ -18,6 +18,7 @@ const T: Record<string, React.ReactNode> = {
   photo: <><path d="M4 8h3l1.500-2h7L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" /><circle cx="12" cy="13.500" r="3.500" /></>,
   batiment: <><path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16M14 10h5a1 1 0 0 1 1 1v10M2 21h20" /><path d="M8 8h2M8 12h2M8 16h2" /></>,
   corbeille: <><path d="M4 7h16M10 11v6M14 11v6" /><path d="M6 7l1 13h10l1-13M9 7V4h6v3" /></>,
+  jeux: <><rect x="3" y="7" width="18" height="11" rx="5" /><path d="M8 10.500v4M6 12.500h4" /><circle cx="15.500" cy="11.500" r=".8" /><circle cx="17.500" cy="13.500" r=".8" /></>,
   carte: <><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="9" cy="11" r="2" /><path d="M6.500 16c.4-1.400 1.400-2 2.500-2s2.100.6 2.500 2M14 10h4M14 13h3" /></>,
 };
 export type NomIcone = keyof typeof T;
