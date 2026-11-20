@@ -5,15 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Icone from "./Icone";
 import Avatar from "./Avatar";
+import Logo from "./Logo";
 import { api, type Me } from "@/lib/api";
 import { moi, secretExistant } from "@/lib/session";
 
 export function BarreHaut() {
   const [nonLus, setNonLus] = useState(0);
   const [me, setMe] = useState<Me | null>(null);
+  const [connecte, setConnecte] = useState(false);
   const path = usePathname();
   useEffect(() => {
     let vivant = true;
+    setConnecte(!!secretExistant());
     async function charger() {
       const s = secretExistant();
       if (!s) return;
@@ -27,11 +30,17 @@ export function BarreHaut() {
   return (
     <header className="barre">
       <div className="barre-in">
-        <Link href="/moi" className="moi-av" aria-label="Mon profil"><Avatar nom={me?.nom || "Moi"} photo={me?.photo} taille={38} /></Link>
-        <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /> Chercher un métier, un quartier</Link>
-        <Link href="/messages" className="icone" aria-label={nonLus ? `Messages, ${nonLus} non lus` : "Messages"}>
-          <Icone nom="message" taille={22} />{nonLus > 0 && <span className="badge" aria-hidden="true">{nonLus > 9 ? "9+" : nonLus}</span>}
-        </Link>
+        <Link href="/" className="logo-lien" aria-label="Kargora, accueil"><Logo /></Link>
+        <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /><span>Chercher un métier, un quartier</span></Link>
+        {connecte ? <>
+          <Link href="/messages" className="icone" aria-label={nonLus ? `Messages, ${nonLus} non lus` : "Messages"}>
+            <Icone nom="message" taille={22} />{nonLus > 0 && <span className="badge" aria-hidden="true">{nonLus > 9 ? "9+" : nonLus}</span>}
+          </Link>
+          <Link href="/moi" className="moi-av" aria-label="Mon profil"><Avatar nom={me?.nom || "Moi"} photo={me?.photo} taille={38} /></Link>
+        </> : <>
+          <Link href="/connexion" className="nav-lien">Connexion</Link>
+          <Link href="/inscription" className="btn-pilule">Créer mon compte</Link>
+        </>}
       </div>
     </header>
   );

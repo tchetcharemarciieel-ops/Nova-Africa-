@@ -86,7 +86,10 @@ async function brancher(ctx, log) {
 
   // ===== accueil public (visiteur)
   await pro.goto(U + "/");
-  ok(await vis(pro.getByRole("heading", { name: "Kargora" })), "accueil : le nom Kargora");
+  ok(await vis(pro.getByRole("heading", { level: 1, name: /Trouve quelqu.un de confiance/ })), "accueil : grand titre du hero");
+  ok(await vis(pro.getByRole("link", { name: "Kargora, accueil" })), "barre flottante : logo Kargora");
+  for (const t of ["Ta galerie de réalisations", "Des chantiers confirmés", "Recrute des profils vérifiés"]) ok(await vis(pro.getByText(t).first()), "section : " + t);
+  ok(await pro.locator(".etapes5 .num").count() === 5, "timeline : 5 étapes numérotées");
   ok(await vis(pro.getByRole("link", { name: /Je suis un Professionnel \/ Candidat/ })), "accueil : bouton Professionnel / Candidat");
   ok(await vis(pro.getByRole("link", { name: /Je suis une Entreprise \/ ONG/ })), "accueil : bouton Entreprise / ONG");
   ok(await vis(pro.getByRole("link", { name: "Se connecter" })), "accueil : lien Se connecter");
@@ -306,10 +309,10 @@ async function brancher(ctx, log) {
   await cli.goto(U + "/emplois");
   ok(await vis(cli.locator("article .verif", { hasText: "Entreprise vérifiée" })), "liste des offres : badge sur l'offre vérifiée");
   await cli.goto(U + "/");
-  ok(await vis(cli.getByText("Comptable junior")), "accueil : l'offre vérifiée apparaît dans le fil");
+  ok(await vis(cli.locator("article.carte").getByText("Comptable junior")), "accueil : l'offre vérifiée apparaît dans le fil");
   await cli.getByRole("button", { name: "Offres", exact: true }).click();
   await cli.selectOption('select[aria-label^="Filtrer par quartier"]', "Bimbo");
-  ok(await cli.getByText("Comptable junior").count() === 0, "filtre quartier : l'offre de Bangui 3e disparaît pour Bimbo");
+  ok(await cli.locator("article.carte").getByText("Comptable junior").count() === 0, "filtre quartier : l'offre de Bangui 3e disparaît pour Bimbo");
   ok(await vis(cli.getByText(/\d+/).first()), "chiffres affichés");
   await cli.goto(U + "/chercher?m=Plomberie");
   ok(await vis(cli.getByText("Joseph Ngaïkosset")) && await vis(cli.getByText(/1 chantier confirmé/)), "recherche : professionnel et chantier confirmé");

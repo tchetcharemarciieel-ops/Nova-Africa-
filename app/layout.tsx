@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { BarreBas, BarreHaut } from "@/components/Barres";
 import EnregistrerSW from "@/components/EnregistrerSW";
-import { Inter } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap", weight: ["600", "700", "800"] });
 
 export const metadata: Metadata = {
   title: "Kargora : trouve quelqu'un de confiance",
@@ -18,7 +19,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={inter.variable}>
+    <html lang="fr" className={`${inter.variable} ${jakarta.variable}`}>
       <body>
         <BarreHaut />
         {children}
