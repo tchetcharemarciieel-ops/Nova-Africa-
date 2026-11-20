@@ -7,7 +7,7 @@ export default function Cgu() {
     <main className="page legal">
       <section className="carte"><div className="in">
         <h1>Conditions d&apos;utilisation</h1>
-        <p className="lead">En utilisant Kargora, tu acceptes ces règles. Version de test : elles seront complétées avant le lancement public.</p>
+        <p className="lead">En utilisant Kargora, tu acceptes ces règles.</p>
         <h2>Fausses offres d&apos;emploi : tolérance zéro</h2>
         <ul>
           <li>Seules les entreprises et ONG inscrites peuvent publier une offre d&apos;emploi.</li>

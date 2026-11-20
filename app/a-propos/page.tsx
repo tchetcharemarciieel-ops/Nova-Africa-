@@ -9,7 +9,7 @@ export default function APropos() {
       <section className="carte"><div className="in">
         <h1>À propos de Kargora</h1>
         <p className="lead">Kargora est un réseau professionnel pour la Centrafrique et sa diaspora. Notre mission : rendre l&apos;emploi et le travail plus <b>confiables</b>.</p>
-        <p className="info"><b>Version de test.</b> Kargora est en phase de test : des choses peuvent changer ou ne pas marcher. Le contrôle des entreprises se fait à la main, au cas par cas.</p>
+        <p className="info"><b>Le contrôle est humain.</b> Les entreprises sont vérifiées à la main, au cas par cas. La vérification d&apos;identité des personnes n&apos;existe pas encore : pour un professionnel, la confiance vient des chantiers confirmés par ses clients.</p>
       </div></section>
       <section className="carte"><div className="in">
         <h2>Ce que nous voulons changer</h2>

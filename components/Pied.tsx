@@ -11,7 +11,7 @@ export default function Pied() {
       <b>Kargora</b>
       <p>Le réseau professionnel de Centrafrique et de sa diaspora.</p>
       <nav aria-label="Informations">{LIENS.map(([h, n]) => <Link key={h} href={h}>{n}</Link>)}</nav>
-      <small>Version de test · Kargora ne détient pas d&apos;argent et ne garantit aucun travail.</small>
+      <small>Kargora ne détient pas d&apos;argent et ne garantit aucun travail.</small>
     </footer>
   );
 }

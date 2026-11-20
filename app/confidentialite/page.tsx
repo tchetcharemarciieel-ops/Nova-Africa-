@@ -7,7 +7,7 @@ export default function Confidentialite() {
     <main className="page legal">
       <section className="carte"><div className="in">
         <h1>Politique de confidentialité</h1>
-        <p className="lead">Voici ce que Kargora garde sur toi, qui peut le voir, et ce que tu peux faire. Version de test : ce texte sera complété avant le lancement public.</p>
+        <p className="lead">Voici ce que Kargora garde sur toi, qui peut le voir, et ce que tu peux faire.</p>
         <h2>Ce que nous gardons</h2>
         <ul>
           <li><b>Profil professionnel</b> : nom, quartier ou ville, métier, présentation, langues, photo de profil, parcours, photos de réalisations avec leurs légendes.</li>

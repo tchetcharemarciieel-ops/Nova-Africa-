@@ -39,7 +39,7 @@ export function BarreHaut() {
           <Link href="/moi" className="moi-av" aria-label="Mon profil"><Avatar nom={me?.nom || "Moi"} photo={me?.photo} taille={38} /></Link>
         </> : <>
           <Link href="/connexion" className="nav-lien">Connexion</Link>
-          <Link href="/inscription" className="btn-pilule">Créer mon compte</Link>
+          <Link href="/inscription" className="btn-pilule">S'inscrire</Link>
         </>}
       </div>
     </header>

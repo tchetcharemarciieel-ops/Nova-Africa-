@@ -72,7 +72,7 @@ function Contenu() {
         <LigneMenu href="/messages" icone="message" teinte="bleu" titre="Mes messages" sous="Conversations avec les professionnels et les clients" />
         <LigneMenu href="/publier" icone="publier" teinte="vert" titre="Publier" sous="Un besoin, une offre d'emploi" />
         <LigneMenu href="/parametres" icone="reglages" teinte="gris" titre="Paramètres" sous="Mon code de connexion, quitter ce téléphone" />
-        <LigneMenu href="/a-propos" icone="bouclier" teinte="ambre" titre="À propos et confidentialité" sous="Version de test" />
+        <LigneMenu href="/a-propos" icone="bouclier" teinte="ambre" titre="À propos et confidentialité" sous="Mission, règles et données" />
       </section>
     </main>
   );

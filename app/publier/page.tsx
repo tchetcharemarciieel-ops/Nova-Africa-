@@ -10,6 +10,19 @@ export default function Publier() {
   const [me, setMe] = useState<Me | null | undefined>(undefined);
   useEffect(() => { moi().then(setMe).catch(() => setMe(null)); }, []);
   const entreprise = !!me?.org_slug;
+  if (me === null) return (
+    <main className="page">
+      <section className="carte"><div className="in">
+        <h1>Publier</h1>
+        <p className="lead">Pour publier une réalisation, un besoin ou une offre, crée d&apos;abord ton compte. Sans mot de passe, en deux minutes.</p>
+        <div className="lignes">
+          <Link className="btn plein" href="/inscription-candidat">Je suis un Professionnel / Candidat</Link>
+          <Link className="btn" href="/inscription-entreprise">Je suis une Entreprise / ONG</Link>
+        </div>
+        <p className="lien-bas">Déjà un compte ? <Link href="/connexion">Se connecter</Link></p>
+      </div></section>
+    </main>
+  );
   return (
     <main className="page">
       <section className="carte"><div className="in"><h1>Publier</h1><p className="lead" style={{ marginBottom: 0 }}>Que veux-tu faire ?</p></div></section>

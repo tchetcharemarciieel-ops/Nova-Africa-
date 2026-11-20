@@ -54,7 +54,7 @@ export default function Parametres() {
       </div></section>
 
       <section className="carte menu">
-        <LigneMenu href="/a-propos" icone="bouclier" teinte="ambre" titre="À propos et confidentialité" sous="Version de test de Kargora" />
+        <LigneMenu href="/a-propos" icone="bouclier" teinte="ambre" titre="À propos et confidentialité" sous="Mission, règles et données" />
       </section>
     </main>
   );

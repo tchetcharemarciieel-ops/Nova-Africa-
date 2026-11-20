@@ -1,11 +1,17 @@
-/** Logo Kargora : icône géométrique verte (trois points reliés dans un carré arrondi) + nom. */
+/** Logo Kargora : un K stylisé (tige et bras) sur vert forêt profond, avec une étincelle dorée au bout du bras. */
 export function LogoIcone({ taille = 36 }: { taille?: number }) {
   return (
     <svg aria-hidden="true" width={taille} height={taille} viewBox="0 0 40 40" fill="none">
-      <defs><linearGradient id="lg" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse"><stop stopColor="#34D399" /><stop offset="1" stopColor="#047857" /></linearGradient></defs>
-      <rect width="40" height="40" rx="12" fill="url(#lg)" />
-      <path d="M14 11v18M14 20l11-9M14 20l11 9" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="26" cy="11" r="3.2" fill="#fff" /><circle cx="26" cy="29" r="3.2" fill="#fff" />
+      <defs>
+        <linearGradient id="lgf" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stopColor="#065F46" /><stop offset="1" stopColor="#022C22" /></linearGradient>
+        <radialGradient id="lgh" cx="30%" cy="18%" r="70%"><stop stopColor="#34D399" stopOpacity=".45" /><stop offset="1" stopColor="#34D399" stopOpacity="0" /></radialGradient>
+      </defs>
+      <rect width="40" height="40" rx="11" fill="url(#lgf)" />
+      <rect width="40" height="40" rx="11" fill="url(#lgh)" />
+      <path d="M13.5 9.5v21" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
+      <path d="M14 21.5 26 11" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
+      <path d="M17.5 19.5 27 30.5" stroke="#34D399" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="29" cy="9.5" r="3" fill="#FBBF24" />
     </svg>
   );
 }

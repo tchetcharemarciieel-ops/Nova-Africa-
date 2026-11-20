@@ -112,6 +112,9 @@ async function brancher(ctx, log) {
   await pro.goto(U + "/inscription");
   ok(await vis(pro.getByRole("link", { name: /Professionnel \/ Candidat/ })) && await vis(pro.getByRole("link", { name: /Entreprise \/ ONG/ })), "choix d'inscription : deux parcours");
 
+  await pro.goto(U + "/publier");
+  ok(await vis(pro.getByText(/crée d'abord ton compte/)) && await vis(pro.getByRole("link", { name: /Je suis une Entreprise \/ ONG/ })), "Publier (visiteur) : invitation claire à créer un compte");
+  ok(await pro.getByText(/version de test/i).count() === 0, "plus aucune mention « version de test »");
   // PWA
   const man = await (await pro.request.get(U + "/manifest.webmanifest")).json();
   ok(man.name === "Kargora" && man.theme_color === "#064e3b" && man.display === "standalone", "manifeste");
