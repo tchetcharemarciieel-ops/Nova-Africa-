@@ -55,7 +55,7 @@ export default function Accueil() {
           <div>
             <span className="hero-pastille"><i />Centrafrique &amp; diaspora</span>
             <h1>Trouve quelqu&apos;un de <em>confiance</em>, en Centrafrique et partout.</h1>
-            <p className="hero-sous">Le réseau professionnel où l&apos;on montre son travail en photos, où les clients confirment les chantiers, et où les entreprises vérifiées recrutent.</p>
+            <p className="hero-sous">Montre ton travail en photos, fais confirmer tes chantiers, recrute des entreprises vérifiées.</p>
             {visiteur ? (
               <>
                 <div className="hero-cta">

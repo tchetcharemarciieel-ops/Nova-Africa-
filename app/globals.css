@@ -208,7 +208,7 @@ h1,h2,.nom,.sec-t,.logo b,.vide-carte h2,.carte h2{font-family:var(--jak)}
 h1,h2{letter-spacing:-.03em}
 /* barre flottante en verre dépoli */
 .barre{position:sticky;top:10px;z-index:40;background:transparent;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0 10px}
-.barre-in{max-width:1120px;margin:0 auto;border-radius:999px;background:rgba(255,255,255,.8);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);border:1px solid rgba(255,255,255,.7);box-shadow:0 6px 24px rgba(2,44,34,.1);padding:7px 8px 7px 14px;gap:10px}
+.barre-in{max-width:1120px;margin:0 auto;border-radius:999px;background:rgba(255,255,255,.94);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);border:1px solid rgba(255,255,255,.7);box-shadow:0 6px 24px rgba(2,44,34,.1);padding:7px 8px 7px 14px;gap:10px}
 .logo{display:inline-flex;align-items:center;gap:9px}.logo b{font-size:20px;font-weight:800;letter-spacing:-.04em;color:var(--noir)}
 .logo-lien{flex:none;display:block;border-radius:12px}
 .recherche{background:#f1f5f9;border-radius:999px;min-height:40px}
@@ -322,3 +322,16 @@ article.carte{transition:transform .3s,box-shadow .3s}article.carte:hover{transf
 .fil-sec{padding:56px 0 64px}
 @media (max-width:759px){.bc .deco{grid-template-columns:repeat(2,56px);right:-8px;top:-8px;opacity:.55}}
 .mock-ex{left:0;transform:none}
+
+/* maquette : empilée sur mobile (rien ne se chevauche), flottante sur ordinateur */
+.mock{padding:34px 0 0;display:flex;flex-direction:column;gap:12px}
+.mock-carte{margin-top:0}
+.mock-offre,.mock-msg{position:relative;right:auto;left:auto;top:auto;bottom:auto;max-width:none;animation:none}
+.mock-offre{order:-1;align-self:flex-end;width:min(92%,300px);margin-right:-4px}
+.mock-msg{align-self:flex-start;width:fit-content}
+@media (min-width:900px){
+ .mock{display:block;padding:34px 0 30px}
+ .mock-carte{margin-top:62px}
+ .mock-offre{position:absolute;right:-8px;top:8px;max-width:250px;width:auto;animation:flotte 7s ease-in-out -2s infinite}
+ .mock-msg{position:absolute;left:-6px;bottom:0;animation:flotte 8s ease-in-out -4s infinite}
+}
