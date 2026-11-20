@@ -1,31 +1,30 @@
 import Link from "next/link";
+import Pied from "@/components/Pied";
 
-export const metadata = { title: "À propos de Kargora et confidentialité" };
+export const metadata = { title: "À propos de Kargora" };
 
 export default function APropos() {
   return (
-    <main className="page">
+    <main className="page legal">
       <section className="carte"><div className="in">
         <h1>À propos de Kargora</h1>
-        <p className="lead">Kargora aide à trouver quelqu&apos;un de confiance : des professionnels dont les clients ont confirmé le travail, des besoins, des offres d&apos;emploi, et des messages dans l&apos;application.</p>
-        <p className="info"><b>Version de test.</b> Kargora est en phase de test. Des choses peuvent changer, être lentes ou ne pas marcher. Aucune vérification d&apos;identité n&apos;existe encore : les niveaux « identité vérifiée » et « entreprise déclarée » sont annoncés pour plus tard, et aucune offre d&apos;emploi n&apos;est contrôlée.</p>
+        <p className="lead">Kargora est un réseau professionnel pour la Centrafrique et sa diaspora. Notre mission : rendre l&apos;emploi et le travail plus <b>confiables</b>.</p>
+        <p className="info"><b>Version de test.</b> Kargora est en phase de test : des choses peuvent changer ou ne pas marcher. Le contrôle des entreprises se fait à la main, au cas par cas.</p>
       </div></section>
       <section className="carte"><div className="in">
-        <h2>Ce que nous gardons</h2>
-        <p>Quand tu crées une carte : ton nom, ton métier, ton quartier, ta présentation, tes langues, et ton numéro seulement si tu choisis de le montrer. Quand tu publies un besoin ou une offre : son contenu. Quand tu écris : tes messages. Quand un client confirme un travail : sa note, ses mots et son prénom s&apos;il le donne.</p>
-        <p style={{ marginTop: 8 }}>Il n&apos;y a pas de mot de passe. Un secret aléatoire est gardé sur ton téléphone et nous n&apos;en gardons que l&apos;empreinte. Les cartes, besoins et offres sont visibles par tout le monde. Les messages ne sont visibles que par les deux personnes.</p>
-      </div></section>
-      <section className="carte"><div className="in">
-        <h2>Ce qu&apos;il faut savoir</h2>
-        <ul style={{ paddingLeft: 20 }}>
-          <li>Si tu perds ou changes de téléphone, tu perds l&apos;accès à ta carte. Une récupération sera ajoutée plus tard.</li>
-          <li>La suppression d&apos;une carte n&apos;est pas encore disponible dans cette version.</li>
-          <li>Les avis sont publiés tels quels, retirés seulement s&apos;ils sont faux ou injurieux, avec une explication. Personne ne peut payer pour les faire disparaître.</li>
-          <li>Kargora ne détient pas ton argent et ne garantit aucun travail : les accords se font entre les personnes.</li>
-          <li>Ne partage jamais un mot de passe, un code ou un numéro de carte, ni dans les messages ni dans une annonce. Une vraie offre d&apos;emploi ne demande jamais d&apos;argent.</li>
+        <h2>Ce que nous voulons changer</h2>
+        <p>Trop d&apos;emplois et de chantiers se trouvent par le bouche-à-oreille ou dans des groupes où l&apos;on ne sait pas qui est sérieux. Trop de fausses offres circulent. Et un Centrafricain à l&apos;étranger ne sait pas à qui confier un projet à Bangui.</p>
+        <h2>Ce que fait Kargora</h2>
+        <ul>
+          <li><b>Pour les professionnels et candidats</b> : une carte pro avec photo, parcours, réalisations en images et chantiers confirmés par les clients.</li>
+          <li><b>Pour les entreprises et ONG</b> : des offres d&apos;emploi publiées depuis une page entreprise, avec un badge « Entreprise vérifiée » une fois le RCCM et le NIF (ou l&apos;agrément) contrôlés.</li>
+          <li><b>Pour la diaspora</b> : trouver un professionnel fiable à distance, voir ses réalisations, lire des avis confirmés, et recruter ou conseiller des jeunes de Bangui.</li>
         </ul>
+        <h2>Ce que Kargora ne fait pas</h2>
+        <p>Kargora ne détient pas d&apos;argent, ne garantit pas un travail et n&apos;est pas une agence de recrutement : les accords se font entre les personnes. Un badge « vérifié » signifie seulement que nous avons contrôlé les documents fournis, pas que nous garantissons l&apos;entreprise.</p>
       </div></section>
-      <p style={{ padding: "0 4px" }}><Link className="btn" href="/">Retour à l&apos;accueil</Link></p>
+      <section className="carte"><div className="in"><h2>Pour aller plus loin</h2><p><Link href="/verification">Règles de vérification</Link> · <Link href="/cgu">Conditions d&apos;utilisation</Link> · <Link href="/confidentialite">Confidentialité</Link> · <Link href="/contact">Contact</Link></p></div></section>
+      <Pied />
     </main>
   );
 }

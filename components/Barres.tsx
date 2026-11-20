@@ -27,7 +27,7 @@ export function BarreHaut() {
   return (
     <header className="barre">
       <div className="barre-in">
-        <Link href="/moi" className="moi-av" aria-label="Mon profil"><Avatar nom={me?.nom || "Moi"} taille={38} /></Link>
+        <Link href="/moi" className="moi-av" aria-label="Mon profil"><Avatar nom={me?.nom || "Moi"} photo={me?.photo} taille={38} /></Link>
         <Link href="/chercher" className="recherche"><Icone nom="recherche" taille={18} /> Chercher un métier, un quartier</Link>
         <Link href="/messages" className="icone" aria-label={nonLus ? `Messages, ${nonLus} non lus` : "Messages"}>
           <Icone nom="message" taille={22} />{nonLus > 0 && <span className="badge" aria-hidden="true">{nonLus > 9 ? "9+" : nonLus}</span>}

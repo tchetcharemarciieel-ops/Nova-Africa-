@@ -43,11 +43,19 @@ function Contenu() {
         </section>
       )}
       <section className="carte"><div className="in profil-ligne">
-        <Avatar nom={me.nom} taille={68} badge />
+        <Avatar nom={me.nom} photo={me.photo} carre={!!me.org_slug} taille={68} badge />
         <div style={{ minWidth: 0 }}><h1 style={{ margin: 0, fontSize: 22 }}>{me.nom}</h1><p className="mute petit">Compte sur ce téléphone</p><span className="statut"><span aria-hidden="true" />Actif</span></div>
       </div></section>
 
-      <section className="carte-pro">
+      {me.org_slug && (
+        <section className="carte-pro">
+          <span className="carte-pro-ico"><Icone nom="batiment" taille={26} trait={1.5} /></span>
+          <h2>Ma page entreprise</h2>
+          <p className="cp-txt">{me.org_statut === "verifiee" ? "Entreprise vérifiée (RCCM/NIF contrôlé)" : me.org_statut === "refusee" ? "Vérification refusée : écris-nous" : "En attente de vérification : nous contrôlons tes documents."}</p>
+          <div className="lignes" style={{ marginTop: 14 }}><Link className="btn-blanc" href={`/e/${me.org_slug}`}>Voir ma page</Link><Link className="btn-fantome" href="/emplois/nouveau">Publier une offre</Link></div>
+        </section>
+      )}
+      {!me.org_slug && <section className="carte-pro">
         <span className="carte-pro-ico"><Icone nom="carte" taille={26} trait={1.5} /></span>
         <h2>Ma carte pro</h2>
         {carte ? <>
@@ -56,9 +64,9 @@ function Contenu() {
           <div className="lignes" style={{ marginTop: 14 }}><Link className="btn-blanc" href={`/p/${carte.slug}`}>Voir ma carte</Link><Link className="btn-fantome" href="/moi/carte">Modifier</Link></div>
         </> : <>
           <p className="cp-txt">Montre ton travail et fais-le confirmer par tes clients : c&apos;est ce qui donne confiance.</p>
-          <div style={{ marginTop: 14 }}><Link className="btn-blanc" href="/creer">Créer ma carte pro</Link></div>
+          <div style={{ marginTop: 14 }}><Link className="btn-blanc" href="/inscription-candidat">Créer ma carte pro</Link></div>
         </>}
-      </section>
+      </section>}
 
       <section className="carte menu">
         <LigneMenu href="/messages" icone="message" teinte="bleu" titre="Mes messages" sous="Conversations avec les professionnels et les clients" />

@@ -4,9 +4,11 @@ export const METIERS = [
   "Cours et formation", "Comptabilité et gestion", "Autre",
 ] as const;
 export const LIEUX = [
-  "Bangui centre", "Bimbo", "Bégoua", "PK5", "PK12", "Miskine", "Boy-Rabe", "Combattants", "Gobongo",
-  "Fatima", "Lakouanga", "Ouango", "Sica", "Autre quartier de Bangui", "Ailleurs en Centrafrique", "À l'étranger",
+  "Bangui 1er arr.", "Bangui 2e arr.", "Bangui 3e arr.", "Bangui 4e arr.", "Bangui 5e arr.", "Bangui 6e arr.", "Bangui 7e arr.", "Bangui 8e arr.",
+  "Bimbo", "Bégoua", "Bambari", "Berbérati", "Bouar", "Bossangoa", "Bria", "Ailleurs en Centrafrique",
+  "France (diaspora)", "Autre pays (diaspora)",
 ] as const;
+export const SECTEURS = ["Commerce", "Construction et BTP", "Santé", "Éducation et formation", "Transport et logistique", "Restauration et hôtellerie", "Informatique et télécoms", "Banque et finance", "Agriculture", "ONG et humanitaire", "Autre"] as const;
 export const LANGUES = ["Français", "Sango", "Anglais"] as const;
 export const TYPES_OFFRE = ["CDI", "CDD", "Stage", "Mission"] as const;
 
@@ -28,6 +30,7 @@ export function normalizePhone(raw: string): string | null {
   if (d.length === 8) return "236" + d;
   return d.length >= 9 && d.length <= 15 ? d : "invalide";
 }
+export const CATEGORIES = [["tout", "Tout"], ["realisations", "Réalisations"], ["besoins", "Besoins"], ["offres", "Offres"]] as const;
 export const NIVEAUX = [
   { n: 1, nom: "Profil créé" },
   { n: 2, nom: "Profil complet" },

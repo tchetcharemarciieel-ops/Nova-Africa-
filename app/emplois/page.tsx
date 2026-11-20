@@ -15,7 +15,7 @@ export default function Emplois() {
         <p className="info" style={{ marginTop: 12 }}>Aucune offre n&apos;est vérifiée pour l&apos;instant. Méfie-toi de toute offre qui demande de l&apos;argent.</p></div></section>
       {erreur && <Erreur texte={erreur} />}
       {liste === null ? <Chargement /> : liste.length === 0 && !erreur ? <EtatVide icone="emplois" titre="Aucune offre pour l'instant" texte="Publie la première offre d'emploi, de stage ou de mission : les candidats t'écrivent ici." href="/emplois/nouveau" action="Publier la première offre" />
-        : liste.map(o => <Poste key={o.id} carre nom={o.organisation} soustitre={o.lieu} temps={o.cree_le} titre={o.titre} texte={o.details} etiquette={o.type} action="Postuler" href={`/messages/nouveau?to=${o.member_id}&nom=${encodeURIComponent(o.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${o.titre}`)}`} />)}
+        : liste.map(o => <Poste key={o.id} genre="offre" carre photo={o.logo} verifiee={o.verifiee} hrefNom={o.org_slug ? `/e/${o.org_slug}` : undefined} nom={o.organisation} soustitre={o.lieu} temps={o.cree_le} titre={o.titre} texte={o.details} etiquette={o.type} action="Postuler" href={`/messages/nouveau?to=${o.member_id}&nom=${encodeURIComponent(o.organisation)}&sujet=${encodeURIComponent(`Je postule à l'offre : ${o.titre}`)}`} />)}
     </main>
   );
 }
